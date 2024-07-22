@@ -1,17 +1,13 @@
 package com.studycow.config;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.models.Components;
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.security.OAuthFlow;
-import io.swagger.v3.oas.models.security.OAuthFlows;
-import io.swagger.v3.oas.models.security.Scopes;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 
 //Swagger-UI 확인
 //http://localhost/swagger-ui.html
@@ -21,7 +17,12 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(apiInfo());
+                .info(apiInfo())
+                 .components(new Components()
+                .addSecuritySchemes("basicScheme",
+                        new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("basic")));
     }
 
 
