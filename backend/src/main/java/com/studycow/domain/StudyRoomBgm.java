@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +26,7 @@ public class StudyRoomBgm {
 
     @Column(name = "BGM_IN_DATE")
     @NotNull
-    private String bgmInDate;
+    private LocalDateTime bgmInDate;
 
     @Column(name = "BGM_NAME")
     private String bgmName;

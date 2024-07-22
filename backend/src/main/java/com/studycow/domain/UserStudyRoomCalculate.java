@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +22,7 @@ public class UserStudyRoomCalculate {
 
     @Column(name = "PROC_DATE")
     @NotNull
-    private String procDate;
+    private LocalDate procDate;
 
     @Column(name = "SUM_ROOM_TIME")
     @NotNull

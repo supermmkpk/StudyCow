@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -25,14 +28,14 @@ public class UserStudyRoomEnter {
 
     @Column(name = "STUDY_DATE")
     @NotNull
-    private String studyDate;
+    private LocalDate studyDate;
 
     @Column(name = "IN_DATE")
     @NotNull
-    private String inDate;
+    private LocalDateTime inDate;
 
     @Column(name = "OUT_DATE")
-    private String outDate;
+    private LocalDateTime outDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ROOM_ID")

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @AllArgsConstructor
@@ -23,7 +25,7 @@ public class UserStudyRoomChat {
 
     @Column(name = "CHAT_IN_DATE")
     @NotNull
-    private String chatInDate;
+    private LocalDateTime chatInDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
