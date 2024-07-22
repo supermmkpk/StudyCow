@@ -30,31 +30,31 @@ public class StudyRoom {
     @Column(name = "ROOM_ID")
     private Long id;
 
-    @Column(name = "ROOM_TITLE", length = 50)
+    @Column(name = "ROOM_TITLE", length = 50, nullable = false)
     @NotNull
     private String roomTitle;
 
-    @Column(name = "ROOM_MAX_PERSON")
+    @Column(name = "ROOM_MAX_PERSON", nullable = false)
     @NotNull
     private int roomMaxPerson;
 
-    @Column(name = "ROOM_NOW_PERSON")
+    @Column(name = "ROOM_NOW_PERSON", nullable = false)
     @NotNull
     private int roomNowPerson;
 
-    @Column(name = "ROOM_CREATE_DATE")
+    @Column(name = "ROOM_CREATE_DATE", nullable = false)
     @NotNull
     private LocalDate roomCreateDate;
 
-    @Column(name = "ROOM_END_DATE")
+    @Column(name = "ROOM_END_DATE", nullable = false)
     @NotNull
     private LocalDate roomEndDate;
 
-    @Column(name = "ROOM_STATUS")
+    @Column(name = "ROOM_STATUS", nullable = false)
     @NotNull
     private int roomStatus;
 
-    @Column(name = "ROOM_UPDATE_DATE")
+    @Column(name = "ROOM_UPDATE_DATE", nullable = false)
     @NotNull
     private LocalDateTime roomUpdateDate;
 
@@ -62,7 +62,7 @@ public class StudyRoom {
     private String roomContent;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_ID", nullable = false)
     @NotNull
     private User user; //외래키
 }
