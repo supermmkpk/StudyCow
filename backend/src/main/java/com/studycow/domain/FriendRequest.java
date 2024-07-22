@@ -21,31 +21,31 @@ public class FriendRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "FRIEND_REQUEST_ID")
+    @Column(name = "FRIEND_REQUEST_ID",nullable = false)
     @NotNull
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FROM_USER_ID")
+    @JoinColumn(name = "FROM_USER_ID",nullable = false)
     @NotNull
     private User fromUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TO_USER_ID")
+    @JoinColumn(name = "TO_USER_ID",nullable = false)
     @NotNull
     private User toUser;
 
-    @Column(name = "REQUEST_STATUS")
+    @Column(name = "REQUEST_STATUS",nullable = false)
     @NotNull
     @ColumnDefault("0")
     private int requestStatus;
 
-    @Column(name = "REQUEST_DATE")
+    @Column(name = "REQUEST_DATE",nullable = false)
     @NotNull
     @CreationTimestamp
     private LocalDateTime requestDate;
 
-    @Column(name = "REQUEST_UPDATE_DATE")
+    @Column(name = "REQUEST_UPDATE_DATE",nullable = false)
     @NotNull
     @UpdateTimestamp
     private LocalDateTime requestUpdateDate;

@@ -20,13 +20,13 @@ public class Friend {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID1")
+    @JoinColumn(name = "USER_ID1",nullable = false)
     @NotNull
     private User user1;
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID2")
+    @JoinColumn(name = "USER_ID2",nullable = false)
     @NotNull
     private User user2;
 

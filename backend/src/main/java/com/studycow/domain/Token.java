@@ -17,7 +17,7 @@ public class Token {
 
     @Id
     @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_ID",nullable = false)
     @NotNull
     private User user;
 
