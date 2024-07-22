@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * 친구 도메인 클래스
  * @author 채기훈
- * @Since JDK17
+ * @since  JDK17
  */
 
 
