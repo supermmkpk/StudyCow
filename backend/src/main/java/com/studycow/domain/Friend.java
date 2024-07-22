@@ -11,7 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "t_freind")
+@Table(name = "t_friend")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,7 +30,7 @@ public class Friend {
     @NotNull
     private User user2;
 
-    @Column(name = "FREIND_DATE")
+    @Column(name = "FRIEND_DATE")
     @CreationTimestamp
     private LocalDateTime friendDate;
 

@@ -13,7 +13,7 @@ import java.security.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "t_freind_request")
+@Table(name = "t_friend_request")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class FriendRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "FREIND_REQUEST_ID")
+    @Column(name = "FRIEND_REQUEST_ID")
     @NotNull
     private int id;
 
