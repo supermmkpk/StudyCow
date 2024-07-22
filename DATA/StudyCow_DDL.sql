@@ -320,8 +320,7 @@ CREATE TABLE `t_proc_room_study` (
   `PROC_DATE` date NOT NULL,
   `SUM_ROOM_TIME` int NOT NULL,
   PRIMARY KEY (`PROC_ROOM_ID`),
-  KEY `ROOM_ID` (`ROOM_ID`),
-  KEY `IDX_PROC_DATE` (`PROC_DATE`),
+  CONSTRAINT `uni_room_date` UNIQUE (ROOM_ID, PROC_DATE),
   CONSTRAINT `t_proc_room_study_ibfk_1` FOREIGN KEY (`ROOM_ID`) REFERENCES `t_room` (`ROOM_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -348,8 +347,7 @@ CREATE TABLE `t_proc_user_study` (
   `PROC_DATE` date NOT NULL,
   `SUM_STUDY_TIME` int NOT NULL,
   PRIMARY KEY (`PROC_USER_ID`),
-  KEY `USER_ID` (`USER_ID`),
-  KEY `IDX_PROC_DATE` (`PROC_DATE`),
+  CONSTRAINT `uni_user_date` UNIQUE (USER_ID, PROC_DATE),
   CONSTRAINT `t_proc_user_study_ibfk_1` FOREIGN KEY (`USER_ID`) REFERENCES `t_user` (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
