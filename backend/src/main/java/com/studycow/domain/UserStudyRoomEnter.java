@@ -29,15 +29,15 @@ public class UserStudyRoomEnter {
     @Column(name = "IN_LOG_ID")
     private Long id;
 
-    @Column(name = "STUDY_TIME")
+    @Column(name = "STUDY_TIME", nullable = false)
     @NotNull
     private int studyTime;
 
-    @Column(name = "STUDY_DATE")
+    @Column(name = "STUDY_DATE", nullable = false)
     @NotNull
     private LocalDate studyDate;
 
-    @Column(name = "IN_DATE")
+    @Column(name = "IN_DATE", nullable = false)
     @NotNull
     private LocalDateTime inDate;
 
@@ -45,12 +45,12 @@ public class UserStudyRoomEnter {
     private LocalDateTime outDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ROOM_ID")
+    @JoinColumn(name = "ROOM_ID", nullable = false)
     @NotNull
     private StudyRoom studyRoom; //외래키
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_ID", nullable = false)
     @NotNull
     private User user; //외래키
 }

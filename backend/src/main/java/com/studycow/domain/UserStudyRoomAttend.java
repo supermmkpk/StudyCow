@@ -27,7 +27,7 @@ public class UserStudyRoomAttend {
     private User user; //외래키
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ROOM_ID")
+    @JoinColumn(name = "ROOM_ID", nullable = false)
     @NotNull
     private StudyRoom studyRoom; //외래키
 }

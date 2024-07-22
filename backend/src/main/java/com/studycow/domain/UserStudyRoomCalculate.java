@@ -28,16 +28,16 @@ public class UserStudyRoomCalculate {
     @Column(name = "PROC_ROOM_ID")
     private Long id;
 
-    @Column(name = "PROC_DATE")
+    @Column(name = "PROC_DATE", nullable = false)
     @NotNull
     private LocalDate procDate;
 
-    @Column(name = "SUM_ROOM_TIME")
+    @Column(name = "SUM_ROOM_TIME", nullable = false)
     @NotNull
     private String sumRoomTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ROOM_ID")
+    @JoinColumn(name = "ROOM_ID", nullable = false)
     @NotNull
     private StudyRoom studyRoom; //외래키
 }

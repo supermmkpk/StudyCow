@@ -28,11 +28,11 @@ public class StudyRoomBgm {
     @Column(name = "BGM_INDEX")
     private int id;
 
-    @Column(name = "BGM_LINK", length = 500)
+    @Column(name = "BGM_LINK", length = 500, nullable = false)
     @NotNull
     private String bgmLink;
 
-    @Column(name = "BGM_IN_DATE")
+    @Column(name = "BGM_IN_DATE", nullable = false)
     @NotNull
     private LocalDateTime bgmInDate;
 
