@@ -23,15 +23,15 @@ public class SubjectCode {
     @Column(name = "sub_name", length = 20)
     private String name;
 
-    @Column(name = "sub_max_score")
+    @Column(name = "sub_max_score", nullable = false)
     @NotNull
     private int maxScore;
 
-    @Column(name = "sub_status")
+    @Column(name = "sub_status", nullable = false)
     @NotNull
     private int status;
 
-    @Column(name = "sub_in_date")
+    @Column(name = "sub_in_date", nullable = false)
     @NotNull
     private LocalDateTime inDate;
 }

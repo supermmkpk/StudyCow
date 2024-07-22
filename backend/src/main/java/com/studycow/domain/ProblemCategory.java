@@ -23,16 +23,16 @@ public class ProblemCategory {
     @Column(name = "cat_name", length = 30)
     private String name;
 
-    @Column(name = "cat_status")
+    @Column(name = "cat_status", nullable = false)
     @NotNull
     private int status;
 
-    @Column(name = "cat_in_date")
+    @Column(name = "cat_in_date", nullable = false)
     @NotNull
     private LocalDateTime inDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sub_code")
+    @JoinColumn(name = "sub_code", nullable = false)
     @NotNull
     private SubjectCode subjectCode;
 }
