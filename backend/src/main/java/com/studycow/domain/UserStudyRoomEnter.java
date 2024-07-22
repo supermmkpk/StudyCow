@@ -9,6 +9,13 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * <pre>
+ *     회원 스터디룸 입장 기록 도메인 클래스
+ * </pre>
+ * @author 박봉균
+ * @since JDK17
+ */
 
 @Entity
 @Getter

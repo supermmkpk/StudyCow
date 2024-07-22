@@ -7,6 +7,14 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ * <pre>
+ *     StudyRoomBgm 다중 기본키 클래스
+ * </pre>
+ * @author 박봉균
+ * @since JDK17
+ */
+
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode

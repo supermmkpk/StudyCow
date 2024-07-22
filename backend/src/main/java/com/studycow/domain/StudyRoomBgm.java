@@ -8,6 +8,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * <pre>
+ *     스터디룸 BGM 도메인 클래스
+ * </pre>
+ * @author 박봉균
+ * @since JDK17
+ */
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
