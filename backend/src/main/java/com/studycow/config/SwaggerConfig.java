@@ -26,10 +26,9 @@ public class SwaggerConfig {
 
 
     private Info apiInfo() {
-        return new Info().title("Studycow 문서 API") // API 제목을 설정합니다.
-                .description("<h3>RestAPI 문서 내용을 다음과 같이 제공합니다.</h3>") // API 설명을 설정합니다.
+        return new Info().title("Study Cow API 문서") // API 제목을 설정합니다.
+                .description("<h3>REST API 문서 내용을 다음과 같이 제공합니다.</h3>") // API 설명을 설정합니다.
                 .version("1.0.0") // API 버전을 설정합니다.
                 .license(new License().name("Apache 2.0").url("http://springdoc.org"));
     }
 }
-
