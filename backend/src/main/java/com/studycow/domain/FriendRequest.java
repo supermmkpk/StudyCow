@@ -12,6 +12,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.security.Timestamp;
 import java.time.LocalDateTime;
 
+/**
+ * 친구 요청 도메인 클래스
+ * @author 채기훈
+ * @Since JDK17
+ */
+
+
 @Entity
 @Table(name = "t_friend_request")
 @Getter

@@ -7,6 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+/**
+ * 유저 등급 도메인 클래스
+ * @author 채기훈
+ * @Since JDK17
+ */
+
 @Entity
 @Table(name = "t_grade_code")
 @Getter

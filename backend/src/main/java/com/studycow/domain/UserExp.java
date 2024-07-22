@@ -6,6 +6,12 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.security.Timestamp;
 
+/**
+ * 유저 경험치 도메인 클래스
+ * @author 채기훈
+ * @Since JDK17
+ */
+
 @Entity
 @Table(name = "t_exp_log")
 public class UserExp {
