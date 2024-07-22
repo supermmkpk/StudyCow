@@ -22,16 +22,16 @@ public class WrongProblem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "score_id")
+    @JoinColumn(name = "score_id", nullable = false)
     @NotNull
     private UserSubjectScore score;
 
     @ManyToOne
-    @JoinColumn(name = "cat_code")
+    @JoinColumn(name = "cat_code", nullable = false)
     @NotNull
     private ProblemCategory catCode;
 
-    @Column(name = "wrong_cnt")
+    @Column(name = "wrong_cnt", nullable = false)
     @NotNull
     private int wrongCount;
 }

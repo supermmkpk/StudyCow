@@ -23,27 +23,27 @@ public class UserSubjectScore {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @NotNull
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sub_code")
+    @JoinColumn(name = "sub_code", nullable = false)
     @NotNull
     private SubjectCode subCode;
 
-    @Column(name = "test_date")
+    @Column(name = "test_date", nullable = false)
     @NotNull
     private LocalDate testDate;
 
-    @Column(name = "test_score")
+    @Column(name = "test_score", nullable = false)
     @NotNull
     private int testScore;
 
     @Column(name = "test_grade")
     private int testGrade;
 
-    @Column(name = "score_update_date")
+    @Column(name = "score_update_date", nullable = false)
     @NotNull
     private LocalDateTime updateDate;
 
