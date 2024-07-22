@@ -6,6 +6,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
+/**
+ * <pre>
+ *     회원 스터디룸 채팅 도메인 클래스
+ * </pre>
+ * @author 박봉균
+ * @since JDK17
+ */
+
 @Entity
 @Getter
 @AllArgsConstructor
@@ -23,7 +33,7 @@ public class UserStudyRoomChat {
 
     @Column(name = "CHAT_IN_DATE")
     @NotNull
-    private String chatInDate;
+    private LocalDateTime chatInDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")

@@ -7,6 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+/**
+ * <pre>
+ *     스터디룸 도메인 클래스
+ * </pre>
+ * @author 박봉균
+ * @since JDK17
+ */
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,11 +44,11 @@ public class StudyRoom {
 
     @Column(name = "ROOM_CREATE_DATE")
     @NotNull
-    private String roomCreateDate;
+    private LocalDate roomCreateDate;
 
     @Column(name = "ROOM_END_DATE")
     @NotNull
-    private String roomEndDate;
+    private LocalDate roomEndDate;
 
     @Column(name = "ROOM_STATUS")
     @NotNull
@@ -45,7 +56,7 @@ public class StudyRoom {
 
     @Column(name = "ROOM_UPDATE_DATE")
     @NotNull
-    private String roomUpdateDate;
+    private LocalDateTime roomUpdateDate;
 
     @Column(name = "ROOM_CONTENT", length = 2000)
     private String roomContent;

@@ -6,6 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * <pre>
+ *     회원 스터디룸 입장 현황 도메인 클래스
+ * </pre>
+ * @author 박봉균
+ * @since JDK17
+ */
+
 @Entity
 @Getter
 @AllArgsConstructor
