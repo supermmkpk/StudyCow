@@ -16,9 +16,10 @@ import java.security.Timestamp;
 public class Token {
 
     @Id
+    @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     @NotNull
-    private int userId;
+    private User user;
 
     @Column(name = "REFRESH_TOKEN")
     private String refreshToken;

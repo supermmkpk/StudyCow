@@ -27,8 +27,8 @@ dependencies {
 	implementation 'commons-io:commons-io:2.6'
 	implementation 'org.apache.commons:commons-collections4:4.4'
 	implementation 'org.apache.commons:commons-lang3:3.9'
-	implementation "com.querydsl:querydsl-jpa:5.0.0" // 최신 QueryDSL 버전으로 업데이트
-	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jpa" // 최신 QueryDSL 버전으로 업데이트
+//	implementation "com.querydsl:querydsl-jpa:5.0.0" // 최신 QueryDSL 버전으로 업데이트
+//	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jpa" // 최신 QueryDSL 버전으로 업데이트
 	implementation "com.squareup.retrofit2:retrofit:2.7.1"
 	implementation "com.squareup.retrofit2:converter-jackson:2.7.1"
 	implementation "com.squareup.okhttp3:logging-interceptor:3.9.0"

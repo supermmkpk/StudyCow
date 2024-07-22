@@ -69,5 +69,5 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GRADE_CODE")
     @NotNull
-    private int gradeCode; //외래키
+    private UserGrade userGrade; //외래키
 }

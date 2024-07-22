@@ -10,19 +10,15 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "t_category")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "t_category")
 public class ProblemCategory {
+
     @Id
     @Column(name = "cat_code")
     private int code;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sub_code")
-    @NotNull
-    private int subCode;
 
     @Column(name = "cat_name", length = 30)
     private String name;
@@ -34,4 +30,9 @@ public class ProblemCategory {
     @Column(name = "cat_in_date")
     @NotNull
     private LocalDateTime inDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sub_code")
+    @NotNull
+    private SubjectCode subjectCode;
 }

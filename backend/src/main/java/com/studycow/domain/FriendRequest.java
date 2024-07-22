@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "t_freind_request")
@@ -42,11 +43,11 @@ public class FriendRequest {
     @Column(name = "REQUEST_DATE")
     @NotNull
     @CreationTimestamp
-    private Timestamp requestDate;
+    private LocalDateTime requestDate;
 
     @Column(name = "REQUEST_UPDATE_DATE")
     @NotNull
     @UpdateTimestamp
-    private Timestamp requestUpdateDate;
+    private LocalDateTime requestUpdateDate;
 
 }
