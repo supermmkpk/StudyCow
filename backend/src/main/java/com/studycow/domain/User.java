@@ -63,4 +63,5 @@ public class User {
     @Column(name = "USER_BIRTHDAY")
     private Date birthday;
 
+
 }
