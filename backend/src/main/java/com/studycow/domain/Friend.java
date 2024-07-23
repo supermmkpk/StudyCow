@@ -5,18 +5,16 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 /**
  * 친구 도메인 클래스
+ *
  * @author 채기훈
- * @since  JDK17
+ * @since JDK17
  */
-
-
 @Entity
 @Table(name = "t_friend")
 @Getter
@@ -27,13 +25,13 @@ public class Friend {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID1",nullable = false)
+    @JoinColumn(name = "USER_ID1", nullable = false)
     @NotNull
     private User user1;
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID2",nullable = false)
+    @JoinColumn(name = "USER_ID2", nullable = false)
     @NotNull
     private User user2;
 

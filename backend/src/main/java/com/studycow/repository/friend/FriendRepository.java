@@ -1,9 +1,7 @@
 package com.studycow.repository.friend;
 
 import com.studycow.domain.FriendRequest;
-import com.studycow.domain.User;
 import com.studycow.dto.FriendDto;
-import com.studycow.dto.FriendRequestDto;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
@@ -35,4 +33,6 @@ public interface FriendRepository {
     /** 보낸 친구 요청 목록 조회 */
     List<FriendRequest> listFriendRequestSent(int userId) throws PersistenceException;
 
+    /** 친구 삭제 */
+    void deleteFriend(int friendUserId, int userId) throws PersistenceException;
 }
