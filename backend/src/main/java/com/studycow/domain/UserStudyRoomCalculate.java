@@ -20,7 +20,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name = "t_proc_room_study")
+@Table(name = "t_proc_room_study", uniqueConstraints =
+@UniqueConstraint(name = "uni_room_date", columnNames = {"room_id", "proc_date"}))
 public class UserStudyRoomCalculate {
 
     @Id

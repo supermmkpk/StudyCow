@@ -22,7 +22,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Table(name = "t_room")
+@Table(name = "t_room", indexes =
+@Index(name = "idx_title_status", columnList = "room_title, room_status"))
 public class StudyRoom {
 
     @Id

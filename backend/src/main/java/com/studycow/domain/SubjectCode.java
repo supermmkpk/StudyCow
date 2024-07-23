@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "t_subject_code", indexes =
-@Index(name = "idx_status", columnList = "cat_status"))
+@Index(name = "idx_status", columnList = "sub_status"))
 public class SubjectCode {
 
     @Id

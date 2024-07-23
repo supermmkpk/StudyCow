@@ -13,7 +13,8 @@ import java.security.Timestamp;
  */
 
 @Entity
-@Table(name = "t_exp_log")
+@Table(name = "t_exp_log", indexes =
+@Index(name = "idx_getDate", columnList = "get_date"))
 public class UserExp {
 
     @Id
