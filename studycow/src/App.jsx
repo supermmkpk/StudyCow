@@ -1,8 +1,7 @@
 import "./App.css";
-import Header from "./components/navbar/navBar";
+import Header from "./components/Navbar/Navbar"
 
 function App() {
-  // return <Main_Unlogin />;
   return (
     <>
       <Header />
