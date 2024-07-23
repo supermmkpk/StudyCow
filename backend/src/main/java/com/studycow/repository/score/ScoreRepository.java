@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <pre>
@@ -20,5 +21,7 @@ public interface ScoreRepository {
     List<ScoreDto> listScores(int userId, int subCode) throws PersistenceException;
 
     /** 유저 성적 입력 */
-    void saveScore(ScoreDto scoreDto) throws PersistenceException;
+    Long saveScore(Map<String, Object> scoreMap) throws PersistenceException;
+
+    void saveScoreDetails(Long scoreId, int catCode, int wrongCnt) throws PersistenceException;
 }

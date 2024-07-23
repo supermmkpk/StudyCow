@@ -15,7 +15,6 @@ import java.util.List;
 @Setter
 public class ScoreDto {
     private Long scoreId;
-    private int userId;
     private int subCode;
     private String subName;
     private int testScore;

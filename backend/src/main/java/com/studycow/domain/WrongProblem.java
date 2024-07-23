@@ -32,7 +32,7 @@ public class WrongProblem {
     @ManyToOne
     @JoinColumn(name = "score_id", nullable = false)
     @NotNull
-    private UserSubjectScore score;
+    private UserSubjectScore scoreId;
 
     @ManyToOne
     @JoinColumn(name = "cat_code", nullable = false)
