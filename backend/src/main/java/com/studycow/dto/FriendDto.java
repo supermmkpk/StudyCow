@@ -20,9 +20,14 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class FriendDto {
+    /** 친구 회원 번호 */
     private int friendUserId;
+    /** 친구 닉네임 */
     private String friendNickName;
+    /** 친구 이메일 */
     private String friendEmail;
+    /** 친구 프로필 사진 */
     private String friendThumb;
+    /** 친구 시작 일시 */
     private LocalDateTime friendDate;
 }

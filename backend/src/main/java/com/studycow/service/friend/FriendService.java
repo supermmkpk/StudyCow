@@ -15,38 +15,24 @@ import java.util.Map;
  * @since JDK17
  */
 public interface FriendService {
-    /**
-     * 친구 맺은 목록 조회
-     */
+    /** 친구 맺은 목록 조회 */
     List<FriendDto> listFriends(int userId) throws Exception;
 
-    /**
-     * 보낸 친구 요청 삭제
-     */
+    /** 보낸 친구 요청 삭제 */
     void deleteFriendRequest(int friendRequestId) throws Exception;
 
-    /**
-     * 친구 요청 승인
-     */
+    /** 친구 요청 승인 */
     void acceptFriendRequest(int friendRequestId) throws Exception;
 
-    /**
-     * 친구 요청 저장
-     */
+    /** 친구 요청 저장 */
     void saveFriendRequest(Map<String, Integer> friendRequestMap) throws Exception;
 
-    /**
-     * 받은 친구 요청 목록 조회
-     */
+    /** 받은 친구 요청 목록 조회 */
     List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception;
 
-    /**
-     * 보낸 친구 요청 목록 조회
-     */
+    /** 보낸 친구 요청 목록 조회 */
     List<FriendRequestDto> listFriendRequestSent(int userId) throws Exception;
 
-    /**
-     * 친구 삭제
-     */
+    /** 친구 삭제 */
     void deleteFriend(int friendUserId, int userId) throws Exception;
 }

@@ -31,27 +31,18 @@ public class FriendRepositoryImpl implements FriendRepository {
     /**
      * 친구 맺은 목록 조회
      * <pre>
-     *  userId1 또는 userId2와 내 ID가 일치할 때,
-     *  내 ID와 일치하지 않는 ID와 friendDate를 FriendDto로 반환
+     *  userId1 또는 userId2와 내 ID가 일치하는 행에 대하여,
+     *  중복을 제거하고 반대편 회원/친구 정보를 FriendDto로 반환
      * </pre>
      *
      * @param userId 내 회원 ID
-     * @return : FriendDto 리스트
+     * @return FriendDto 리스트
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
     public List<FriendDto> listFriends(int userId) throws PersistenceException {
         //JPQL 쿼리 생성
         StringBuilder jpql = new StringBuilder();
-        /*
-        jpql.append("SELECT new com.studycow.dto.FriendDto( \n");
-        jpql.append("   CASE \n");
-        jpql.append("       WHEN f.user1.id = :userId THEN f.user2.id \n");
-        jpql.append("       ELSE f.user1.id \n");
-        jpql.append("   END AS friendId, f.friendDate) \n");
-        jpql.append("FROM Friend f\n");
-        jpql.append("WHERE f.user1.id = :userId OR f.user2.id = :userId");
-        */
         jpql.append("SELECT f.user1, f.friendDate \n");
         jpql.append("FROM Friend f \n");
         jpql.append("WHERE f.user2.id = :userId \n");
@@ -60,15 +51,14 @@ public class FriendRepositoryImpl implements FriendRepository {
         jpql.append("FROM Friend f \n");
         jpql.append("WHERE f.user1.id = :userId");
 
-
-        //User 리스트 반환
-        List<Object[]> resultList =  em.createQuery(jpql.toString(), Object[].class)
+        //쿼리 실행
+        List<Object[]> resultList = em.createQuery(jpql.toString(), Object[].class)
                 .setParameter("userId", userId)
                 .getResultList();
 
+        //FriendDto 리스트로 반환
         List<FriendDto> friendDtoList = new ArrayList<>();
-
-        for(Object[] o : resultList) {
+        for (Object[] o : resultList) {
             User user = (User) o[0];
             LocalDateTime friendDate = (LocalDateTime) o[1];
             FriendDto friendDto = new FriendDto(
