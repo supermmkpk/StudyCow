@@ -50,8 +50,9 @@ public class FriendServiceImpl implements FriendService {
      * @param friendRequestId
      */
     @Override
+    @Transactional
     public void deleteFriendRequest(int friendRequestId) throws Exception {
-
+        friendRepository.deleteFriendRequest(friendRequestId);
     }
 
     /** 친구 요청 저장

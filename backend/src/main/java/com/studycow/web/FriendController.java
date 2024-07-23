@@ -94,4 +94,16 @@ public class FriendController {
         }
     }
 
+    @Operation(summary="친구 요청 취소", description = "보낸 친구 요청을 삭제합니다.")
+    @DeleteMapping("/request/cancel/{friendRequestId}")
+    public ResponseEntity<?> cancelFriendRequest(@PathVariable("friendRequestId") int friendRequestId) {
+        try {
+            friendService.deleteFriendRequest(friendRequestId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("친구 요청 취소 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
