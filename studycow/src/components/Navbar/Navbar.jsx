@@ -1,8 +1,8 @@
 import Navbar from "react-bootstrap/Navbar";
-import Logo from "./brandLogo.jsx";
-import "./styles/navBar.css";
+import Logo from "./BrandLogo.jsx";
+import "./styles/Navbar.css";
 import useInfoStore from "../../stores/infos.js";
-import User from "./user.jsx";
+import User from "./UserInformation.jsx";
 
 function Header() {
   const { isLogin } = useInfoStore();

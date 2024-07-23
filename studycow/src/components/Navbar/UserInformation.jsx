@@ -2,10 +2,10 @@ import useInfoStore from "../../stores/infos.js";
 import profileImg from "./img/7.jpg";
 import upImg from "./img/up.png";
 import downImg from "./img/down.png";
-import "./styles/user.css";
+import "./styles/UserInformation.css";
 import Navbar from "react-bootstrap/Navbar";
 
-function User() {
+function UserInformation() {
   const { toggleDropdown, isOpen, userInfo } = useInfoStore();
 
   return (
@@ -79,4 +79,4 @@ function User() {
   );
 }
 
-export default User;
+export default UserInformation;
