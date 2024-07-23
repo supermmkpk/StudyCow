@@ -4,6 +4,7 @@ import com.studycow.dto.ScoreDto;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <pre>
@@ -17,5 +18,5 @@ public interface ScoreService {
     List<ScoreDto> listScores(int userId, int subCode) throws PersistenceException;
 
     /** 유저 성적 입력 */
-    void saveScore(ScoreDto scoreDto) throws PersistenceException;
+    void saveScore(Map<String, Object> scoreMap) throws PersistenceException;
 }

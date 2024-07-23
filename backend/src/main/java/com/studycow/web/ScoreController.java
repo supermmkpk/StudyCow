@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <pre>
@@ -39,6 +40,20 @@ public class ScoreController {
         } catch(Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("성적 조회 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "성적 등록", description="성적을 등록합니다.<br>필수 : userId, subCode, testDate, testScore" +
+            "<br>선택 : testGrade, scoreDetail")
+    @PostMapping("/regist")
+    public ResponseEntity<?> sendFriendRequest(@RequestBody Map<String, Object> requestBody) {
+        try {
+            scoreService.saveScore(requestBody);
+            return new ResponseEntity<>("성적 등록 성공", HttpStatus.OK);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("성적 등록 실패", HttpStatus.BAD_REQUEST);
         }
     }
 }
