@@ -3,6 +3,7 @@ import {create} from 'zustand';
 const useInfoStore = create((set) => ({
   isLogin: true,
   userInfo: {
+    email: 'cowhead@studycow.com',
     name: '소머리국밥' ,
     grade: '1++',
     exp:'100,000,000',

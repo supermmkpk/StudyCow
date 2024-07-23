@@ -1,0 +1,29 @@
+.Logo {
+    display: flex;
+    justify-content: flex-start;
+    padding-top: 15px;
+    width: 350px;
+    color: white;
+}
+.LogoImg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration-line: none;
+    color: black;
+  }
+
+.LogoItem {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 200px;
+    height: 60px;
+    text-decoration-line: none;
+  }
+
+.LogoItem a {
+    padding-top: 7.5px;
+    font-size: 30px;
+    text-decoration-line: none;
+}

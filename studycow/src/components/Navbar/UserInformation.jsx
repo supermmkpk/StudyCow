@@ -39,6 +39,7 @@ function UserInformation() {
             <div className="userInfoOpen" onClick={toggleDropdown}>
               <div>
                 <img
+                  width="65px"
                   className="profileImg"
                   src={profileImg}
                   alt="프로필이미지"

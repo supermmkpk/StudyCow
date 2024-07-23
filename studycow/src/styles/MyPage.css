@@ -1,0 +1,33 @@
+.MyPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.MyPageContainer {
+    display: flex;
+    width: 1199px;
+    height: 914px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .MyPageSidebar {
+    z-index: 2;
+    width: 395px;
+    height: 914px;
+    background-color: #7092BE;
+    box-sizing: border-box;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+  }
+  
+  .MyPageContent {
+    padding: 100px;
+    z-index: 1;
+    width: 804px;
+    height: 914px;
+    background-color: #fff;
+    box-sizing: border-box;
+  }
