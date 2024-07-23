@@ -1,6 +1,7 @@
 package com.studycow.repository.friend;
 
 import com.studycow.domain.FriendRequest;
+import com.studycow.domain.User;
 import com.studycow.dto.FriendDto;
 import jakarta.persistence.PersistenceException;
 

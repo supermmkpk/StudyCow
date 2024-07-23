@@ -9,6 +9,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +43,7 @@ public class FriendRepositoryImpl implements FriendRepository {
     public List<FriendDto> listFriends(int userId) throws PersistenceException {
         //JPQL 쿼리 생성
         StringBuilder jpql = new StringBuilder();
+        /*
         jpql.append("SELECT new com.studycow.dto.FriendDto( \n");
         jpql.append("   CASE \n");
         jpql.append("       WHEN f.user1.id = :userId THEN f.user2.id \n");
@@ -48,11 +51,37 @@ public class FriendRepositoryImpl implements FriendRepository {
         jpql.append("   END AS friendId, f.friendDate) \n");
         jpql.append("FROM Friend f\n");
         jpql.append("WHERE f.user1.id = :userId OR f.user2.id = :userId");
+        */
+        jpql.append("SELECT f.user1, f.friendDate \n");
+        jpql.append("FROM Friend f \n");
+        jpql.append("WHERE f.user2.id = :userId \n");
+        jpql.append("UNION \n");
+        jpql.append("SELECT f.user2, f.friendDate \n");
+        jpql.append("FROM Friend f \n");
+        jpql.append("WHERE f.user1.id = :userId");
 
-        //FriendDto 리스트 반환
-        return em.createQuery(jpql.toString(), FriendDto.class)
+
+        //User 리스트 반환
+        List<Object[]> resultList =  em.createQuery(jpql.toString(), Object[].class)
                 .setParameter("userId", userId)
                 .getResultList();
+
+        List<FriendDto> friendDtoList = new ArrayList<>();
+
+        for(Object[] o : resultList) {
+            User user = (User) o[0];
+            LocalDateTime friendDate = (LocalDateTime) o[1];
+            FriendDto friendDto = new FriendDto(
+                    user.getId(),
+                    user.getUserNickname(),
+                    user.getUserEmail(),
+                    user.getUserThumb(),
+                    friendDate
+            );
+            friendDtoList.add(friendDto);
+        }
+
+        return friendDtoList;
     }
 
     /**

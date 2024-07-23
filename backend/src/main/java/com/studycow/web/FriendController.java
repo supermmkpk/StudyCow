@@ -45,7 +45,9 @@ public class FriendController {
 
     }
 
-    @Operation(summary = "친구 목록 조회", description = "나와 맺은 친구 목록을 조회합니다.")
+    @Operation(
+            summary = "친구 목록 조회",
+            description = "나와 맺은 친구 목록을 조회합니다. <br> 친구의 id번호, 닉네임, 이메일, 프로필사진, 친구시작일시를 반환합니다.")
     @GetMapping("/list")
     public ResponseEntity<?> listFriends(@RequestParam("userId") int userId) {
         try {

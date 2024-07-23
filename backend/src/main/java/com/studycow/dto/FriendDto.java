@@ -20,6 +20,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class FriendDto {
-    private int friendId;
+    private int friendUserId;
+    private String friendNickName;
+    private String friendEmail;
+    private String friendThumb;
     private LocalDateTime friendDate;
 }
