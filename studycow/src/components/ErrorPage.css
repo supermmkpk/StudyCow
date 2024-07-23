@@ -1,0 +1,21 @@
+.ErrorPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: auto;
+  flex-direction: column;
+}
+
+.ErrorPage img {
+  clip-path: circle(45%);
+  width: 300px;
+  height: 300px;
+  object-fit: cover; /* 이미지가 원형에 맞게 잘리도록 설정 */
+}
+
+.ErrorPage > h1 {
+  color: crimson;
+  font-size: 50px; /* 폰트 크기 증가 */
+  margin-top: 50px; /* 그림과 h1 문자 사이의 간격 추가 */
+}
