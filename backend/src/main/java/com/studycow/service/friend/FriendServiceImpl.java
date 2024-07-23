@@ -35,18 +35,27 @@ public class FriendServiceImpl implements FriendService {
         return friendRepository.listFriends(userId);
     }
 
-    /** 친구 관계 추가
-     * @param friendMap : userId1, userId2 맵
-     * @throws Exception
+    /** 친구 요청 승인
+     * @param friendRequestId
      */
     @Override
     @Transactional
-    public void saveFriend(Map<String, Integer> friendMap) throws Exception {
-        friendRepository.saveFriend(friendMap);
+    public void acceptFriendRequest(int friendRequestId) throws Exception {
+        //친구 관계 저장 및 요청 삭제
+        friendRepository.acceptFriendRequest(friendRequestId);
+    }
+
+    /** 보낸 친구 요청 삭제
+     *
+     * @param friendRequestId
+     */
+    @Override
+    public void deleteFriendRequest(int friendRequestId) throws Exception {
+
     }
 
     /** 친구 요청 저장
-     * @param friendRequestMap : fromUserId, toUserId 맵
+     * @param friendRequestMap fromUserId, toUserId 맵
      * @throws Exception
      */
     @Override
@@ -56,7 +65,7 @@ public class FriendServiceImpl implements FriendService {
     }
 
     /** 받은 친구 요청 목록 조회
-     * @return : FriendRequestDto 리스트
+     * @return FriendRequestDto 리스트
      * @throws Exception
      */
    public List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception {
