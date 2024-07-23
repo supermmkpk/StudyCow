@@ -9,14 +9,24 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * <pre>
+ *     문제 유형 도메인 클래스
+ * </pre>
+ * @author 노명환
+ * @since JDK17
+ */
+
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "t_category")
+@Table(name = "t_category", indexes =
+@Index(name = "idx_status", columnList = "cat_status"))
 public class ProblemCategory {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cat_code")
     private int code;
 

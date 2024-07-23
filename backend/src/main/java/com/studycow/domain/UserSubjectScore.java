@@ -10,11 +10,20 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * <pre>
+ *     과목별 성적 도메인 클래스
+ * </pre>
+ * @author 노명환
+ * @since JDK17
+ */
+
 @Entity
-@Table(name = "t_score")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "t_score", indexes =
+@Index(name = "idx_testDate", columnList = "test_date"))
 public class UserSubjectScore {
 
     @Id

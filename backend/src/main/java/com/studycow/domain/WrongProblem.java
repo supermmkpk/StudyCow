@@ -9,6 +9,14 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * <pre>
+ *     성적 상세내역 도메인 클래스
+ * </pre>
+ * @author 노명환
+ * @since JDK17
+ */
+
 @Entity
 @Getter
 @AllArgsConstructor
