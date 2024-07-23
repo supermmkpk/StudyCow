@@ -55,16 +55,4 @@ public class UserSubjectScore {
     @Column(name = "score_update_date", nullable = false)
     @NotNull
     private LocalDateTime updateDate;
-
-    /*public static UserSubjectScore createScore
-            (User user, SubjectCode subCode, LocalDate testDate, int testScore, int testGrade){
-        UserSubjectScore score = new UserSubjectScore();
-        score.setUser(user);
-        score.setSubCode(subCode);
-        score.setTestDate(testDate);
-        score.setTestScore(testScore);
-        score.setTestGrade(testGrade);
-
-        return score;
-    }*/
 }
