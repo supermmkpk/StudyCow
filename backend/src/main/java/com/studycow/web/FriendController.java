@@ -17,10 +17,10 @@ import java.util.Map;
  * <pre>
  *     친구 관리 컨트롤러 클래스
  * </pre>
+ *
  * @author 박봉균
  * @since JDK17
  */
-
 @Tag(name = "Friend", description = "친구 관리")
 @RestController
 @RequestMapping("/friend")
@@ -32,12 +32,12 @@ public class FriendController {
 
     @Operation(
             summary = "친구 요청 승인",
-            description="친구 요청 승인하여 친구 관계를 추가하며, 요청을 삭제합니다.")
+            description = "친구 요청 승인하여 친구 관계를 추가하며, 요청을 삭제합니다.")
     @PostMapping("/accept")
     public ResponseEntity<?> acceptFriend(@RequestBody int friendRequestId) {
         try {
             friendService.acceptFriendRequest(friendRequestId);
-            return new ResponseEntity<>("친구 요청 승인 성공",HttpStatus.CREATED);
+            return new ResponseEntity<>("친구 요청 승인 성공", HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("친구 요청 승인 실패", HttpStatus.BAD_REQUEST);
@@ -51,20 +51,20 @@ public class FriendController {
         try {
             List<FriendDto> friendList = friendService.listFriends(userId);
             return ResponseEntity.ok(friendList);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("친구 목록 조회 실패", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @Operation(summary = "친구 요청 전송", description="친구 요청을 저장합니다.<br>fromUserId, toUserId 전달")
+    @Operation(summary = "친구 요청 전송", description = "친구 요청을 저장합니다.<br>fromUserId, toUserId 전달")
     @PostMapping("/request")
     public ResponseEntity<?> sendFriendRequest(@RequestBody Map<String, Integer> requestBody) {
         try {
             friendService.saveFriendRequest(requestBody);
             return new ResponseEntity<>("친구 요청 전송 성공", HttpStatus.OK);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("친구 요청 전송 실패", HttpStatus.BAD_REQUEST);
         }
@@ -76,7 +76,7 @@ public class FriendController {
         try {
             List<FriendRequestDto> friendRequestDtoList = friendService.listFriendRequestReceived(userId);
             return ResponseEntity.ok(friendRequestDtoList);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("받은 친구 요청 목록 조회 실패", HttpStatus.BAD_REQUEST);
         }
@@ -88,21 +88,36 @@ public class FriendController {
         try {
             List<FriendRequestDto> friendRequestDtoList = friendService.listFriendRequestSent(userId);
             return ResponseEntity.ok(friendRequestDtoList);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("보낸 친구 요청 목록 조회 실패", HttpStatus.BAD_REQUEST);
         }
     }
 
-    @Operation(summary="친구 요청 취소", description = "보낸 친구 요청을 삭제합니다.")
+    @Operation(summary = "친구 요청 취소", description = "보낸 친구 요청을 삭제합니다.")
     @DeleteMapping("/request/cancel/{friendRequestId}")
     public ResponseEntity<?> cancelFriendRequest(@PathVariable("friendRequestId") int friendRequestId) {
         try {
             friendService.deleteFriendRequest(friendRequestId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch(Exception e) {
+            return new ResponseEntity<>("친구 요청 취소 성공", HttpStatus.OK);
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("친구 요청 취소 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "친구 해제", description = "친구 관계를 삭제합니다.")
+    @DeleteMapping(value = "/{friendUserId}", params = "userId")
+    public ResponseEntity<?> cancelFriend(
+            @PathVariable("friendUserId") int friendUserId,
+            @RequestParam("userId") int userId
+    ) {
+        try {
+            friendService.deleteFriend(friendUserId, userId);
+            return new ResponseEntity<>("친구 해제 성공", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("친구 해제 실패", HttpStatus.BAD_REQUEST);
         }
     }
 
