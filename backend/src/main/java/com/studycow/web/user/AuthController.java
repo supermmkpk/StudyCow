@@ -21,4 +21,9 @@ public class AuthController {
         String token = this.userService.login(requestDto);
         return ResponseEntity.ok(token);
     }
+
+    @GetMapping("test")
+    public ResponseEntity<String> getMemberTest(){
+        return ResponseEntity.ok("Well done");
+    }
 }

@@ -29,7 +29,7 @@ public class DataInitializer {
         //테스트 초기 회원 생성
         User user = new User();
 
-        // 테스트 데이터 삽입
+//         테스트 데이터 삽입
 //        User user1 = new User();
 //        user1.setUserName("TestUser");
 //        user1.setUserEmail("chae0738@naver.com");

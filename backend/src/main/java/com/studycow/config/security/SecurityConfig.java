@@ -29,14 +29,14 @@ import org.springframework.web.cors.CorsConfiguration;
 
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity // HTTP 요청에 대한 인증 및 인가 구성
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
             "/api/v1/user/**", "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
-            "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/**",
+            "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/login",
             "/login",
     };
 
