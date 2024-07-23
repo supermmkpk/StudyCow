@@ -16,6 +16,7 @@ function UserInformation() {
             <div className="userInfoClose" onClick={toggleDropdown}>
               <div>
                 <img
+                  width="65px"
                   className="profileImg"
                   src={profileImg}
                   alt="프로필이미지"
@@ -39,6 +40,7 @@ function UserInformation() {
             <div className="userInfoOpen" onClick={toggleDropdown}>
               <div>
                 <img
+                  width="65px"
                   className="profileImg"
                   src={profileImg}
                   alt="프로필이미지"
@@ -57,20 +59,20 @@ function UserInformation() {
             </div>
             <div className="userDropdownContent">
               <div className="userInfoDetail">
-                  <p>등급: {userInfo.grade}</p>
-                  <p>경험치: {userInfo.exp}</p>
-                  <p>
-                    접속중인 친구: {userInfo.onlineFriends}/{userInfo.friends}
-                  </p>
-                  <p>오늘 공부시간: {userInfo.todayStudyTime}</p>
-                  <p>현재 랭킹: {userInfo.ranks}</p>
-                </div>
-                <Navbar.Brand className="userInfoItem" href="#마이페이지">
-                  마이 페이지
-                </Navbar.Brand>
-                <Navbar.Brand className="userInfoItem" href="#로그아웃">
-                  로그아웃
-                </Navbar.Brand>
+                <p>등급: {userInfo.grade}</p>
+                <p>경험치: {userInfo.exp}</p>
+                <p>
+                  접속중인 친구: {userInfo.onlineFriends}/{userInfo.friends}
+                </p>
+                <p>오늘 공부시간: {userInfo.todayStudyTime}</p>
+                <p>현재 랭킹: {userInfo.ranks}</p>
+              </div>
+              <Navbar.Brand className="userInfoItem" href="#마이페이지">
+                마이 페이지
+              </Navbar.Brand>
+              <Navbar.Brand className="userInfoItem" href="#로그아웃">
+                로그아웃
+              </Navbar.Brand>
             </div>
           </>
         )}

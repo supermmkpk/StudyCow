@@ -1,10 +1,10 @@
 import "./App.css";
-import Header from "./components/Navbar/Navbar"
+import StudyPage from "./views/StudyPage";
 
 function App() {
   return (
     <>
-      <Header />
+      <StudyPage />
     </>
   );
 }

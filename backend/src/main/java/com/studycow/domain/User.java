@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,8 +23,8 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="t_user")
-@Setter
+@Table(name="t_user", indexes =
+@Index(name = "idx_userNickname", columnList = "user_nickname"))
 public class User {
 
     @Id
@@ -36,7 +36,7 @@ public class User {
     @NotNull
     private String userName;
 
-    @Column(name = "USER_EMAIL", length = 30)
+    @Column(name = "USER_EMAIL", length = 30, unique = true)
     @NotNull
     private String userEmail;
 
@@ -53,6 +53,7 @@ public class User {
 
     @Column(name = "USER_EXP")
     @NotNull
+    @ColumnDefault(value = "0")
     private int userExp;
 
     @Column(name = "USER_JOIN_DATE")
@@ -62,7 +63,7 @@ public class User {
     @Column(name = "USER_UPDATE_DATE")
     private LocalDateTime userUpdateDate;
 
-    @Column(name = "USER_NICKNAME", length = 20)
+    @Column(name = "USER_NICKNAME", length = 20, unique = true)
     private String userNickname;
 
     @Column(name = "USER_BIRTHDAY")

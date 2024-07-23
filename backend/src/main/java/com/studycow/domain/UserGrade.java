@@ -25,20 +25,22 @@ public class UserGrade {
     @Id
     @Column(name = "GRADE_CODE",nullable = false)
     @NotNull
-    private Integer gradeCode;
+    private int gradeCode;
 
-    @Column(name = "GRADE_NAME", length = 10,nullable = false)
+    @Column(name = "GRADE_NAME", length = 10, nullable = false)
     @NotNull
     private String gradeName;
 
     @Column(name = "MIN_EXP",nullable = false)
     @ColumnDefault("0")
     @NotNull
-    private Integer minEXP;
+    private int minEXP;
 
     @Column(name = "MAX_EXP",nullable = false)
     @ColumnDefault("100")
     @NotNull
-    private Integer maxEXP;
-
+    private int maxEXP;
 }
+
+
+
