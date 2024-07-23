@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import cowDribbble from "../assets/cow_dribbble.gif";
-import "./LoadingPage.css";
+import "../styles/LoadingPage.css";
 
 const LoadingPage = () => {
   const [dots, setDots] = useState("");

@@ -18,6 +18,8 @@
   justify-content: center;
   width: 150px;
   height: 75px;
+  text-decoration-line: none;
+  color: black;
 }
 
 .navBackground {

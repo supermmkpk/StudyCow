@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import surprisedCow from "../assets/supriseCow.gif";
-import "./ErrorPage.css";
+import "../styles/ErrorPage.css";
 
 const ErrorPage = () => {
   const [semicolon, setSemicolon] = useState("");

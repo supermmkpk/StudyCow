@@ -1,5 +1,5 @@
 import React from "react";
-import "/src/components/CarouselContents.css";
+import "./styles/CarouselContents.css";
 
 const CarouselContents = ({ src, alt, text, left = "0px", top = "0px" }) => {
   return (
