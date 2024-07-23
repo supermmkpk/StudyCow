@@ -9,14 +9,24 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * <pre>
+ *     과목 코드 도메인 클래스
+ * </pre>
+ * @author 노명환
+ * @since JDK17
+ */
+
 @Entity
-@Table(name = "t_subject_code")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "t_subject_code", indexes =
+@Index(name = "idx_status", columnList = "cat_status"))
 public class SubjectCode {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sub_code")
     private int code;
 
