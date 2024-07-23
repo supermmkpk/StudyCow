@@ -1,10 +1,10 @@
 package com.studycow.service.friend;
 
+import com.studycow.domain.FriendRequest;
 import com.studycow.dto.FriendDto;
+import com.studycow.dto.FriendRequestDto;
 import com.studycow.repository.friend.FriendRepository;
-import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,4 +44,53 @@ public class FriendServiceImpl implements FriendService {
     public void saveFriend(Map<String, Integer> friendMap) throws Exception {
         friendRepository.saveFriend(friendMap);
     }
+
+    /** 친구 요청 저장
+     * @param friendRequestMap : fromUserId, toUserId 맵
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void saveFriendRequest(Map<String, Integer> friendRequestMap) throws Exception {
+        friendRepository.saveFriendRequest(friendRequestMap);
+    }
+
+    /** 받은 친구 요청 목록 조회
+     * @return : FriendRequestDto 리스트
+     * @throws Exception
+     */
+   public List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception {
+       List<FriendRequest> friendRequestList = friendRepository.listFriendRequestReceived(userId);
+
+       return friendRequestList
+               .stream()
+               .map(friendRequest -> new FriendRequestDto(
+                       friendRequest.getId(),
+                       friendRequest.getFromUser().getId(),
+                       friendRequest.getRequestStatus(),
+                       friendRequest.getRequestDate(),
+                       friendRequest.getRequestUpdateDate()
+               ))
+               .toList();
+   }
+
+    /** 보낸 친구 요청 목록 조회
+     * @return : FriendRequestDto 리스트
+     * @throws Exception
+     */
+   public List<FriendRequestDto> listFriendRequestSent(int userId) throws Exception{
+       List<FriendRequest> friendRequestList = friendRepository.listFriendRequestSent(userId);
+
+       return friendRequestList
+               .stream()
+               .map(friendRequest -> new FriendRequestDto(
+                       friendRequest.getId(),
+                       friendRequest.getToUser().getId(),
+                       friendRequest.getRequestStatus(),
+                       friendRequest.getRequestDate(),
+                       friendRequest.getRequestUpdateDate()
+               ))
+               .toList();
+   }
+
 }

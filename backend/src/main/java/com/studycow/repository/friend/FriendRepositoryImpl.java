@@ -1,8 +1,10 @@
 package com.studycow.repository.friend;
 
 import com.studycow.domain.Friend;
+import com.studycow.domain.FriendRequest;
 import com.studycow.domain.User;
 import com.studycow.dto.FriendDto;
+import com.studycow.dto.FriendRequestDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
@@ -53,6 +55,10 @@ public class FriendRepositoryImpl implements FriendRepository {
                 .getResultList();
     }
 
+    /** 친구 관계 저장
+     * @param friendMap
+     * @throws PersistenceException
+     */
     @Override
     public void saveFriend(Map<String, Integer> friendMap) throws PersistenceException {
         User user1 = em.find(User.class, friendMap.get("userId1"));
@@ -61,5 +67,41 @@ public class FriendRepositoryImpl implements FriendRepository {
         //@CreationTimestamp이므로 friendDate null
         Friend friend = new Friend(user1, user2, null);
         em.persist(friend);
+    }
+
+
+    /** 친구 요청 저장
+     * @param friendRequestMap
+     * @throws PersistenceException
+     */
+    @Override
+    public void saveFriendRequest(Map<String, Integer> friendRequestMap) throws PersistenceException {
+        User fromUser = em.find(User.class, friendRequestMap.get("fromUserId"));
+        User toUser = em.find(User.class, friendRequestMap.get("toUserId"));
+
+        FriendRequest friendRequest = new FriendRequest(fromUser, toUser);
+        em.persist(friendRequest);
+    }
+
+    /** 받은 친구 요청 목록 조회
+     * @return : FriendRequest 리스트
+     * @throws PersistenceException
+     */
+    @Override
+    public List<FriendRequest> listFriendRequestReceived(int userId) throws PersistenceException {
+        return em.createQuery("SELECT fr FROM FriendRequest fr WHERE fr.toUser.id = :userId ", FriendRequest.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
+
+    /** 보낸 친구 요청 목록 조회
+     * @return : FriendRequest 리스트
+     * @throws PersistenceException
+     */
+    @Override
+    public List<FriendRequest> listFriendRequestSent(int userId) throws PersistenceException {
+        return em.createQuery("SELECT fr FROM FriendRequest fr WHERE fr.fromUser.id = :userId ", FriendRequest.class)
+                .setParameter("userId", userId)
+                .getResultList();
     }
 }
