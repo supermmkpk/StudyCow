@@ -16,6 +16,7 @@ import java.util.Map;
  * <pre>
  *      친구 관리 서비스 구현 클래스
  * </pre>
+ *
  * @author 박봉균
  * @since JDK17
  */
@@ -25,9 +26,11 @@ import java.util.Map;
 public class FriendServiceImpl implements FriendService {
     private final FriendRepository friendRepository;
 
-    /** 친구 맺은 목록 조회
-     * @param userId : 내 회원 ID
-     * @return : FriendDto 리스트
+    /**
+     * 친구 맺은 목록 조회
+     *
+     * @param userId 내 회원 ID
+     * @return FriendDto 리스트
      * @throws Exception
      */
     @Override
@@ -35,8 +38,11 @@ public class FriendServiceImpl implements FriendService {
         return friendRepository.listFriends(userId);
     }
 
-    /** 친구 요청 승인
-     * @param friendRequestId
+    /**
+     * 친구 요청 승인
+     *
+     * @param friendRequestId 친구 요청 번호
+     * @throws Exception
      */
     @Override
     @Transactional
@@ -45,16 +51,21 @@ public class FriendServiceImpl implements FriendService {
         friendRepository.acceptFriendRequest(friendRequestId);
     }
 
-    /** 보낸 친구 요청 삭제
+    /**
+     * 보낸 친구 요청 삭제
      *
-     * @param friendRequestId
+     * @param friendRequestId 친구 요청 번호
+     * @throws Exception
      */
     @Override
+    @Transactional
     public void deleteFriendRequest(int friendRequestId) throws Exception {
-
+        friendRepository.deleteFriendRequest(friendRequestId);
     }
 
-    /** 친구 요청 저장
+    /**
+     * 친구 요청 저장
+     *
      * @param friendRequestMap fromUserId, toUserId 맵
      * @throws Exception
      */
@@ -64,42 +75,59 @@ public class FriendServiceImpl implements FriendService {
         friendRepository.saveFriendRequest(friendRequestMap);
     }
 
-    /** 받은 친구 요청 목록 조회
+    /**
+     * 받은 친구 요청 목록 조회
+     *
      * @return FriendRequestDto 리스트
      * @throws Exception
      */
-   public List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception {
-       List<FriendRequest> friendRequestList = friendRepository.listFriendRequestReceived(userId);
+    public List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception {
+        List<FriendRequest> friendRequestList = friendRepository.listFriendRequestReceived(userId);
 
-       return friendRequestList
-               .stream()
-               .map(friendRequest -> new FriendRequestDto(
-                       friendRequest.getId(),
-                       friendRequest.getFromUser().getId(),
-                       friendRequest.getRequestStatus(),
-                       friendRequest.getRequestDate(),
-                       friendRequest.getRequestUpdateDate()
-               ))
-               .toList();
-   }
+        return friendRequestList
+                .stream()
+                .map(friendRequest -> new FriendRequestDto(
+                        friendRequest.getId(),
+                        friendRequest.getFromUser().getId(),
+                        friendRequest.getRequestStatus(),
+                        friendRequest.getRequestDate(),
+                        friendRequest.getRequestUpdateDate()
+                ))
+                .toList();
+    }
 
-    /** 보낸 친구 요청 목록 조회
-     * @return : FriendRequestDto 리스트
+    /**
+     * 보낸 친구 요청 목록 조회
+     *
+     * @return FriendRequestDto 리스트
      * @throws Exception
      */
-   public List<FriendRequestDto> listFriendRequestSent(int userId) throws Exception{
-       List<FriendRequest> friendRequestList = friendRepository.listFriendRequestSent(userId);
+    public List<FriendRequestDto> listFriendRequestSent(int userId) throws Exception {
+        List<FriendRequest> friendRequestList = friendRepository.listFriendRequestSent(userId);
 
-       return friendRequestList
-               .stream()
-               .map(friendRequest -> new FriendRequestDto(
-                       friendRequest.getId(),
-                       friendRequest.getToUser().getId(),
-                       friendRequest.getRequestStatus(),
-                       friendRequest.getRequestDate(),
-                       friendRequest.getRequestUpdateDate()
-               ))
-               .toList();
-   }
+        return friendRequestList
+                .stream()
+                .map(friendRequest -> new FriendRequestDto(
+                        friendRequest.getId(),
+                        friendRequest.getToUser().getId(),
+                        friendRequest.getRequestStatus(),
+                        friendRequest.getRequestDate(),
+                        friendRequest.getRequestUpdateDate()
+                ))
+                .toList();
+    }
 
+    /**
+     * 친구 삭제
+     *
+     * @param friendUserId
+     * @param userId
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void deleteFriend(int friendUserId, int userId) throws Exception {
+        friendRepository.deleteFriend(friendUserId, userId);
+    }
+    
 }

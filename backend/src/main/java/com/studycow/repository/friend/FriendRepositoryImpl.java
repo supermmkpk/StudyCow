@@ -4,14 +4,13 @@ import com.studycow.domain.Friend;
 import com.studycow.domain.FriendRequest;
 import com.studycow.domain.User;
 import com.studycow.dto.FriendDto;
-import com.studycow.dto.FriendRequestDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +18,7 @@ import java.util.Map;
  * <pre>
  *      친구 관리 레포지토리 구현 클래스
  * </pre>
+ *
  * @author 박봉균
  * @since JDK17
  */
@@ -28,37 +28,58 @@ public class FriendRepositoryImpl implements FriendRepository {
     @PersistenceContext
     EntityManager em;
 
-    /** 친구 맺은 목록 조회
+    /**
+     * 친구 맺은 목록 조회
      * <pre>
-     *  userId1 또는 userId2와 내 ID가 일치할 때,
-     *  내 ID와 일치하지 않는 ID와 friendDate를 FriendDto로 반환
+     *  userId1 또는 userId2와 내 ID가 일치하는 행에 대하여,
+     *  중복을 제거하고 반대편 회원/친구 정보를 FriendDto로 반환
      * </pre>
+     *
      * @param userId 내 회원 ID
-     * @return : FriendDto 리스트
+     * @return FriendDto 리스트
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
     public List<FriendDto> listFriends(int userId) throws PersistenceException {
         //JPQL 쿼리 생성
         StringBuilder jpql = new StringBuilder();
-        jpql.append("SELECT new com.studycow.dto.FriendDto( \n");
-        jpql.append("   CASE \n");
-        jpql.append("       WHEN f.user1.id = :userId THEN f.user2.id \n");
-        jpql.append("       ELSE f.user1.id \n");
-        jpql.append("   END AS friendId, f.friendDate) \n");
-        jpql.append("FROM Friend f\n");
-        jpql.append("WHERE f.user1.id = :userId OR f.user2.id = :userId");
+        jpql.append("SELECT f.user1, f.friendDate \n");
+        jpql.append("FROM Friend f \n");
+        jpql.append("WHERE f.user2.id = :userId \n");
+        jpql.append("UNION \n");
+        jpql.append("SELECT f.user2, f.friendDate \n");
+        jpql.append("FROM Friend f \n");
+        jpql.append("WHERE f.user1.id = :userId");
 
-        //FriendDto 리스트 반환
-        return em.createQuery(jpql.toString(), FriendDto.class)
+        //쿼리 실행
+        List<Object[]> resultList = em.createQuery(jpql.toString(), Object[].class)
                 .setParameter("userId", userId)
                 .getResultList();
+
+        //FriendDto 리스트로 반환
+        List<FriendDto> friendDtoList = new ArrayList<>();
+        for (Object[] o : resultList) {
+            User user = (User) o[0];
+            LocalDateTime friendDate = (LocalDateTime) o[1];
+            FriendDto friendDto = new FriendDto(
+                    user.getId(),
+                    user.getUserNickname(),
+                    user.getUserEmail(),
+                    user.getUserThumb(),
+                    friendDate
+            );
+            friendDtoList.add(friendDto);
+        }
+
+        return friendDtoList;
     }
 
-    /** 친구 요청 삭제
+    /**
+     * 친구 요청 삭제
      * <pre>
      *  요청 id 번호를 이용하여 삭제
      * </pre>
+     *
      * @param friendRequestId 요청 id 번호
      * @throws PersistenceException
      */
@@ -69,7 +90,9 @@ public class FriendRepositoryImpl implements FriendRepository {
                 .executeUpdate();
     }
 
-    /** 친구 관계 승인/저장 및 요청 삭제
+    /**
+     * 친구 관계 승인/저장 및 요청 삭제
+     *
      * @param friendRequestId 요청 id 번호
      * @throws PersistenceException
      */
@@ -86,7 +109,9 @@ public class FriendRepositoryImpl implements FriendRepository {
         em.remove(friendRequest);
     }
 
-    /** 친구 요청 저장
+    /**
+     * 친구 요청 저장
+     *
      * @param friendRequestMap
      * @throws PersistenceException
      */
@@ -99,7 +124,9 @@ public class FriendRepositoryImpl implements FriendRepository {
         em.persist(friendRequest);
     }
 
-    /** 받은 친구 요청 목록 조회
+    /**
+     * 받은 친구 요청 목록 조회
+     *
      * @return FriendRequest 리스트
      * @throws PersistenceException
      */
@@ -110,7 +137,9 @@ public class FriendRepositoryImpl implements FriendRepository {
                 .getResultList();
     }
 
-    /** 보낸 친구 요청 목록 조회
+    /**
+     * 보낸 친구 요청 목록 조회
+     *
      * @return FriendRequest 리스트
      * @throws PersistenceException
      */
@@ -120,4 +149,27 @@ public class FriendRepositoryImpl implements FriendRepository {
                 .setParameter("userId", userId)
                 .getResultList();
     }
+
+    /**
+     * 친구 삭제
+     *
+     * @param friendUserId
+     * @param userId
+     */
+    @Override
+    public void deleteFriend(int friendUserId, int userId) throws PersistenceException {
+        StringBuilder jpql = new StringBuilder();
+
+        //JPQL 쿼리 생성
+        jpql.append("DELETE FROM Friend f \n");
+        jpql.append("WHERE (f.user1.id = :friendUserId OR f.user1.id = :userId) \n");
+        jpql.append("AND (f.user2.id = :friendUserId OR f.user2.id = :userId)");
+
+
+        em.createQuery(jpql.toString())
+                .setParameter("friendUserId", friendUserId)
+                .setParameter("userId", userId)
+                .executeUpdate();
+    }
+
 }

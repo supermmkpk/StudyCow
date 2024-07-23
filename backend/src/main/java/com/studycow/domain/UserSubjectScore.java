@@ -56,3 +56,22 @@ public class UserSubjectScore {
     @NotNull
     private LocalDateTime updateDate;
 }
+/*
+임시 성적 더미데이터
+insert into t_score(user_id, sub_code, test_date, test_score, test_grade, score_update_date) values
+(1, 1, '2024-07-01', 80, 3, current_timestamp()),
+(1, 1, '2024-07-02', 85, 2, current_timestamp()),
+(1, 1, '2024-07-03', 90, 2, current_timestamp()),
+(1, 1, '2024-07-04', 95, 1, current_timestamp()),
+(1, 1, '2024-07-05', 100, 1, current_timestamp());
+
+insert into t_score(user_id, sub_code, test_date, test_score, test_grade, score_update_date) values
+(1, 2, '2024-07-01', 70, 3, current_timestamp()),
+(1, 2, '2024-07-02', 73, null, current_timestamp()),
+(1, 2, '2024-07-03', 80, 2, current_timestamp()),
+(1, 2, '2024-07-04', 75, 3, current_timestamp()),
+(1, 2, '2024-07-05', 83, null, current_timestamp());
+
+select * from t_score
+where user_id = 1;
+ */
