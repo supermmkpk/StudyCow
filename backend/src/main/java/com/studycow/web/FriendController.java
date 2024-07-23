@@ -31,16 +31,16 @@ public class FriendController {
     private final FriendService friendService;
 
     @Operation(
-            summary = "친구 추가",
-            description="친구 요청 수락하여 친구 추가합니다. 추후 요청 테이블 삭제와 연동 개발 예정 <br> userId1, userId2 전달")
+            summary = "친구 요청 승인",
+            description="친구 요청 승인하여 친구 관계를 추가하며, 요청을 삭제합니다.")
     @PostMapping("/accept")
-    public ResponseEntity<?> acceptFriend(@RequestBody Map<String, Integer> requestBody) {
+    public ResponseEntity<?> acceptFriend(@RequestBody int friendRequestId) {
         try {
-            friendService.saveFriend(requestBody);
-            return new ResponseEntity<>("친구 요청 수락 성공",HttpStatus.CREATED);
+            friendService.acceptFriendRequest(friendRequestId);
+            return new ResponseEntity<>("친구 요청 승인 성공",HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("친구 요청 수락 실패", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("친구 요청 승인 실패", HttpStatus.BAD_REQUEST);
         }
 
     }
