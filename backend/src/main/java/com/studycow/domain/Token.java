@@ -8,6 +8,12 @@ import lombok.NoArgsConstructor;
 
 import java.security.Timestamp;
 
+/**
+ * 토큰 도메인 클래스
+ * @author 채기훈
+ * @since JDK17
+ */
+
 @Entity
 @Table(name = "t_user_token")
 @Getter
@@ -16,9 +22,10 @@ import java.security.Timestamp;
 public class Token {
 
     @Id
-    @JoinColumn(name = "USER_ID")
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "USER_ID",nullable = false)
     @NotNull
-    private int userId;
+    private User user;
 
     @Column(name = "REFRESH_TOKEN")
     private String refreshToken;

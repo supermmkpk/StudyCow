@@ -27,21 +27,21 @@ public class UserStudyRoomChat {
     @Column(name = "CHAT_ID")
     private Long id;
 
-    @Column(name = "CHAT_CONTENT", length = 1000)
+    @Column(name = "CHAT_CONTENT", length = 1000, nullable = false)
     @NotNull
     private String chatContent;
 
-    @Column(name = "CHAT_IN_DATE")
+    @Column(name = "CHAT_IN_DATE", nullable = false)
     @NotNull
     private LocalDateTime chatInDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_ID", nullable = false)
     @NotNull
     private User user; //외래키
 
     @ManyToOne
-    @JoinColumn(name = "ROOM_ID")
+    @JoinColumn(name = "ROOM_ID", nullable = false)
     @NotNull
     private StudyRoom studyRoom; //외래키
 }

@@ -157,61 +157,65 @@ LOCK TABLES `t_exp_log` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `t_freind`
+-- Table structure for table `t_friend`
 --
 
-DROP TABLE IF EXISTS `t_freind`;
+DROP TABLE IF EXISTS `t_friend`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_freind` (
+CREATE TABLE `t_friend` (
   `USER_ID1` int NOT NULL,
   `USER_ID2` int NOT NULL,
-  `FREIND_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `FRIEND_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`USER_ID1`,`USER_ID2`),
   KEY `USER_ID2` (`USER_ID2`),
-  CONSTRAINT `t_freind_ibfk_1` FOREIGN KEY (`USER_ID1`) REFERENCES `t_user` (`USER_ID`),
-  CONSTRAINT `t_freind_ibfk_2` FOREIGN KEY (`USER_ID2`) REFERENCES `t_user` (`USER_ID`)
+  CONSTRAINT `t_friend
+_ibfk_1` FOREIGN KEY (`USER_ID1`) REFERENCES `t_user` (`USER_ID`),
+  CONSTRAINT `t_friend
+_ibfk_2` FOREIGN KEY (`USER_ID2`) REFERENCES `t_user` (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `t_freind`
+-- Dumping data for table `t_friend`
 --
 
-LOCK TABLES `t_freind` WRITE;
-/*!40000 ALTER TABLE `t_freind` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_freind` ENABLE KEYS */;
+LOCK TABLES `t_friend` WRITE;
+/*!40000 ALTER TABLE `t_friend` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_friend` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `t_freind_request`
+-- Table structure for table `t_friend_request`
 --
 
-DROP TABLE IF EXISTS `t_freind_request`;
+DROP TABLE IF EXISTS `t_friend_request`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `t_freind_request` (
-  `FREIND_REQUEST_ID` bigint NOT NULL AUTO_INCREMENT,
+CREATE TABLE `t_friend_request` (
+  `FRIEND_REQUEST_ID` bigint NOT NULL AUTO_INCREMENT,
   `FROM_USER_ID` int NOT NULL,
   `TO_USER_ID` int NOT NULL,
   `REQUEST_STATUS` tinyint NOT NULL DEFAULT '0',
   `REQUEST_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `REQUEST_UPDATE_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`FREIND_REQUEST_ID`),
+  PRIMARY KEY (`FRIEND_REQUEST_ID`),
   KEY `FROM_USER_ID` (`FROM_USER_ID`),
   KEY `TO_USER_ID` (`TO_USER_ID`),
-  CONSTRAINT `t_freind_request_ibfk_1` FOREIGN KEY (`FROM_USER_ID`) REFERENCES `t_user` (`USER_ID`),
-  CONSTRAINT `t_freind_request_ibfk_2` FOREIGN KEY (`TO_USER_ID`) REFERENCES `t_user` (`USER_ID`)
+  CONSTRAINT `t_friend
+_request_ibfk_1` FOREIGN KEY (`FROM_USER_ID`) REFERENCES `t_user` (`USER_ID`),
+  CONSTRAINT `t_friend
+_request_ibfk_2` FOREIGN KEY (`TO_USER_ID`) REFERENCES `t_user` (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `t_freind_request`
+-- Dumping data for table `t_friend_request`
 --
 
-LOCK TABLES `t_freind_request` WRITE;
-/*!40000 ALTER TABLE `t_freind_request` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_freind_request` ENABLE KEYS */;
+LOCK TABLES `t_friend_request` WRITE;
+/*!40000 ALTER TABLE `t_friend_request` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_friend_request` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

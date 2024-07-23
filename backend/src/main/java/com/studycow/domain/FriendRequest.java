@@ -10,9 +10,17 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
+
+/**
+ * 친구 요청 도메인 클래스
+ * @author 채기훈
+ * @since JDK17
+ */
+
 
 @Entity
-@Table(name = "t_freind_request")
+@Table(name = "t_friend_request")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,33 +28,33 @@ public class FriendRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "FREIND_REQUEST_ID")
+    @Column(name = "FRIEND_REQUEST_ID",nullable = false)
     @NotNull
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FROM_USER_ID")
+    @JoinColumn(name = "FROM_USER_ID",nullable = false)
     @NotNull
     private User fromUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TO_USER_ID")
+    @JoinColumn(name = "TO_USER_ID",nullable = false)
     @NotNull
     private User toUser;
 
-    @Column(name = "REQUEST_STATUS")
+    @Column(name = "REQUEST_STATUS",nullable = false)
     @NotNull
     @ColumnDefault("0")
     private int requestStatus;
 
-    @Column(name = "REQUEST_DATE")
+    @Column(name = "REQUEST_DATE",nullable = false)
     @NotNull
     @CreationTimestamp
-    private Timestamp requestDate;
+    private LocalDateTime requestDate;
 
-    @Column(name = "REQUEST_UPDATE_DATE")
+    @Column(name = "REQUEST_UPDATE_DATE",nullable = false)
     @NotNull
     @UpdateTimestamp
-    private Timestamp requestUpdateDate;
+    private LocalDateTime requestUpdateDate;
 
 }
