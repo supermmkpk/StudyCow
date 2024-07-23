@@ -9,6 +9,7 @@
   padding: 10px;
   box-sizing: border-box;
   background-color: white;
+  font-family: "CustomFont", sans-serif;
 }
 
 .navItem {
