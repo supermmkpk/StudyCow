@@ -30,17 +30,17 @@ public class DataInitializer {
         User user = new User();
 
         // 테스트 데이터 삽입
-        User user1 = new User();
-        user1.setUserName("TestUser");
-        user1.setUserEmail("chae0738@naver.com");
-        user1.setUserPassword(passwordEncoder.encode("asdf"));
-        user1.setUserPublic(1);
-        user1.setUserExp(0);
-        user1.setUserJoinDate(LocalDateTime.now());
-        user1.setUserUpdateDate(LocalDateTime.now());
-        user1.setUserNickname("TestNick");
-        user1.setUserBirthday(LocalDate.of(1990, 1, 1));
-        user1.setUserGrade(grade); // 설정된 UserGrade 할당
+//        User user1 = new User();
+//        user1.setUserName("TestUser");
+//        user1.setUserEmail("chae0738@naver.com");
+//        user1.setUserPassword(passwordEncoder.encode("asdf"));
+//        user1.setUserPublic(1);
+//        user1.setUserExp(0);
+//        user1.setUserJoinDate(LocalDateTime.now());
+//        user1.setUserUpdateDate(LocalDateTime.now());
+//        user1.setUserNickname("TestNick");
+//        user1.setUserBirthday(LocalDate.of(1990, 1, 1));
+//        user1.setUserGrade(grade); // 설정된 UserGrade 할당
 //        userRepository.save(user1);
     }
 }
