@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -52,6 +53,7 @@ public class User {
 
     @Column(name = "USER_EXP")
     @NotNull
+    @ColumnDefault(value = "0")
     private int userExp;
 
     @Column(name = "USER_JOIN_DATE")

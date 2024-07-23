@@ -72,3 +72,4 @@ public class UserSubjectPlan {
     @NotNull
     private int sumTime;
 }
+

@@ -1,7 +1,7 @@
 package com.studycow.service.friend;
 
 import com.studycow.dto.FriendDto;
-import org.springframework.stereotype.Service;
+import com.studycow.dto.FriendRequestDto;
 
 import java.util.List;
 import java.util.Map;
@@ -19,4 +19,13 @@ public interface FriendService {
 
     /** 친구 관계 추가 */
     void saveFriend(Map<String, Integer> friendMap) throws Exception;
+
+    /** 친구 요청 저장 */
+    void saveFriendRequest(Map<String, Integer> friendRequestMap) throws Exception;
+
+    /** 받은 친구 요청 목록 조회 */
+    List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception;
+
+    /** 보낸 친구 요청 목록 조회 */
+    List<FriendRequestDto> listFriendRequestSent(int userId) throws Exception;
 }
