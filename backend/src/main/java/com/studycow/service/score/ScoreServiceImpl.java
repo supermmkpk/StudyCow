@@ -104,4 +104,10 @@ public class ScoreServiceImpl implements ScoreService{
     public void deleteScore(Long scoreId) throws Exception {
         scoreRepository.deleteScore(scoreId);
     }
+
+    @Override
+    @Transactional
+    public void saveScoreTarget(Map<String, Object> targetMap) throws Exception {
+        scoreRepository.saveScoreTarget(targetMap);
+    }
 }

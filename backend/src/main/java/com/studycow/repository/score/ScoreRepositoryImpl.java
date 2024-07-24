@@ -8,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -204,10 +203,19 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      */
     @Override
     public void saveScoreTarget(Map<String, Object> targetMap) throws PersistenceException {
-        try{
-            return;
+        try {
+            User user = em.find(User.class, (Integer)targetMap.get("userId"));
+            SubjectCode subjectCode = em.find(SubjectCode.class, (Integer)targetMap.get("subCode"));
+            int targetScore = (Integer)targetMap.get("targetScore");
+            int targetGrade = (Integer)targetMap.get("targetGrade");
+
+            UserScoreTarget userScoreTarget = new UserScoreTarget(
+                    null, user, subjectCode, targetScore, targetGrade
+            );
+
+            em.persist(userScoreTarget);
         }catch(Exception e){
-            throw new PersistenceException("목표 성적 등록 중 에러 발생", e);
+            throw new PersistenceException("목표 등록 중 에러 발생", e);
         }
     }
 
