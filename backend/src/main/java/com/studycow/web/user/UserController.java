@@ -1,6 +1,8 @@
 package com.studycow.web.user;
 
+import com.studycow.config.jwt.JwtUtil;
 import com.studycow.dto.user.UserInfoDto;
+import com.studycow.dto.user.UserUpdateDto;
 import com.studycow.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @Operation(summary="회원", description = "회원")
     @GetMapping("me")
@@ -31,5 +34,18 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "회원 정보 수정", description = "회원의 기본정보를 수정합니다.")
+    @PatchMapping("me")
+    public ResponseEntity<?> UpdateUser(@RequestHeader("Authorization") String authorizationHeader,@RequestBody UserUpdateDto userUpdateDto) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        int currentUserId = jwtUtil.getUserId(token);
 
+        if(currentUserId!=userUpdateDto.getUserId()){
+            return new ResponseEntity<>("인가된 사용자가 아닙니다",HttpStatus.UNAUTHORIZED);
+        }
+
+        userService.updateUserInfo(userUpdateDto);
+        return new ResponseEntity<>("업데이트 성공",HttpStatus.OK);
+
+    }
 }

@@ -3,10 +3,7 @@ package com.studycow.service.user;
 import com.studycow.config.jwt.JwtUtil;
 import com.studycow.domain.User;
 import com.studycow.domain.UserGrade;
-import com.studycow.dto.user.CustomUserInfoDto;
-import com.studycow.dto.user.LoginRequestDto;
-import com.studycow.dto.user.RegisterRequestDto;
-import com.studycow.dto.user.UserInfoDto;
+import com.studycow.dto.user.*;
 import com.studycow.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -14,6 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.Optional;
 
@@ -64,16 +62,39 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserInfoDto getUserInfo(Long userId){
+    public UserInfoDto getUserInfo( Long userId){
+
         Optional<User> user = userRepository.findById(userId);
 
-        if(user.isPresent()){
+
+        if(user.isPresent()  ){
             return modelMapper.map(user.get(), UserInfoDto.class);
         }
 
         return null;
     }
 
+    @Transactional
+    @Override
+    public void updateUserInfo(UserUpdateDto userUpdateDto){
+        Optional<User>user = userRepository.findById((long)userUpdateDto.getUserId());
+
+
+
+        // 유저가 존재하고, 요청한 유저와 업데이트 유저의 정보가 같으면 수행
+        if(user.isPresent() ){
+
+            User newuser = user.get();
+
+            newuser.setUserEmail(userUpdateDto.getUserEmail());
+            newuser.setUserBirthday(userUpdateDto.getUserBirthday());
+            newuser.setUserThumb(userUpdateDto.getUserThumb());
+            newuser.setUserNickname(userUpdateDto.getUserNickname());
+            newuser.setUserPublic(userUpdateDto.getUserPublic());
+
+            userRepository.save(newuser);
+        }
+    }
 
 
 }
