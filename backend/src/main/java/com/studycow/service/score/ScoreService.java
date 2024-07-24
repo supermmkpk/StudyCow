@@ -15,8 +15,8 @@ import java.util.Map;
  */
 public interface ScoreService {
     /** 유저 과목별 성적 리스트 조회 */
-    List<ScoreDto> listScores(int userId, int subCode) throws PersistenceException;
+    List<ScoreDto> listScores(int userId, int subCode) throws Exception;
 
     /** 유저 성적 입력 */
-    void saveScore(Map<String, Object> scoreMap) throws PersistenceException;
+    void saveScore(Map<String, Object> scoreMap) throws Exception;
 }
