@@ -81,4 +81,17 @@ public class ScoreController {
             return new ResponseEntity<>("성적 삭제 실패", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Operation(summary = "목표 등록", description="목표를 등록합니다.")
+    @PostMapping("/target/regist")
+    public ResponseEntity<?> registTarget(@RequestBody Map<String, Object> requestBody) {
+        try {
+            scoreService.saveScoreTarget(requestBody);
+            return new ResponseEntity<>("목표 등록 성공", HttpStatus.OK);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("목표 등록 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

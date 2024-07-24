@@ -26,4 +26,7 @@ public interface ScoreService {
     /** 단일 성적 삭제 */
     void deleteScore(Long scoreId) throws Exception;
 
+    /** 성적 목표 등록 */
+    void saveScoreTarget(Map<String, Object> targetMap) throws Exception;
+
 }
