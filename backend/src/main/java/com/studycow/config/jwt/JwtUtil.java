@@ -13,6 +13,15 @@ import java.security.Key;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+/**
+ * Jwt 관련 메서드 클래스
+ * <pre>
+ *     Jwt를 관리하는 메서드가 모여있는 클래스
+ * </pre>
+ * @author 채기훈
+ * @since JDK17
+ */
+
 @Slf4j
 @Component
 public class JwtUtil {
@@ -34,6 +43,12 @@ public class JwtUtil {
         return createToken(user, accessTokenExpTime);
     }
 
+    /**
+     * AccessToken 생성
+     *
+     * @param user,accessTokenExpTime 요청한 사용자,accessToken 유효기간
+     * @return String 토큰
+     */
     private String createToken(CustomUserInfoDto user, long accessTokenExpTime){
         Claims claims = Jwts.claims();
         claims.put("userId",user.getUserId());
@@ -51,11 +66,20 @@ public class JwtUtil {
                 .compact();
     }
 
-
+    /**
+     * 현재 요청한 사용자 조회
+     * @param token 요청자 토큰
+     * @return Long 요청자 유저Id
+     */
     public Long getUserId(String token){
         return parseClaims(token).get("userId", Long.class);
     }
 
+    /**
+     * 토큰 유효성 검증
+     * @param token 요청자 토큰
+     * @return boolean 유효하면 true, 아니면 false + 예외
+     */
     public boolean validateToken(String token){
         try{
             Jwts.parser().setSigningKey(key).parseClaimsJws(token);
@@ -73,6 +97,11 @@ public class JwtUtil {
         return false;
     }
 
+    /**
+     * jwt Claims 분석
+     * @param accessToken 토큰
+     * @return Claims 반환
+     */
     public Claims parseClaims(String accessToken){
         try{
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();

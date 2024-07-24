@@ -13,6 +13,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Jwt 인증 필터 클래스
+ * <pre>
+ *     시큐리티의 세션 방식이 아닌, Jwt 방식을 적용하기 위한 필터를 설정합니다
+ * </pre>
+ * @author 채기훈
+ * @since JDK17
+ */
+
 @RequiredArgsConstructor
 public class JwtAuthFilter  extends OncePerRequestFilter {
 
@@ -22,20 +31,20 @@ public class JwtAuthFilter  extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
-        System.out.println("authorizationHeader = " + authorizationHeader);
+
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
             String token = authorizationHeader.substring(7);
-            System.out.println("token = " + token);
+
             if(jwtUtil.validateToken(token)){
                 Long userId = jwtUtil.getUserId(token);
-                System.out.println("userId = " + userId);
+
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(userId.toString());
                 if(userDetails != null){
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    System.out.println("authentication = " + authentication);
+
                 }
 
             }
