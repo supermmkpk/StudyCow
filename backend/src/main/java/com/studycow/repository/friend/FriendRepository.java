@@ -26,7 +26,7 @@ public interface FriendRepository {
     void acceptFriendRequest(int friendRequestId) throws PersistenceException;
 
     /** 친구 요청 전송 */
-    void saveFriendRequest(Map<String, Integer> friendRequestMap) throws PersistenceException;
+    void saveFriendRequest(int fromUserId, int toUserId) throws PersistenceException;
 
     /** 받은 친구 요청 목록 조회 */
     List<FriendRequest> listFriendRequestReceived(int userId) throws PersistenceException;

@@ -25,7 +25,7 @@ public interface FriendService {
     void acceptFriendRequest(int friendRequestId) throws Exception;
 
     /** 친구 요청 저장 */
-    void saveFriendRequest(Map<String, Integer> friendRequestMap) throws Exception;
+    void saveFriendRequest(int fromUserId, int toUserId) throws Exception;
 
     /** 받은 친구 요청 목록 조회 */
     List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception;
