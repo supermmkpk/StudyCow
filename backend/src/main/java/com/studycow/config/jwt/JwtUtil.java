@@ -71,8 +71,10 @@ public class JwtUtil {
      * @param token 요청자 토큰
      * @return Long 요청자 유저Id
      */
-    public Long getUserId(String token){
-        return parseClaims(token).get("userId", Long.class);
+    public int getUserId(String token){
+        Claims claims = parseClaims(token);
+
+        return ((Number)claims.get("userId")).intValue();
     }
 
     /**

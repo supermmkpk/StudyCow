@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * 유저 경험치 도메인 클래스
@@ -27,7 +28,7 @@ public class UserExp {
 
     @Column(name = "GET_DATE")
     @CreationTimestamp
-    private Timestamp getDate;
+    private LocalDateTime getDate;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name= "USER_ID")

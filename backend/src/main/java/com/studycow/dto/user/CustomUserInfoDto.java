@@ -3,6 +3,7 @@ package com.studycow.dto.user;
 import lombok.*;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -17,8 +18,8 @@ public class CustomUserInfoDto {
     private String userThumb;
     private int userGradeCode;
     private int userExp;
-    private Timestamp userJoinDate;
-    private Timestamp userUpdateDate;
+    private LocalDateTime userJoinDate;
+    private LocalDateTime userUpdateDate;
     private String userNickName;
     private Date userBirthday;
 

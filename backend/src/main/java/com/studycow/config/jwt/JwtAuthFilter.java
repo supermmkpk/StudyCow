@@ -18,12 +18,13 @@ import java.io.IOException;
  * <pre>
  *     시큐리티의 세션 방식이 아닌, Jwt 방식을 적용하기 위한 필터를 설정합니다
  * </pre>
+ *
  * @author 채기훈
  * @since JDK17
  */
 
 @RequiredArgsConstructor
-public class JwtAuthFilter  extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailService customUserDetailService;
     private final JwtUtil jwtUtil;
@@ -32,16 +33,15 @@ public class JwtAuthFilter  extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
 
-            if(jwtUtil.validateToken(token)){
-                Long userId = jwtUtil.getUserId(token);
+            if (jwtUtil.validateToken(token)) {
+                int userId = jwtUtil.getUserId(token);
 
-                UserDetails userDetails = customUserDetailService.loadUserByUsername(userId.toString());
-                if(userDetails != null){
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UserDetails userDetails = customUserDetailService.loadUserByUsername(String.valueOf(userId));
+                if (userDetails != null) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
