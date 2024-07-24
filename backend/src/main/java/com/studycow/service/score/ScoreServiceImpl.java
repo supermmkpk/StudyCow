@@ -93,4 +93,15 @@ public class ScoreServiceImpl implements ScoreService{
             }
         }
     }
+
+    /**
+     * 단일 성적 삭제
+     * @param scoreId : 성적 id
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void deleteScore(Long scoreId) throws Exception {
+        scoreRepository.deleteScore(scoreId);
+    }
 }

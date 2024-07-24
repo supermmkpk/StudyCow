@@ -4,9 +4,11 @@ import com.studycow.domain.*;
 import com.studycow.dto.ScoreDetailDto;
 import com.studycow.dto.ScoreDto;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -143,7 +145,7 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      * <pre>
      *      페이지에서 입력한 성적을 등록한다
      * </pre>
-     * @param scoreId : 상위 성적 테이블 id
+     * @param scoreId : 성적 id
      * @param catCode : 오답 문제 유형 코드
      * @param wrongCnt : 오답 유형 개수
      * @throws PersistenceException : JPA 표준 예외
@@ -158,6 +160,38 @@ public class ScoreRepositoryImpl implements ScoreRepository{
             em.persist(wrongProblem);
         }catch(Exception e){
             throw new PersistenceException("성적 상세 등록 중 에러 발생", e);
+        }
+    }
+
+    /** 단일 성적 삭제
+     * <pre>
+     *      선택한 성적을 삭제한다. 등록된 오답 유형 또한 삭제된다.
+     * </pre>
+     * @param scoreId : 성적 id
+     * @throws PersistenceException : JPA 표준 예외
+     */
+    @Override
+    public void deleteScore(Long scoreId) throws PersistenceException {
+        try{
+            UserSubjectScore us = em.find(UserSubjectScore.class, scoreId);
+
+            if(us != null) {
+                StringBuilder jpql = new StringBuilder();
+                jpql.append("DELETE FROM WrongProblem wp \n");
+                jpql.append("WHERE wp.userSubjectScore.id = :scoreId \n");
+
+                em.createQuery(jpql.toString())
+                        .setParameter("scoreId", scoreId)
+                        .executeUpdate();
+
+                em.remove(us);
+            }else{
+                throw new EntityNotFoundException("해당 성적을 찾을 수 없습니다.");
+            }
+        }catch(EntityNotFoundException e) {
+            throw e;
+        }catch(Exception e){
+            throw new PersistenceException("성적 삭제 중 에러 발생", e);
         }
     }
 
