@@ -8,6 +8,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Custom User Detail 클래스
+ * <pre>
+ *     SpringSecurity
+ * </pre>
+ */
+
 @Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {

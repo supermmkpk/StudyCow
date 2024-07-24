@@ -27,6 +27,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 
+/**
+ * Spring Security 설정
+ * <pre>
+ *     Session 인증 비활성화 + Jwt 필터 체인 추가
+ * </pre>
+ * @author 채기훈
+ * @since JDK17
+ */
 
 @Configuration
 @EnableWebSecurity // HTTP 요청에 대한 인증 및 인가 구성
@@ -37,7 +45,7 @@ public class SecurityConfig {
     private static final String[] AUTH_WHITELIST = {
             "/api/v1/user/**", "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
             "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html", "/api/v1/auth/login",
-            "/login",
+            "/login","/swagger-ui.html#/**"
     };
 
     private final CustomUserDetailService userDetailService;
