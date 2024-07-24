@@ -1,20 +1,23 @@
 package com.studycow.dto.user;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.security.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomUserInfoDto {
+public class UserInfoDto {
+
     private int userId;
     private String userName;
     private String userEmail;
-    private String userPassword;
     private int userPublic;
     private String userThumb;
     private int userGradeCode;
@@ -23,5 +26,4 @@ public class CustomUserInfoDto {
     private LocalDateTime userUpdateDate;
     private String userNickName;
     private LocalDate userBirthday;
-
 }
