@@ -30,7 +30,11 @@ public interface ScoreRepository {
     /** 유저 성적 입력 */
     Long saveScore(Map<String, Object> scoreMap) throws PersistenceException;
 
+    /** 성적 내 상세 오답 내역 입력 */
     void saveScoreDetails(Long scoreId, int catCode, int wrongCnt) throws PersistenceException;
+
+    /** 단일 성적 삭제 */
+    void deleteScore(Long scoreId) throws PersistenceException;
 
     void saveScoreTarget(Map<String, Object> targetMap) throws PersistenceException;
 }
