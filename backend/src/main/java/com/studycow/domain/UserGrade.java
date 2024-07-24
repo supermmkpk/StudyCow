@@ -25,6 +25,7 @@ public class UserGrade {
     @Id
     @Column(name = "GRADE_CODE",nullable = false)
     @NotNull
+    @ColumnDefault("1")
     private int gradeCode;
 
     @Column(name = "GRADE_NAME", length = 10, nullable = false)

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * 토큰 도메인 클래스
@@ -31,9 +32,9 @@ public class Token {
     private String refreshToken;
 
     @Column(name = "END_DATE")
-    private Timestamp endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "IN_DATE")
-    private Timestamp inDate;
+    private LocalDateTime inDate;
 
 }

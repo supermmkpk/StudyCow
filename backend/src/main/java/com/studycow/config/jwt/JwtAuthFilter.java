@@ -23,7 +23,7 @@ import java.io.IOException;
  */
 
 @RequiredArgsConstructor
-public class JwtAuthFilter  extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailService customUserDetailService;
     private final JwtUtil jwtUtil;
@@ -32,18 +32,18 @@ public class JwtAuthFilter  extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
 
-            if(jwtUtil.validateToken(token)){
+            if (jwtUtil.validateToken(token)) {
                 int userId = jwtUtil.getUserId(token);
 
                 UserDetails userDetails = customUserDetailService.loadUserByUsername(String.valueOf(userId));
-                if(userDetails != null){
-                    UsernamePasswordAuthenticationToken authentication =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                if (userDetails != null) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+
                 }
 
             }

@@ -2,17 +2,19 @@ package com.studycow.service.user;
 
 import com.studycow.config.jwt.JwtUtil;
 import com.studycow.domain.User;
+import com.studycow.domain.UserGrade;
 import com.studycow.dto.user.CustomUserInfoDto;
 import com.studycow.dto.user.LoginRequestDto;
+import com.studycow.dto.user.RegisterRequestDto;
 import com.studycow.repository.user.UserRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final UserGradeRepository userGradeRepository;
 
     @Override
     @Transactional
@@ -39,4 +42,26 @@ public class UserServiceImpl implements UserService {
         String accessToken = jwtUtil.createAccessToken(info);
         return accessToken;
     }
+
+    @Transactional
+    public void register(RegisterRequestDto signUpRequestDto){
+        User user = modelMapper.map(signUpRequestDto, User.class);
+
+
+
+        Optional<UserGrade> optionalUserGrade = userGradeRepository.findById(1);
+
+        if(optionalUserGrade.isPresent()){
+            user.setUserGrade(optionalUserGrade.get());
+        }else throw new RuntimeException("존재하지 않는 등급입니다.");
+        String password = signUpRequestDto.getUserPassword();
+
+        user.setUserPassword(passwordEncoder.encode(password));
+
+        userRepository.save(user);
+
+    }
+
+
+
 }
