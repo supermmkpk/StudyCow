@@ -5,6 +5,7 @@ import com.studycow.domain.User;
 import com.studycow.domain.UserGrade;
 import com.studycow.dto.user.*;
 import com.studycow.repository.user.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -96,5 +97,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
+    @Transactional
+    @Override
+    public UserInfoDto getUserInfoByNickName(String nickName){
+        return userRepository.findByUserNickname(nickName)
+                .map(user -> modelMapper.map(user,UserInfoDto.class))
+                .orElseThrow(()->new EntityNotFoundException("해당하는 유저가 없습니다"));
+    }
 }

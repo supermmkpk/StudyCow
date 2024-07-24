@@ -13,4 +13,5 @@ public interface UserService {
     void register(RegisterRequestDto signUpRequestDto);
     UserInfoDto getUserInfo(Long userId);
     void updateUserInfo(UserUpdateDto userUpdateDto);
+    UserInfoDto getUserInfoByNickName(String nickName);
 }

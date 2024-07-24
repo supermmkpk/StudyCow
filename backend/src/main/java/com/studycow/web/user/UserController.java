@@ -48,4 +48,12 @@ public class UserController {
         return new ResponseEntity<>("업데이트 성공",HttpStatus.OK);
 
     }
+
+    @Operation(summary = "회원 별명 검색", description = "작성한 닉네임을 가진 유저를 검색합니다")
+    @GetMapping("/nickname")
+    public ResponseEntity<?> searchNickname(@RequestParam String nickname) {
+        UserInfoDto userInfoDto = userService.getUserInfoByNickName(nickname);
+
+        return new ResponseEntity<>(userInfoDto,HttpStatus.OK);
+    }
 }
