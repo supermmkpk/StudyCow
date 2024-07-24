@@ -112,13 +112,14 @@ public class FriendRepositoryImpl implements FriendRepository {
     /**
      * 친구 요청 저장
      *
-     * @param friendRequestMap
+     * @param fromUserId 보내는 회원 번호
+     * @param toUserId 받는 회원 번호
      * @throws PersistenceException
      */
     @Override
-    public void saveFriendRequest(Map<String, Integer> friendRequestMap) throws PersistenceException {
-        User fromUser = em.find(User.class, friendRequestMap.get("fromUserId"));
-        User toUser = em.find(User.class, friendRequestMap.get("toUserId"));
+    public void saveFriendRequest(int fromUserId, int toUserId) throws PersistenceException {
+        User fromUser = em.find(User.class, fromUserId);
+        User toUser = em.find(User.class,toUserId);
 
         FriendRequest friendRequest = new FriendRequest(fromUser, toUser);
         em.persist(friendRequest);
