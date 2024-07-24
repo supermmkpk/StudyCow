@@ -39,7 +39,7 @@ public class UserSubjectScore {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_code", nullable = false)
     @NotNull
-    private SubjectCode subCode;
+    private SubjectCode subjectCode;
 
     @Column(name = "test_date", nullable = false)
     @NotNull
