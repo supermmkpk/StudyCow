@@ -3,6 +3,7 @@ package com.studycow.web;
 import com.studycow.config.jwt.JwtUtil;
 import com.studycow.dto.FriendDto;
 import com.studycow.dto.FriendRequestDto;
+import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.service.friend.FriendService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,19 +51,26 @@ public class FriendController {
 
     @Operation(
             summary = "친구 목록 조회",
-            description = "나와 맺은 친구 목록을 조회합니다. <br> 친구의 id번호, 닉네임, 이메일, 프로필사진, 친구시작일시를 반환합니다.")
+            description = "나와 맺은 친구 목록을 조회합니다. <br> " +
+                    "친구의 id번호, 닉네임, 이메일, 프로필사진, 친구시작일시를 반환합니다. <br>" +
+                    "닉네임 검색어, 정렬 기준, 정렬 방향을 설정할 수 있고, null일 경우 전체 조회합니다.")
     @GetMapping("/list")
-    public ResponseEntity<?> listFriends() {
+    public ResponseEntity<?> listFriends(
+            @RequestParam(value="searchText", required = false) String searchText,
+            @RequestParam(value = "sortKey", required = false) String sortKey,
+            @RequestParam(value = "sortDirection", required = false) String sortDirection
+    ) {
         try {
             //토큰에서 사용자 정보 가져오기
             CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder
                     .getContext()
                     .getAuthentication()
                     .getPrincipal();
-
             int userId = customUserDetails.getUser().getUserId();
 
-            List<FriendDto> friendList = friendService.listFriends(userId);
+            ListOptionDto listOptionDto = new ListOptionDto(searchText, sortKey, sortDirection);
+
+            List<FriendDto> friendList = friendService.listFriends(userId, listOptionDto);
             return ResponseEntity.ok(friendList);
         } catch (Exception e) {
             e.printStackTrace();
