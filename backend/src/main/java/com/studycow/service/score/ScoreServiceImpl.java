@@ -1,5 +1,6 @@
 package com.studycow.service.score;
 
+import com.studycow.dto.ScoreDetailDto;
 import com.studycow.dto.ScoreDto;
 import com.studycow.repository.score.ScoreRepository;
 import jakarta.persistence.PersistenceException;
@@ -26,14 +27,42 @@ public class ScoreServiceImpl implements ScoreService{
     private final ScoreRepository scoreRepository;
 
     /**
-     * 과목별 성적 리스트 조회
+     * 상세 포함 과목별 성적 리스트 조회
      * @param userId : 유저 id
      * @param subCode : 과목 코드
      * @throws Exception
      */
     @Override
     public List<ScoreDto> listScores(int userId, int subCode) throws Exception {
-        return scoreRepository.listScores(userId, subCode);
+        // 과목별 성적 리스트
+        List<ScoreDto> scoreDtoList = scoreRepository.listScores(userId, subCode);
+
+        // 오답 유형 리스트 조회
+        for(ScoreDto scores : scoreDtoList){
+            Long scoreId = scores.getScoreId();
+
+            List<ScoreDetailDto> scoreDetailDtoList = scoreRepository.listScoreDetails(scoreId);
+            if(scoreDetailDtoList != null && !scoreDetailDtoList.isEmpty())
+                scores.setScoreDetails(scoreDetailDtoList);
+        }
+
+        return scoreDtoList;
+    }
+
+    /**
+     * 단일 성적 상세 조회
+     * @param scoreId : 성적 ID
+     * @throws Exception
+     */
+    @Override
+    public ScoreDto scoreDetail(Long scoreId) throws Exception {
+        ScoreDto scoreDto = scoreRepository.scoreDetail(scoreId);
+
+        List<ScoreDetailDto> scoreDetailDtoList = scoreRepository.listScoreDetails(scoreId);
+        if(scoreDetailDtoList != null && !scoreDetailDtoList.isEmpty())
+            scoreDto.setScoreDetails(scoreDetailDtoList);
+
+        return scoreDto;
     }
 
     /**

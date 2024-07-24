@@ -10,8 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ScoreDetailDto {
-    private int wrongDetailId;
-    private int scoreId;
+    private Long wrongDetailId;
+    private Long scoreId;
     private int catCode;
     private String catName;
     private int wrongCnt;

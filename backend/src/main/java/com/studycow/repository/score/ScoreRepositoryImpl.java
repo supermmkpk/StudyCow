@@ -1,6 +1,7 @@
 package com.studycow.repository.score;
 
 import com.studycow.domain.*;
+import com.studycow.dto.ScoreDetailDto;
 import com.studycow.dto.ScoreDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -47,12 +48,64 @@ public class ScoreRepositoryImpl implements ScoreRepository{
         jpql.append("us.testDate            as testDate, \n");
         jpql.append("us.updateDate          as scoreUpdateDate) \n");
         jpql.append("FROM UserSubjectScore us\n");
-        jpql.append("JOIN us.subjectCode \n");
         jpql.append("WHERE us.user.id = :userId \n");
         jpql.append("AND us.subjectCode.code = :subCode \n");
 
         return em.createQuery(jpql.toString(), ScoreDto.class)
                 .setParameter("userId", userId).setParameter("subCode", subCode)
+                .getResultList();
+    }
+
+    /** 단일 성적 조회
+     * <pre>
+     *      List로부터 받아온 ID를 기반으로
+     *      해당 성적을 조회한다. (수정 페이지에 사용)
+     * </pre>
+     * @param scoreId : 성적 ID
+     * @return : ScoreDto
+     * @throws PersistenceException : JPA 표준 예외
+     */
+
+    @Override
+    public ScoreDto scoreDetail(Long scoreId) throws PersistenceException {
+        UserSubjectScore us = em.find(UserSubjectScore.class, scoreId);
+
+        return new ScoreDto(
+                us.getId(),
+                us.getSubjectCode().getCode(),
+                us.getSubjectCode().getName(),
+                us.getTestScore(),
+                us.getTestGrade(),
+                us.getTestDate(),
+                us.getUpdateDate(),
+                null
+        );
+
+        //return scoreDto;
+    }
+
+    /** 등록한 성적 상세 조회
+     * <pre>
+     *      성적 ID를 기반으로 성적의 상세 설명을 조회한다
+     * </pre>
+     * @param scoreId : 성적 ID
+     * @return : ScoreDetailDto 리스트
+     * @throws PersistenceException : JPA 표준 예외
+     */
+    @Override
+    public List<ScoreDetailDto> listScoreDetails(Long scoreId) throws PersistenceException {
+        StringBuilder jpql = new StringBuilder();
+        jpql.append("SELECT new com.studycow.dto.ScoreDetailDto( \n");
+        jpql.append("wp.id                      as wrongDetailId, \n");
+        jpql.append("wp.userSubjectScore.id     as scoreId, \n");
+        jpql.append("wp.problemCategory.id      as catCode, \n");
+        jpql.append("wp.problemCategory.name    as catName, \n");
+        jpql.append("wp.wrongCount              as wrongCnt) \n");
+        jpql.append("FROM WrongProblem wp\n");
+        jpql.append("WHERE wp.userSubjectScore.id = :scoreId \n");
+
+        return em.createQuery(jpql.toString(), ScoreDetailDto.class)
+                .setParameter("scoreId", scoreId)
                 .getResultList();
     }
 
@@ -107,4 +160,22 @@ public class ScoreRepositoryImpl implements ScoreRepository{
             throw new PersistenceException("성적 상세 등록 중 에러 발생", e);
         }
     }
+
+    /** 성적 목표 등록
+     * <pre>
+     *      페이지에서 입력한 목표 성적을 입력한다
+     * </pre>
+     * @param targetMap : 목표 성적 정보
+     * @throws PersistenceException : JPA 표준 예외
+     */
+    @Override
+    public void saveScoreTarget(Map<String, Object> targetMap) throws PersistenceException {
+        try{
+            return;
+        }catch(Exception e){
+            throw new PersistenceException("목표 성적 등록 중 에러 발생", e);
+        }
+    }
+
+
 }
