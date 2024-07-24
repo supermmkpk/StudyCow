@@ -3,6 +3,7 @@ package com.studycow.service.friend;
 import com.studycow.domain.FriendRequest;
 import com.studycow.dto.FriendDto;
 import com.studycow.dto.FriendRequestDto;
+import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.repository.friend.FriendRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,8 @@ public class FriendServiceImpl implements FriendService {
      * @throws Exception
      */
     @Override
-    public List<FriendDto> listFriends(int userId) throws Exception {
-        return friendRepository.listFriends(userId);
+    public List<FriendDto> listFriends(int userId, ListOptionDto listOptionDto) throws Exception {
+        return friendRepository.listFriends(userId, listOptionDto);
     }
 
     /**
