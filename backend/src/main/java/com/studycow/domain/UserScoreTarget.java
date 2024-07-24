@@ -18,7 +18,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "t_user_target")
+@Table(name = "t_user_target", uniqueConstraints =
+@UniqueConstraint(name = "uni_user_sub_code", columnNames = {"user_id", "sub_code"}))
 public class UserScoreTarget {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

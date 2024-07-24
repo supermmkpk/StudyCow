@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -32,12 +31,12 @@ public class WrongProblem {
     @ManyToOne
     @JoinColumn(name = "score_id", nullable = false)
     @NotNull
-    private UserSubjectScore scoreId;
+    private UserSubjectScore userSubjectScore;
 
     @ManyToOne
     @JoinColumn(name = "cat_code", nullable = false)
     @NotNull
-    private ProblemCategory catCode;
+    private ProblemCategory problemCategory;
 
     @Column(name = "wrong_cnt", nullable = false)
     @NotNull

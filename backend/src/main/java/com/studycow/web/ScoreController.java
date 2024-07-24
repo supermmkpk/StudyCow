@@ -43,10 +43,22 @@ public class ScoreController {
         }
     }
 
+    @Operation(summary = "성적 단일 조회", description = "선택한 성적의 상세 정보를 조회합니다.")
+    @GetMapping("/detail")
+    public ResponseEntity<?> scoreDetail(@RequestParam("scoreId") Long scoreId) {
+        try {
+            ScoreDto scoreDto = scoreService.scoreDetail(scoreId);
+            return ResponseEntity.ok(scoreDto);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("성적 조회 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @Operation(summary = "성적 등록", description="성적을 등록합니다.<br>필수 : userId, subCode, testDate, testScore" +
             "<br>선택 : testGrade, scoreDetail")
     @PostMapping("/regist")
-    public ResponseEntity<?> sendFriendRequest(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<?> registScore(@RequestBody Map<String, Object> requestBody) {
         try {
             scoreService.saveScore(requestBody);
             return new ResponseEntity<>("성적 등록 성공", HttpStatus.OK);
@@ -54,6 +66,32 @@ public class ScoreController {
         } catch(Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("성적 등록 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "성적 삭제", description="성적을 삭제합니다.")
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteScore(@RequestParam("scoreId") Long scoreId) {
+        try {
+            scoreService.deleteScore(scoreId);
+            return new ResponseEntity<>("성적 삭제 성공", HttpStatus.OK);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("성적 삭제 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "목표 등록", description="목표를 등록합니다.")
+    @PostMapping("/target/regist")
+    public ResponseEntity<?> registTarget(@RequestBody Map<String, Object> requestBody) {
+        try {
+            scoreService.saveScoreTarget(requestBody);
+            return new ResponseEntity<>("목표 등록 성공", HttpStatus.OK);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("목표 등록 실패", HttpStatus.BAD_REQUEST);
         }
     }
 }

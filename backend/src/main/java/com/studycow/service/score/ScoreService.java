@@ -17,6 +17,16 @@ public interface ScoreService {
     /** 유저 과목별 성적 리스트 조회 */
     List<ScoreDto> listScores(int userId, int subCode) throws Exception;
 
+    /** 단일 성적 조회 */
+    ScoreDto scoreDetail(Long scoreId) throws Exception;
+
     /** 유저 성적 입력 */
     void saveScore(Map<String, Object> scoreMap) throws Exception;
+
+    /** 단일 성적 삭제 */
+    void deleteScore(Long scoreId) throws Exception;
+
+    /** 성적 목표 등록 */
+    void saveScoreTarget(Map<String, Object> targetMap) throws Exception;
+
 }

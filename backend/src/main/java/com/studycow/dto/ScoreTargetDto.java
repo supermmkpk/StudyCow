@@ -1,5 +1,6 @@
 package com.studycow.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ScoreDetailDto {
-    private Long wrongDetailId;
-    private Long scoreId;
-    private int catCode;
-    private String catName;
-    private int wrongCnt;
+public class ScoreTargetDto {
+    private Long id;
+    private int userId;
+    private int subCode;
+    private int targetScore;
+    private int targetGrade;
 }

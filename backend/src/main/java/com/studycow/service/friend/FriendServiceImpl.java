@@ -66,13 +66,14 @@ public class FriendServiceImpl implements FriendService {
     /**
      * 친구 요청 저장
      *
-     * @param friendRequestMap fromUserId, toUserId 맵
+     * @param fromUserId 보내는 회원 번호
+     * @param toUserId 받는 회원 번호
      * @throws Exception
      */
     @Override
     @Transactional
-    public void saveFriendRequest(Map<String, Integer> friendRequestMap) throws Exception {
-        friendRepository.saveFriendRequest(friendRequestMap);
+    public void saveFriendRequest(int fromUserId, int toUserId) throws Exception {
+        friendRepository.saveFriendRequest(fromUserId, toUserId);
     }
 
     /**

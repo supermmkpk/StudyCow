@@ -18,7 +18,6 @@ import java.io.IOException;
  * <pre>
  *     시큐리티의 세션 방식이 아닌, Jwt 방식을 적용하기 위한 필터를 설정합니다
  * </pre>
- *
  * @author 채기훈
  * @since JDK17
  */
