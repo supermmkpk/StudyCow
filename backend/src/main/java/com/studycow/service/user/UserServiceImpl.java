@@ -6,6 +6,7 @@ import com.studycow.domain.UserGrade;
 import com.studycow.dto.user.CustomUserInfoDto;
 import com.studycow.dto.user.LoginRequestDto;
 import com.studycow.dto.user.RegisterRequestDto;
+import com.studycow.dto.user.UserInfoDto;
 import com.studycow.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -45,21 +46,32 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public void register(RegisterRequestDto signUpRequestDto){
-        User user = modelMapper.map(signUpRequestDto, User.class);
-
-
 
         Optional<UserGrade> optionalUserGrade = userGradeRepository.findById(1);
 
         if(optionalUserGrade.isPresent()){
-            user.setUserGrade(optionalUserGrade.get());
+            signUpRequestDto.setUserGrade(optionalUserGrade.get());
         }else throw new RuntimeException("존재하지 않는 등급입니다.");
+
         String password = signUpRequestDto.getUserPassword();
 
-        user.setUserPassword(passwordEncoder.encode(password));
+        signUpRequestDto.setUserPassword(passwordEncoder.encode(password));
 
+        User user = modelMapper.map(signUpRequestDto, User.class);
         userRepository.save(user);
 
+    }
+
+    @Transactional
+    @Override
+    public UserInfoDto getUserInfo(Long userId){
+        Optional<User> user = userRepository.findById(userId);
+
+        if(user.isPresent()){
+            return modelMapper.map(user.get(), UserInfoDto.class);
+        }
+
+        return null;
     }
 
 

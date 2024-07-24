@@ -30,7 +30,7 @@ public class RegisterRequestDto {
 
     private String userThumb;
 
-    private UserGrade userGradeCode;
+    private UserGrade userGrade;
 
     @NotNull
     private int userExp = 0;
