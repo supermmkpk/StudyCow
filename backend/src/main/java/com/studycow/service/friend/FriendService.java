@@ -2,6 +2,7 @@ package com.studycow.service.friend;
 
 import com.studycow.dto.FriendDto;
 import com.studycow.dto.FriendRequestDto;
+import com.studycow.dto.listoption.ListOptionDto;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Map;
  */
 public interface FriendService {
     /** 친구 맺은 목록 조회 */
-    List<FriendDto> listFriends(int userId) throws Exception;
+    List<FriendDto> listFriends(int userId, ListOptionDto listOptionDto) throws Exception;
 
     /** 보낸 친구 요청 삭제 */
     void deleteFriendRequest(int friendRequestId) throws Exception;

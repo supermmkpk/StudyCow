@@ -1,18 +1,29 @@
 package com.studycow.repository.friend;
 
-import com.studycow.domain.Friend;
-import com.studycow.domain.FriendRequest;
-import com.studycow.domain.User;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.studycow.domain.*;
 import com.studycow.dto.FriendDto;
+import com.studycow.dto.listoption.ListOptionDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.studycow.domain.QFriend.friend;
+import static com.studycow.domain.QFriendRequest.friendRequest;
+import static com.studycow.domain.QUser.user;
 
 /**
  * <pre>
@@ -23,10 +34,13 @@ import java.util.Map;
  * @since JDK17
  */
 @Repository
+@RequiredArgsConstructor
 public class FriendRepositoryImpl implements FriendRepository {
 
     @PersistenceContext
-    EntityManager em;
+    private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
+
 
     /**
      * 친구 맺은 목록 조회
@@ -40,38 +54,43 @@ public class FriendRepositoryImpl implements FriendRepository {
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public List<FriendDto> listFriends(int userId) throws PersistenceException {
-        //JPQL 쿼리 생성
-        StringBuilder jpql = new StringBuilder();
-        jpql.append("SELECT f.user1, f.friendDate \n");
-        jpql.append("FROM Friend f \n");
-        jpql.append("WHERE f.user2.id = :userId \n");
-        jpql.append("UNION \n");
-        jpql.append("SELECT f.user2, f.friendDate \n");
-        jpql.append("FROM Friend f \n");
-        jpql.append("WHERE f.user1.id = :userId");
+    public List<FriendDto> listFriends(int userId, ListOptionDto option) throws PersistenceException {
+        //user2와 같으면 user1 반환
+        List<FriendDto> user1List = queryFactory
+                .select(Projections.constructor(FriendDto.class,
+                        user.id,
+                        user.userNickname,
+                        user.userEmail,
+                        user.userThumb,
+                        friend.friendDate)
+                )
+                .from(friend)
+                .join(friend.user1, user)
+                .where(friend.user2.id.eq(userId),
+                        searchTextContains(option.getSearchText())
+                )
+                .fetch();
 
-        //쿼리 실행
-        List<Object[]> resultList = em.createQuery(jpql.toString(), Object[].class)
-                .setParameter("userId", userId)
-                .getResultList();
+        //user1과 같으면 user2 반환
+        List<FriendDto> user2List = queryFactory
+                .select(Projections.constructor(FriendDto.class,
+                        user.id,
+                        user.userNickname,
+                        user.userEmail,
+                        user.userThumb,
+                        friend.friendDate)
+                )
+                .from(friend)
+                .join(friend.user2, user)
+                .where(friend.user1.id.eq(userId),
+                        searchTextContains(option.getSearchText())
+                )
+                .fetch();
 
-        //FriendDto 리스트로 반환
-        List<FriendDto> friendDtoList = new ArrayList<>();
-        for (Object[] o : resultList) {
-            User user = (User) o[0];
-            LocalDateTime friendDate = (LocalDateTime) o[1];
-            FriendDto friendDto = new FriendDto(
-                    user.getId(),
-                    user.getUserNickname(),
-                    user.getUserEmail(),
-                    user.getUserThumb(),
-                    friendDate
-            );
-            friendDtoList.add(friendDto);
-        }
+        //합치기
+        user1List.addAll(user2List);
 
-        return friendDtoList;
+        return user1List;
     }
 
     /**
@@ -85,9 +104,10 @@ public class FriendRepositoryImpl implements FriendRepository {
      */
     @Override
     public void deleteFriendRequest(int friendRequestId) throws PersistenceException {
-        em.createQuery("DELETE FROM FriendRequest fr WHERE id = :friendRequestId ")
-                .setParameter("friendRequestId", friendRequestId)
-                .executeUpdate();
+        queryFactory
+                .delete(friendRequest)
+                .where(friendRequest.id.eq(friendRequestId))
+                .execute();
     }
 
     /**
@@ -133,9 +153,11 @@ public class FriendRepositoryImpl implements FriendRepository {
      */
     @Override
     public List<FriendRequest> listFriendRequestReceived(int userId) throws PersistenceException {
-        return em.createQuery("SELECT fr FROM FriendRequest fr WHERE fr.toUser.id = :userId ", FriendRequest.class)
-                .setParameter("userId", userId)
-                .getResultList();
+        return queryFactory
+                .selectFrom(friendRequest)
+                .join(friendRequest.toUser, user)
+                .where(user.id.eq(userId))
+                .fetch();
     }
 
     /**
@@ -146,9 +168,11 @@ public class FriendRepositoryImpl implements FriendRepository {
      */
     @Override
     public List<FriendRequest> listFriendRequestSent(int userId) throws PersistenceException {
-        return em.createQuery("SELECT fr FROM FriendRequest fr WHERE fr.fromUser.id = :userId ", FriendRequest.class)
-                .setParameter("userId", userId)
-                .getResultList();
+        return queryFactory
+                .selectFrom(friendRequest)
+                .join(friendRequest.fromUser, user)
+                .where(user.id.eq(userId))
+                .fetch();
     }
 
     /**
@@ -161,16 +185,17 @@ public class FriendRepositoryImpl implements FriendRepository {
     public void deleteFriend(int friendUserId, int userId) throws PersistenceException {
         StringBuilder jpql = new StringBuilder();
 
-        //JPQL 쿼리 생성
-        jpql.append("DELETE FROM Friend f \n");
-        jpql.append("WHERE (f.user1.id = :friendUserId OR f.user1.id = :userId) \n");
-        jpql.append("AND (f.user2.id = :friendUserId OR f.user2.id = :userId)");
+        queryFactory
+                .delete(friend)
+                .where(friend.user1.id.eq(friendUserId).or(friend.user1.id.eq(userId)),
+                        friend.user1.id.eq(friendUserId).or(friend.user1.id.eq(userId))
+                )
+                .execute();
+    }
 
 
-        em.createQuery(jpql.toString())
-                .setParameter("friendUserId", friendUserId)
-                .setParameter("userId", userId)
-                .executeUpdate();
+    private BooleanExpression searchTextContains(String searchText) {
+        return searchText != null ? user.userNickname.contains(searchText) : null;
     }
 
 }
