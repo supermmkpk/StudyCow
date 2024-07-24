@@ -1,0 +1,14 @@
+stages:
+  - review
+
+review-code:
+  stage: review
+  image: python:3.8
+  script:
+    - pip install openai
+    - python review_script.py
+  only:
+    - merge_requests
+    - pushes
+  variables:
+    OPENAI_API_KEY: sk-None-3x6P3V1R3lJgKsmugHtOT3BlbkFJoEEaBVRt35qnzreqYisx
