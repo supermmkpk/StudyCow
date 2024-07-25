@@ -1,9 +1,11 @@
 package com.studycow.repository.score;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.studycow.domain.*;
 import com.studycow.dto.ScoreDetailDto;
 import com.studycow.dto.ScoreDto;
+import com.studycow.dto.ScoreTargetDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
@@ -16,6 +18,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static com.studycow.domain.QFriendRequest.friendRequest;
+import static com.studycow.domain.QSubjectCode.subjectCode;
+import static com.studycow.domain.QUser.user;
+import static com.studycow.domain.QUserScoreTarget.userScoreTarget;
 import static com.studycow.domain.QUserSubjectScore.userSubjectScore;
 import static com.studycow.domain.QWrongProblem.wrongProblem;
 
@@ -270,6 +276,35 @@ public class ScoreRepositoryImpl implements ScoreRepository{
         }catch(Exception e){
             throw new PersistenceException("목표 등록 중 에러 발생", e);
         }
+    }
+
+    /** 성적 목표 리스트 조회
+     * <pre>
+     *      등록한 성적 목표의 목록을 조회한다
+     * </pre>
+     * @param userId : 유저 ID
+     * @throws PersistenceException : JPA 표준 예외
+     */
+    @Override
+    public List<ScoreTargetDto> targetList(int userId) throws PersistenceException {
+        return queryFactory
+                .select(Projections.constructor(ScoreTargetDto.class,
+                        userScoreTarget.id,
+                        userScoreTarget.subjectCode.code,
+                        userScoreTarget.subjectCode.name,
+                        userScoreTarget.targetScore,
+                        userScoreTarget.targetGrade))
+                .from(userScoreTarget)
+                .where(userScoreTarget.user.id.eq(userId))
+                .fetch();
+    }
+
+    @Override
+    public void deleteScoreTarget(Long targetId) throws PersistenceException {
+        queryFactory
+                .delete(userScoreTarget)
+                .where(userScoreTarget.id.eq(targetId))
+                .execute();
     }
 
 
