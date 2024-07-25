@@ -50,7 +50,7 @@ public class UserSubjectScore {
     private int testScore;
 
     @Column(name = "test_grade")
-    private int testGrade;
+    private Integer testGrade;
 
     @Column(name = "score_update_date", nullable = false)
     @NotNull

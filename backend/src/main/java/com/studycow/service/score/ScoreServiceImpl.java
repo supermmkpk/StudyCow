@@ -95,6 +95,34 @@ public class ScoreServiceImpl implements ScoreService{
     }
 
     /**
+     * 상세 포함 성적 수정
+     * @param scoreMap : 성적 정보(상세 포함)
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void modifyScore(Map<String, Object> scoreMap) throws Exception {
+        Long scoreId = Long.parseLong((String) scoreMap.get("scoreId"));
+        scoreRepository.modifyScore(scoreMap);
+
+        Object scoreDetail = scoreMap.get("scoreDetail");
+
+        //scoreDetail 데이터가 있고 List 형식일 경우
+        if(scoreDetail instanceof List<?>) {
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> scoreDetailList =
+                    (List<Map<String, Object>>) scoreMap.get("scoreDetail");
+
+            //반복해서 상세 성적을 등록
+            for (Map<String, Object> detail : scoreDetailList) {
+                int catCode = (Integer) detail.get("catCode");
+                int wrongCnt = (Integer) detail.get("wrongCnt");
+                scoreRepository.saveScoreDetails(scoreId, catCode, wrongCnt);
+            }
+        }
+    }
+
+    /**
      * 단일 성적 삭제
      * @param scoreId : 성적 id
      * @throws Exception

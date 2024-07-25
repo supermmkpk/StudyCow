@@ -36,5 +36,8 @@ public interface ScoreRepository {
     /** 단일 성적 삭제 */
     void deleteScore(Long scoreId) throws PersistenceException;
 
+    /** 단일 성적 수정 */
+    void modifyScore(Map<String, Object> scoreMap) throws PersistenceException;
+
     void saveScoreTarget(Map<String, Object> targetMap) throws PersistenceException;
 }
