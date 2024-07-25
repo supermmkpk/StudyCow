@@ -16,4 +16,5 @@ public class ScoreTargetDto {
     private String subName;
     private int targetScore;
     private int targetGrade;
+    private int subMaxScore;
 }

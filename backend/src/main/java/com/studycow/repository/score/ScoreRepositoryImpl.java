@@ -293,19 +293,65 @@ public class ScoreRepositoryImpl implements ScoreRepository{
                         userScoreTarget.subjectCode.code,
                         userScoreTarget.subjectCode.name,
                         userScoreTarget.targetScore,
-                        userScoreTarget.targetGrade))
+                        userScoreTarget.targetGrade,
+                        userScoreTarget.subjectCode.maxScore))
                 .from(userScoreTarget)
                 .where(userScoreTarget.user.id.eq(userId))
+                .orderBy(userScoreTarget.subjectCode.code.asc())
                 .fetch();
     }
 
+    /** 성적 목표 삭제
+     * <pre>
+     *      등록된 성적 목표를 삭제한다
+     * </pre>
+     * @param targetId : 성적 목표 ID
+     * @throws PersistenceException : JPA 표준 예외
+     */
     @Override
     public void deleteScoreTarget(Long targetId) throws PersistenceException {
-        queryFactory
-                .delete(userScoreTarget)
-                .where(userScoreTarget.id.eq(targetId))
-                .execute();
+        try{
+            queryFactory
+                    .delete(userScoreTarget)
+                    .where(userScoreTarget.id.eq(targetId))
+                    .execute();
+        }catch(Exception e){
+            throw new PersistenceException("목표 삭제 중 에러 발생", e);
+        }
     }
 
+    /** 성적 목표 수정
+     * <pre>
+     *      등록된 성적 목표를 수정한다
+     * </pre>
+     * @param targetMap : 성적 목표 정보
+     * @throws PersistenceException : JPA 표준 예외
+     */
+    @Override
+    public void modifyScoreTarget(Map<String, Object> targetMap) throws PersistenceException {
+        try {
+            UserScoreTarget ut = em.find(UserScoreTarget.class,
+                    Long.parseLong((String)targetMap.get("targetId")));
 
+            if(ut != null) {
+                SubjectCode subjectCode = em.find(SubjectCode.class, (int) targetMap.get("subCode"));
+                Integer targetScore = (Integer) targetMap.get("targetScore");
+                Integer targetGrade = (Integer) targetMap.get("targetGrade");
+
+                queryFactory
+                        .update(userScoreTarget)
+                        .set(userScoreTarget.subjectCode.code, subjectCode.getCode())
+                        .set(userScoreTarget.targetScore, targetScore)
+                        .set(userScoreTarget.targetGrade, targetGrade)
+                        .where(userScoreTarget.id.eq(ut.getId()))
+                        .execute();
+            }else{
+                throw new EntityNotFoundException("해당 목표를 찾을 수 없습니다.");
+            }
+        }catch(EntityNotFoundException e) {
+            throw e;
+        }catch(Exception e) {
+            throw new PersistenceException("목표 삭제 중 에러 발생", e);
+        }
+    }
 }

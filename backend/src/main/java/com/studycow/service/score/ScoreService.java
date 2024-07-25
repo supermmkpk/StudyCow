@@ -39,4 +39,7 @@ public interface ScoreService {
 
     /** 성적 목표 삭제 */
     void deleteTarget(Long scoreId) throws Exception;
+
+    /** 성적 목표 수정 */
+    void modifyTarget(Map<String, Object> targetMap) throws Exception;
 }
