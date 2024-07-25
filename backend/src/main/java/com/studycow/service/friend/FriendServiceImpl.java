@@ -82,8 +82,8 @@ public class FriendServiceImpl implements FriendService {
      * @return FriendRequestDto 리스트
      * @throws Exception
      */
-    public List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception {
-        List<FriendRequest> friendRequestList = friendRepository.listFriendRequestReceived(userId);
+    public List<FriendRequestDto> listFriendRequestReceived(int userId, ListOptionDto listOptionDto) throws Exception {
+        List<FriendRequest> friendRequestList = friendRepository.listFriendRequestReceived(userId, listOptionDto);
 
         return friendRequestList
                 .stream()
@@ -103,8 +103,8 @@ public class FriendServiceImpl implements FriendService {
      * @return FriendRequestDto 리스트
      * @throws Exception
      */
-    public List<FriendRequestDto> listFriendRequestSent(int userId) throws Exception {
-        List<FriendRequest> friendRequestList = friendRepository.listFriendRequestSent(userId);
+    public List<FriendRequestDto> listFriendRequestSent(int userId, ListOptionDto listOptionDto) throws Exception {
+        List<FriendRequest> friendRequestList = friendRepository.listFriendRequestSent(userId, listOptionDto);
 
         return friendRequestList
                 .stream()

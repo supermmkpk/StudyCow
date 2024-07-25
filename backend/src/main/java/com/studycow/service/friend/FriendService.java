@@ -28,10 +28,10 @@ public interface FriendService {
     void saveFriendRequest(int fromUserId, int toUserId) throws Exception;
 
     /** 받은 친구 요청 목록 조회 */
-    List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception;
+    List<FriendRequestDto> listFriendRequestReceived(int userId, ListOptionDto listOptionDto) throws Exception;
 
     /** 보낸 친구 요청 목록 조회 */
-    List<FriendRequestDto> listFriendRequestSent(int userId) throws Exception;
+    List<FriendRequestDto> listFriendRequestSent(int userId, ListOptionDto listOptionDto) throws Exception;
 
     /** 친구 삭제 */
     void deleteFriend(int friendUserId, int userId) throws Exception;

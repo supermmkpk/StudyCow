@@ -28,10 +28,10 @@ public interface FriendRepository {
     void saveFriendRequest(int fromUserId, int toUserId) throws PersistenceException;
 
     /** 받은 친구 요청 목록 조회 */
-    List<FriendRequest> listFriendRequestReceived(int userId) throws PersistenceException;
+    List<FriendRequest> listFriendRequestReceived(int userId, ListOptionDto listOptionDto) throws PersistenceException;
 
     /** 보낸 친구 요청 목록 조회 */
-    List<FriendRequest> listFriendRequestSent(int userId) throws PersistenceException;
+    List<FriendRequest> listFriendRequestSent(int userId, ListOptionDto listOptionDto) throws PersistenceException;
 
     /** 친구 삭제 */
     void deleteFriend(int friendUserId, int userId) throws PersistenceException;
