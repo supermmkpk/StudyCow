@@ -3,7 +3,7 @@ import "./styles/SendRequestList.css";
 const SendRequestList = () => {
   return (
     <div>
-      <h1>보낸 친구 요청 목록</h1>
+      <p className="FriendsTitle">보낸 친구 요청 목록</p>
       <div className="listBox02"></div>
     </div>
   );
