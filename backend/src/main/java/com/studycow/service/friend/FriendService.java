@@ -5,7 +5,6 @@ import com.studycow.dto.FriendRequestDto;
 import com.studycow.dto.listoption.ListOptionDto;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <pre>
