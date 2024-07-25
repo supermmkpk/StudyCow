@@ -1,6 +1,7 @@
 package com.studycow.service.user;
 
 
+import com.studycow.dto.plan.PlannerCreateDto;
 import com.studycow.dto.user.*;
 import org.springframework.http.ResponseEntity;
 
@@ -11,4 +12,5 @@ public interface UserService {
     UserInfoDto getUserInfo(Long userId);
     void updateUserInfo(UserUpdateDto userUpdateDto, CustomUserDetails customUserDetails);
     UserInfoDto getUserInfoByNickName(String nickName);
+
 }

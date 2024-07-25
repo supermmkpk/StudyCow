@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Path;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -42,23 +43,66 @@ public class PlannerController {
     public ResponseEntity<?> listDayPlan(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                          @RequestParam
                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate date) {
+        try{
+            int userId = customUserDetails.getUser().getUserId();
+            List<PlannerGetDto> plans = plannerService.getPlansByDateForUser(userId, date);
+            return new ResponseEntity<>(plans, HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
-        int userId = customUserDetails.getUser().getUserId();
 
-        List<PlannerGetDto> plans = plannerService.getPlansByDateForUser(userId, date);
 
-        return new ResponseEntity<>(plans, HttpStatus.OK);
     }
 
     @Operation(summary = "플래너 과목별 조회", description = "요청한 과목에 해당하는 플래너들의 목록을 반환합니다")
     @GetMapping("list/subject")
     public ResponseEntity<?> listSubjectPlan(@AuthenticationPrincipal CustomUserDetails user,
                                              @RequestParam int subjectId) {
-        int userId = user.getUser().getUserId();
 
-        List<PlannerGetDto> plans = plannerService.getPlansBySubjectForUser(userId, subjectId);
+        try{
+            int userId = user.getUser().getUserId();
 
-        return new ResponseEntity<>(plans, HttpStatus.OK);
+            List<PlannerGetDto> plans = plannerService.getPlansBySubjectForUser(userId, subjectId);
+
+            return new ResponseEntity<>(plans, HttpStatus.OK);
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @Operation(summary = "플래너 상세 조회", description = "선택한 플래너의 상세 정보를 출력합니다")
+    @GetMapping("{planId}")
+    public ResponseEntity<?> getPlan(@AuthenticationPrincipal CustomUserDetails user,
+                                     @PathVariable int planId) {
+
+        try{
+            int userId = user.getUser().getUserId();
+
+            PlannerGetDto plan = plannerService.getPlanByIdForUser(userId,planId);
+
+            return new ResponseEntity<>(plan, HttpStatus.OK);
+
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "플래너 수정", description = "선택한 플래너의 상세 정보를 수정합니다.")
+    @PatchMapping("{planId}")
+    public ResponseEntity<?> updatePlan(@AuthenticationPrincipal CustomUserDetails user,
+                                        @PathVariable int planId,
+                                        @RequestBody PlannerCreateDto plannerCreateDto){
+        try{
+            int userId = user.getUser().getUserId();
+
+            plannerService.updatePlan(planId,user,plannerCreateDto);
+
+            return new ResponseEntity<>("업데이트 성공", HttpStatus.OK);
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

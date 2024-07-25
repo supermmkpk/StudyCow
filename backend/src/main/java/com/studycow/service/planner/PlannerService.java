@@ -14,5 +14,6 @@ public interface PlannerService  {
     void createPlan(CustomUserDetails customUserDetails, PlannerCreateDto plannerCreateDto);
     List<PlannerGetDto> getPlansByDateForUser(int userId, LocalDate localDate);
     List<PlannerGetDto> getPlansBySubjectForUser(int userId, int subjectId);
-
+    PlannerGetDto getPlanByIdForUser(int userId, int planId);
+    void updatePlan(int planId, CustomUserDetails customUser, PlannerCreateDto plannerCreateDto );
 }
