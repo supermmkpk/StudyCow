@@ -5,26 +5,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-/**
- * 플래너 생성 Dto
- * @author 채기훈
- * @since JDK17
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlannerCreateDto {
-
+public class PlannerGetDto {
+    private int planId;
+    private int userId;
     private int subCode;
-
     private LocalDate planDate;
-
     private String planContent;
-
     private int planStudyTime;
-
     private int planStatus;
-
-
 }
