@@ -135,4 +135,17 @@ public class ScoreController {
             return new ResponseEntity<>("성적 목표 삭제 실패", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Operation(summary = "목표 수정", description="목표를 수정합니다.")
+    @PatchMapping("/target/modify")
+    public ResponseEntity<?> modifyTarget(@RequestBody Map<String, Object> requestBody) {
+        try {
+            scoreService.modifyTarget(requestBody);
+            return new ResponseEntity<>("목표 수정 성공", HttpStatus.OK);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("목표 수정 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

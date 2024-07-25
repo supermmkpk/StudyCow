@@ -47,6 +47,9 @@ public interface ScoreRepository {
     /** 성적 목표 조회 */
     List<ScoreTargetDto> targetList(int userId) throws PersistenceException;
 
-    /** 성적 목표 등록 */
+    /** 성적 목표 삭제 */
     void deleteScoreTarget(Long targetId) throws PersistenceException;
+
+    /** 성적 목표 수정 */
+    void modifyScoreTarget(Map<String, Object> targetMap) throws PersistenceException;
 }

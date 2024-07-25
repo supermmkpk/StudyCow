@@ -168,4 +168,15 @@ public class ScoreServiceImpl implements ScoreService{
         scoreRepository.deleteScoreTarget(targetId);
     }
 
+    /**
+     * 성적 목표 수정
+     * @param targetMap : 목표 정보
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void modifyTarget(Map<String, Object> targetMap) throws Exception {
+        scoreRepository.modifyScoreTarget(targetMap);
+    }
+
 }
