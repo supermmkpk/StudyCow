@@ -47,29 +47,29 @@ public class UserSubjectPlan {
     private LocalDate planDate;
 
     @Column(name = "plan_content")
-    private String content;
+    private String planContent;
 
     @Column(name = "plan_study_time", nullable = false)
     @ColumnDefault("0")
     @NotNull
-    private int studyTime;
+    private int planStudyTime;
 
     @Column(name = "plan_in_date", nullable = false)
     @NotNull
-    private LocalDateTime inDate;
+    private LocalDateTime planInDate;
 
     @Column(name = "plan_status", nullable = false)
     @ColumnDefault("0")
     @NotNull
-    private int status;
+    private int planStatus;
 
     @Column(name = "plan_update_date", nullable = false)
     @NotNull
-    private LocalDateTime updateDate;
+    private LocalDateTime planUpdateDate;
 
     @Column(name = "plan_sum_time", nullable = false)
     @ColumnDefault("0")
     @NotNull
-    private int sumTime;
+    private int planSumTime;
 }
 

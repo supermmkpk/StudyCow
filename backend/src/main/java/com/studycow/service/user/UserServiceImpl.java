@@ -7,6 +7,7 @@ import com.studycow.dto.user.*;
 import com.studycow.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -77,16 +79,18 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUserInfo(UserUpdateDto userUpdateDto){
-        Optional<User>user = userRepository.findById((long)userUpdateDto.getUserId());
+    public void updateUserInfo(UserUpdateDto userUpdateDto, CustomUserDetails customUserDetails){
 
+        CustomUserInfoDto CurrentUser = customUserDetails.getUser();
+        Optional<User>user = userRepository.findById((long)CurrentUser.getUserId());
 
+        int currentId = customUserDetails.getUser().getUserId();
+        log.info("currnetId: {}"+currentId);
 
         // 유저가 존재하고, 요청한 유저와 업데이트 유저의 정보가 같으면 수행
-        if(user.isPresent() ){
+        if(user.isPresent()){
 
             User newuser = user.get();
-
             newuser.setUserEmail(userUpdateDto.getUserEmail());
             newuser.setUserBirthday(userUpdateDto.getUserBirthday());
             newuser.setUserThumb(userUpdateDto.getUserThumb());

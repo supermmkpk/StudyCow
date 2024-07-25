@@ -1,6 +1,7 @@
 package com.studycow.web.user;
 
 import com.studycow.config.jwt.JwtUtil;
+import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.dto.user.UserInfoDto;
 import com.studycow.dto.user.UserUpdateDto;
 import com.studycow.service.user.UserService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User", description = "회원 관리")
@@ -24,7 +26,7 @@ public class UserController {
 
     @Operation(summary="회원", description = "회원")
     @GetMapping("me")
-    public ResponseEntity<?> getUser(@RequestParam Long id) {
+    public ResponseEntity<?> getUser(@RequestParam("id") Long id) {
 
         UserInfoDto userInfoDto = userService.getUserInfo(id);
         if(userInfoDto == null) {
@@ -36,22 +38,19 @@ public class UserController {
 
     @Operation(summary = "회원 정보 수정", description = "회원의 기본정보를 수정합니다.")
     @PatchMapping("me")
-    public ResponseEntity<?> UpdateUser(@RequestHeader("Authorization") String authorizationHeader,@RequestBody UserUpdateDto userUpdateDto) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        int currentUserId = jwtUtil.getUserId(token);
+    public ResponseEntity<?> UpdateUser(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserUpdateDto userUpdateDto) {
+        //String token = authorizationHeader.replace("Bearer ", "");
+        //int currentUserId = jwtUtil.getUserId(token);
 
-        if(currentUserId!=userUpdateDto.getUserId()){
-            return new ResponseEntity<>("인가된 사용자가 아닙니다",HttpStatus.UNAUTHORIZED);
-        }
 
-        userService.updateUserInfo(userUpdateDto);
+        userService.updateUserInfo(userUpdateDto,customUserDetails);
         return new ResponseEntity<>("업데이트 성공",HttpStatus.OK);
 
     }
 
     @Operation(summary = "회원 별명 검색", description = "작성한 닉네임을 가진 유저를 검색합니다")
     @GetMapping("/nickname")
-    public ResponseEntity<?> searchNickname(@RequestParam String nickname) {
+    public ResponseEntity<?> searchNickname(@RequestParam("nickname") String nickname) {
         UserInfoDto userInfoDto = userService.getUserInfoByNickName(nickname);
 
         return new ResponseEntity<>(userInfoDto,HttpStatus.OK);
