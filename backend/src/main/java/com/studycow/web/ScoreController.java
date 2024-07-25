@@ -1,16 +1,15 @@
 package com.studycow.web;
 
 
-import com.studycow.dto.ScoreDto;
-import com.studycow.dto.ScoreTargetDto;
-import com.studycow.dto.user.CustomUserDetails;
+import com.studycow.dto.SubjectCodeDto;
+import com.studycow.dto.score.ScoreDto;
+import com.studycow.dto.score.ScoreTargetDto;
 import com.studycow.service.score.ScoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -146,6 +145,18 @@ public class ScoreController {
         } catch(Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("목표 수정 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "미설정 목표 과목 조회", description = "아직 목표로 설정하지 않은 과목들을 조회합니다.")
+    @GetMapping("/subject")
+    public ResponseEntity<?> subjectList(@RequestParam("userId") int userId) {
+        try {
+            List<SubjectCodeDto> subjectCodeDtoList = scoreService.subjectList(userId);
+            return ResponseEntity.ok(subjectCodeDtoList);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("성적 목표 조회 실패", HttpStatus.BAD_REQUEST);
         }
     }
 }

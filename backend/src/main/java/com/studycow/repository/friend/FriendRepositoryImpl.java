@@ -1,6 +1,5 @@
 package com.studycow.repository.friend;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
@@ -18,10 +17,8 @@ import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.studycow.domain.QFriend.friend;
 import static com.studycow.domain.QFriendRequest.friendRequest;
@@ -43,9 +40,9 @@ public class FriendRepositoryImpl implements FriendRepository {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
-
     /**
      * 친구 맺은 목록 조회
+     *
      * <pre>
      *  userId1 또는 userId2와 내 ID가 일치하는 행에 대하여,
      *  반대편 회원/친구 정보를 FriendDto로 반환
@@ -79,20 +76,19 @@ public class FriendRepositoryImpl implements FriendRepository {
                                         .when(friend.user1.id.eq(userId))
                                         .then(friend.user2.userThumb)
                                         .otherwise(friend.user1.userThumb),
-                                friend.friendDate
-                        )
-                )
+                                friend.friendDate))
                 .from(friend)
                 .where(
                         (friend.user1.id.eq(userId).and(nicknameContains(option.getSearchText(), friend.user2)))
-                        .or(friend.user2.id.eq(userId).and(nicknameContains(option.getSearchText(), friend.user1)))
-                )
+                                .or(friend.user2.id.eq(userId)
+                                        .and(nicknameContains(option.getSearchText(), friend.user1))))
                 .orderBy(createOrderSpecifier(option, user, Order.DESC, friend, "friendDate"))
                 .fetch();
     }
 
     /**
      * 친구 요청 삭제
+     *
      * <pre>
      *  요청 id 번호를 이용하여 삭제
      * </pre>
@@ -118,12 +114,12 @@ public class FriendRepositoryImpl implements FriendRepository {
     public void acceptFriendRequest(int friendRequestId) throws PersistenceException {
         FriendRequest friendRequest = em.find(FriendRequest.class, friendRequestId);
 
-        //@CreationTimestamp이므로 friendDate null
-        //친구 관계 저장
+        // @CreationTimestamp이므로 friendDate null
+        // 친구 관계 저장
         Friend friend = new Friend(friendRequest.getFromUser(), friendRequest.getToUser(), null);
         em.persist(friend);
 
-        //친구 요청 삭제
+        // 친구 요청 삭제
         em.remove(friendRequest);
     }
 
@@ -131,13 +127,13 @@ public class FriendRepositoryImpl implements FriendRepository {
      * 친구 요청 저장
      *
      * @param fromUserId 보내는 회원 번호
-     * @param toUserId 받는 회원 번호
+     * @param toUserId   받는 회원 번호
      * @throws PersistenceException
      */
     @Override
     public void saveFriendRequest(int fromUserId, int toUserId) throws PersistenceException {
         User fromUser = em.find(User.class, fromUserId);
-        User toUser = em.find(User.class,toUserId);
+        User toUser = em.find(User.class, toUserId);
 
         FriendRequest friendRequest = new FriendRequest(fromUser, toUser);
         em.persist(friendRequest);
@@ -155,8 +151,7 @@ public class FriendRepositoryImpl implements FriendRepository {
                 .selectFrom(friendRequest)
                 .join(friendRequest.toUser, user)
                 .where(user.id.eq(userId),
-                        nicknameContains(option.getSearchText(), user)
-                )
+                        nicknameContains(option.getSearchText(), user))
                 .orderBy(createOrderSpecifier(option, user, Order.DESC, friendRequest, "requestDate"))
                 .fetch();
     }
@@ -173,8 +168,7 @@ public class FriendRepositoryImpl implements FriendRepository {
                 .selectFrom(friendRequest)
                 .join(friendRequest.fromUser, user)
                 .where(user.id.eq(userId),
-                        nicknameContains(option.getSearchText(), user)
-                )
+                        nicknameContains(option.getSearchText(), user))
                 .orderBy(createOrderSpecifier(option, user, Order.DESC, friendRequest, "requestDate"))
                 .fetch();
     }
@@ -192,13 +186,13 @@ public class FriendRepositoryImpl implements FriendRepository {
         queryFactory
                 .delete(friend)
                 .where(friend.user1.id.eq(friendUserId).or(friend.user1.id.eq(userId)),
-                        friend.user1.id.eq(friendUserId).or(friend.user1.id.eq(userId))
-                )
+                        friend.user1.id.eq(friendUserId).or(friend.user1.id.eq(userId)))
                 .execute();
     }
 
-
-    /** 검색 동적 쿼리를 위한 BooleanExpression
+    /**
+     * 검색 동적 쿼리를 위한 BooleanExpression
+     *
      * <pre>
      *     searchText가 null이 아니면 LIKE '%searchText%'가 됨
      *     null일 경우, 무시됨
@@ -222,16 +216,16 @@ public class FriendRepositoryImpl implements FriendRepository {
         List<OrderSpecifier> orderSpecifierList = new ArrayList<>();
 
         // 정렬 기준이 null이 아니라면
-        if(sortKey != null && !sortKey.isBlank()){
-            if(sortDirection == null) {
-                //정렬 방향이 null이라면 오름차순
+        if (sortKey != null && !sortKey.isBlank()) {
+            if (sortDirection == null) {
+                // 정렬 방향이 null이라면 오름차순
                 orderSpecifierList.add(QueryDslUtil.getSortedColumn(Order.ASC, parent, sortKey));
             } else {
                 orderSpecifierList.add(QueryDslUtil.getSortedColumn(Order.DESC, parent, sortKey));
             }
         } else {
-            if(sortDirection == null) {
-                //정렬 기준이 null이고 방향도 null이라면
+            if (sortDirection == null) {
+                // 정렬 기준이 null이고 방향도 null이라면
                 orderSpecifierList.add(QueryDslUtil.getSortedColumn(defaultDirection, defaultParent, defaultFieldName));
             } else {
                 orderSpecifierList.add(QueryDslUtil.getSortedColumn(defaultDirection, defaultParent, defaultFieldName));

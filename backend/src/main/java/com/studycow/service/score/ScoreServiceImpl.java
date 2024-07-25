@@ -1,8 +1,9 @@
 package com.studycow.service.score;
 
-import com.studycow.dto.ScoreDetailDto;
-import com.studycow.dto.ScoreDto;
-import com.studycow.dto.ScoreTargetDto;
+import com.studycow.dto.SubjectCodeDto;
+import com.studycow.dto.score.ScoreDetailDto;
+import com.studycow.dto.score.ScoreDto;
+import com.studycow.dto.score.ScoreTargetDto;
 import com.studycow.repository.score.ScoreRepository;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
@@ -175,6 +176,16 @@ public class ScoreServiceImpl implements ScoreService{
     @Transactional
     public void modifyTarget(Map<String, Object> targetMap) throws Exception {
         scoreRepository.modifyScoreTarget(targetMap);
+    }
+
+    /**
+     * 미설정 목표 과목 조회
+     * @param userId : 유저 id
+     * @throws Exception
+     */
+    @Override
+    public List<SubjectCodeDto> subjectList(int userId) throws PersistenceException {
+        return scoreRepository.subjectList(userId);
     }
 
 }

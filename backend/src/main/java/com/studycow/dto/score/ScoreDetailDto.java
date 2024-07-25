@@ -1,4 +1,4 @@
-package com.studycow.dto;
+package com.studycow.dto.score;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

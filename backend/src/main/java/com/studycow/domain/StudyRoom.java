@@ -4,8 +4,12 @@ package com.studycow.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +26,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 @Table(name = "t_room", indexes =
 @Index(name = "idx_title_status", columnList = "room_title, room_status"))
 public class StudyRoom {
@@ -40,11 +45,11 @@ public class StudyRoom {
     private int roomMaxPerson;
 
     @Column(name = "ROOM_NOW_PERSON", nullable = false)
-    @NotNull
+    @ColumnDefault(value = "0")
     private int roomNowPerson;
 
     @Column(name = "ROOM_CREATE_DATE", nullable = false)
-    @NotNull
+    @CreationTimestamp
     private LocalDate roomCreateDate;
 
     @Column(name = "ROOM_END_DATE", nullable = false)
@@ -56,7 +61,7 @@ public class StudyRoom {
     private int roomStatus;
 
     @Column(name = "ROOM_UPDATE_DATE", nullable = false)
-    @NotNull
+    @UpdateTimestamp
     private LocalDateTime roomUpdateDate;
 
     @Column(name = "ROOM_CONTENT", length = 2000)
