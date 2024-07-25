@@ -3,7 +3,7 @@ import "./styles/FriendSearch.css";
 const FriendSearch = () => {
   return (
     <div>
-      <h1>친구 검색</h1>
+      <p className="FriendsTitle">친구 검색</p>
       <div className="searchBox">
         <div className="searchBar">
           <input

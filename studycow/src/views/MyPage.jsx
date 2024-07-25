@@ -1,20 +1,20 @@
-import "../styles/MyPage.css";
-import Sidebar from "../components/Sidebar/Sidebar";
-import FriendComponent from "../components/Friends/FriendComponent";
+import '../styles/MyPage.css'
+import Sidebar from '../components/Sidebar/Sidebar'
+import { Outlet } from 'react-router-dom';
 
 function MyPage() {
-  return (
+    return (
     <>
-      <div className="MyPage">
-        <div className="MyPageContainer">
-          <div className="MyPageSidebar">
-            <Sidebar />
-          </div>
-          <div className="MyPageContent">
-            <FriendComponent />
-          </div>
+    <div className='MyPage'>
+      <div className="MyPageContainer">
+        <div className="MyPageSidebar">
+          <Sidebar/>
         </div>
-      </div>
+        <div className="MyPageContent">
+          <Outlet />
+        </div>
+      </div>  
+    </div>
     </>
   );
 }

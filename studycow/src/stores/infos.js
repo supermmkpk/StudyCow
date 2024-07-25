@@ -1,6 +1,7 @@
 import {create} from 'zustand';
 
 const useInfoStore = create((set) => ({
+  // 임시 유저 정보
   isLogin: true,
   userInfo: {
     email: 'cowhead@studycow.com',
@@ -12,10 +13,24 @@ const useInfoStore = create((set) => ({
     friends: 4,
     ranks: 1,
   },
+
+
+  // 임시 로그아웃 로직
+  logout: (navigate) => {
+    set({ isLogin: false });
+    navigate('/login'); // 로그아웃 후 로그인 페이지로 리디렉트
+  },
+
+  // 임시 회원탈퇴 로직
+  resign: (navigate) => {
+    set({ isLogin: false });
+    navigate('/login'); // 로그아웃 후 로그인 페이지로 리디렉트
+  },
+
+  // 임시 토글 동작 로직
   isOpen: false,
   toggleDropdown: () => set((state) => {
     const newState = !state.isOpen;
-    console.log(newState); // 상태 변경 시 콘솔에 로그 출력
     return { isOpen: newState };
   })
 }));
