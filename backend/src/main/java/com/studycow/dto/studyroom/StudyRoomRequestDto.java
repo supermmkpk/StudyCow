@@ -9,6 +9,16 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+
+/**
+ * 스터디룸 요청 DTO 클래스
+ * <pre>
+ *     Controller단에서 요청 변수를 받고 검증하는 DTO 클래스
+ * </pre>
+ *
+ * @author 박봉균
+ * @since JDK17
+ */
 @Getter
 @Setter
 @AllArgsConstructor
