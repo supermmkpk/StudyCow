@@ -1,0 +1,49 @@
+.searchBox {
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  height: 200px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  background: linear-gradient(to bottom, #dee5f0, #ffffff);
+  border: solid 1px black;
+}
+
+.searchBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  width: 670px;
+}
+
+.searchInput {
+  width: 540px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.searchBtn {
+  width: 110px;
+  height: 40px;
+  text-align: center;
+  padding: 10px 20px; /* 버튼 패딩 */
+  font-size: 15px; /* 버튼 글자 크기 */
+  font-weight: bold; /* 버튼 글자 굵기 */
+  background-color: #ffffff; /* 버튼 배경색 */
+  color: #000000; /* 버튼 글자색 */
+  border-radius: 5px; /* 버튼 모서리 둥글게 */
+  cursor: pointer; /* 마우스 커서가 포인터로 변경 */
+}
+
+.friendsList {
+  margin-top: 10px;
+  background-color: #ffffff;
+  width: 670px;
+  height: 150px;
+  border-radius: 5px;
+  border: 1px solid black;
+}

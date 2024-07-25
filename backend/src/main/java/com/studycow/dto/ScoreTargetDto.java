@@ -12,8 +12,8 @@ import lombok.Setter;
 @Setter
 public class ScoreTargetDto {
     private Long id;
-    private int userId;
     private int subCode;
+    private String subName;
     private int targetScore;
     private int targetGrade;
 }

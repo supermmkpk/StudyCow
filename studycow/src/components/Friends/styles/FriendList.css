@@ -1,0 +1,7 @@
+.friendListBox {
+  width: 350px;
+  height: 480px;
+  background: linear-gradient(to bottom, #dee5f0, #ffffff);
+  border: solid 1px black;
+  border-radius: 5px;
+}

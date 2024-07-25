@@ -1,7 +1,10 @@
 package com.studycow.service.score;
 
+import com.studycow.domain.UserScoreTarget;
+import com.studycow.dto.FriendRequestDto;
 import com.studycow.dto.ScoreDetailDto;
 import com.studycow.dto.ScoreDto;
+import com.studycow.dto.ScoreTargetDto;
 import com.studycow.repository.score.ScoreRepository;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
@@ -95,6 +98,34 @@ public class ScoreServiceImpl implements ScoreService{
     }
 
     /**
+     * 상세 포함 성적 수정
+     * @param scoreMap : 성적 정보(상세 포함)
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void modifyScore(Map<String, Object> scoreMap) throws Exception {
+        Long scoreId = Long.parseLong((String) scoreMap.get("scoreId"));
+        scoreRepository.modifyScore(scoreMap);
+
+        Object scoreDetail = scoreMap.get("scoreDetail");
+
+        //scoreDetail 데이터가 있고 List 형식일 경우
+        if(scoreDetail instanceof List<?>) {
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> scoreDetailList =
+                    (List<Map<String, Object>>) scoreMap.get("scoreDetail");
+
+            //반복해서 상세 성적을 등록
+            for (Map<String, Object> detail : scoreDetailList) {
+                int catCode = (Integer) detail.get("catCode");
+                int wrongCnt = (Integer) detail.get("wrongCnt");
+                scoreRepository.saveScoreDetails(scoreId, catCode, wrongCnt);
+            }
+        }
+    }
+
+    /**
      * 단일 성적 삭제
      * @param scoreId : 성적 id
      * @throws Exception
@@ -105,9 +136,36 @@ public class ScoreServiceImpl implements ScoreService{
         scoreRepository.deleteScore(scoreId);
     }
 
+    /**
+     * 성적 목표 등록
+     * @param targetMap : 성적 목표 정보
+     * @throws Exception
+     */
     @Override
     @Transactional
     public void saveScoreTarget(Map<String, Object> targetMap) throws Exception {
         scoreRepository.saveScoreTarget(targetMap);
     }
+
+    /**
+     * 목표 목록 조회
+     * @param userId : 유저 id
+     * @throws Exception
+     */
+    @Override
+    public List<ScoreTargetDto> targetList(int userId) throws PersistenceException {
+        return scoreRepository.targetList(userId);
+    }
+
+    /**
+     * 성적 목표 삭제
+     * @param targetId : 목표 id
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void deleteTarget(Long targetId) throws Exception {
+        scoreRepository.deleteScoreTarget(targetId);
+    }
+
 }

@@ -1,0 +1,4 @@
+.friendRequestBox {
+  display: flex;
+  flex-direction: column;
+}
