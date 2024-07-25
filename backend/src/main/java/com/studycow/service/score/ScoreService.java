@@ -23,6 +23,9 @@ public interface ScoreService {
     /** 유저 성적 입력 */
     void saveScore(Map<String, Object> scoreMap) throws Exception;
 
+    /** 단일 성적 수정 */
+    void modifyScore(Map<String, Object> scoreMap) throws Exception;
+
     /** 단일 성적 삭제 */
     void deleteScore(Long scoreId) throws Exception;
 

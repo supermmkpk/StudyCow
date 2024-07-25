@@ -1,5 +1,6 @@
 package com.studycow.repository.score;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.studycow.domain.*;
 import com.studycow.dto.ScoreDetailDto;
 import com.studycow.dto.ScoreDto;
@@ -7,12 +8,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+
+import static com.studycow.domain.QUserSubjectScore.userSubjectScore;
+import static com.studycow.domain.QWrongProblem.wrongProblem;
+
 
 /**
  * <pre>
@@ -22,10 +28,12 @@ import java.util.Map;
  * @since JDK17
  */
 @Repository
+@RequiredArgsConstructor
 public class ScoreRepositoryImpl implements ScoreRepository{
 
     @PersistenceContext
-    EntityManager em;
+    private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
 
     /**과목별 등록한 성적 조회
      * <pre>
@@ -191,6 +199,51 @@ public class ScoreRepositoryImpl implements ScoreRepository{
             throw e;
         }catch(Exception e){
             throw new PersistenceException("성적 삭제 중 에러 발생", e);
+        }
+    }
+
+    /** 단일 성적 수정
+     * <pre>
+     *      선택한 성적을 수정한다.
+     *      등록된 오답 유형은 삭제된 뒤 입력된다.
+     *      입력 : saveScoreDetail
+     * </pre>
+     * @param scoreMap : 수정 성적 정보
+     * @throws PersistenceException : JPA 표준 예외
+     */
+    @Override
+    public void modifyScore(Map<String, Object> scoreMap) throws PersistenceException {
+        try {
+
+            UserSubjectScore us = em.find(UserSubjectScore.class,
+                    Long.parseLong((String)scoreMap.get("scoreId")));
+            if(us != null) {
+                SubjectCode subjectCode = em.find(SubjectCode.class, (int) scoreMap.get("subCode"));
+                LocalDate testDate = LocalDate.parse((String)scoreMap.get("testDate"));
+                int testScore = (Integer) scoreMap.get("testScore");
+                Integer testGrade = (Integer) scoreMap.get("testGrade");
+
+                queryFactory
+                        .delete(wrongProblem)
+                        .where(wrongProblem.userSubjectScore.id.eq(us.getId()))
+                        .execute();
+
+                queryFactory
+                        .update(userSubjectScore)
+                        .set(userSubjectScore.subjectCode.code, subjectCode.getCode())
+                        .set(userSubjectScore.testDate, testDate)
+                        .set(userSubjectScore.testScore, testScore)
+                        .set(userSubjectScore.testGrade, testGrade)
+                        .set(userSubjectScore.updateDate, LocalDateTime.now())
+                        .where(userSubjectScore.id.eq(us.getId()))
+                        .execute();
+            }else{
+                throw new EntityNotFoundException("해당 성적을 찾을 수 없습니다.");
+            }
+        }catch(EntityNotFoundException e) {
+            throw e;
+        }catch(Exception e){
+            throw new PersistenceException("성적 수정 중 에러 발생", e);
         }
     }
 
