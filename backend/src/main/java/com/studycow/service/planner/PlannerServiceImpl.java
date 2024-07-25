@@ -100,6 +100,19 @@ public class PlannerServiceImpl implements PlannerService {
 
     }
 
+    @Override
+    public void deletePlan(int planId, CustomUserDetails customUser) {
+        UserSubjectPlan plan = plannerRepository.findById((long)planId)
+                .orElseThrow(()->new EntityNotFoundException("해당 플래너가 존재하지 않습니다"));
+
+        int userId = customUser.getUser().getUserId();
+
+        if(userId != plan.getUser().getId()){
+            throw new EntityNotFoundException("접근 권한이 없습니다");
+        }
+
+        plannerRepository.delete(plan);
+    }
 
     private List<PlannerGetDto> convertToDtoList(List<UserSubjectPlan> plans){
         return plans.stream()

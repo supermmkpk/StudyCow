@@ -16,4 +16,5 @@ public interface PlannerService  {
     List<PlannerGetDto> getPlansBySubjectForUser(int userId, int subjectId);
     PlannerGetDto getPlanByIdForUser(int userId, int planId);
     void updatePlan(int planId, CustomUserDetails customUser, PlannerCreateDto plannerCreateDto );
+    void deletePlan(int planId, CustomUserDetails customUser);
 }

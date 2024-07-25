@@ -105,4 +105,15 @@ public class PlannerController {
         }
     }
 
+    @Operation(summary = "플래너 삭제", description = "선택한 플래너를 삭제합니다")
+    @DeleteMapping("{planId}")
+    public ResponseEntity<?> deletePlan(@AuthenticationPrincipal CustomUserDetails user,
+                                        @PathVariable int planId) {
+        try{
+            plannerService.deletePlan(planId, user);
+            return new ResponseEntity<>("삭제 성공",HttpStatus.OK);
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
