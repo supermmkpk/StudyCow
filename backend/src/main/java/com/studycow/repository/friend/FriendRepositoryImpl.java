@@ -1,6 +1,5 @@
 package com.studycow.repository.friend;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Path;
@@ -18,8 +17,8 @@ import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.studycow.domain.QFriend.friend;
 import static com.studycow.domain.QFriendRequest.friendRequest;
@@ -43,7 +42,7 @@ public class FriendRepositoryImpl implements FriendRepository {
 
     /**
      * 친구 맺은 목록 조회
-     * 
+     *
      * <pre>
      *  userId1 또는 userId2와 내 ID가 일치하는 행에 대하여,
      *  반대편 회원/친구 정보를 FriendDto로 반환
@@ -89,7 +88,7 @@ public class FriendRepositoryImpl implements FriendRepository {
 
     /**
      * 친구 요청 삭제
-     * 
+     *
      * <pre>
      *  요청 id 번호를 이용하여 삭제
      * </pre>
@@ -193,7 +192,7 @@ public class FriendRepositoryImpl implements FriendRepository {
 
     /**
      * 검색 동적 쿼리를 위한 BooleanExpression
-     * 
+     *
      * <pre>
      *     searchText가 null이 아니면 LIKE '%searchText%'가 됨
      *     null일 경우, 무시됨
@@ -207,10 +206,10 @@ public class FriendRepositoryImpl implements FriendRepository {
     }
 
     private OrderSpecifier[] createOrderSpecifier(ListOptionDto option,
-            Path<?> parent,
-            Order defaultDirection,
-            Path<?> defaultParent,
-            String defaultFieldName) {
+                                                  Path<?> parent,
+                                                  Order defaultDirection,
+                                                  Path<?> defaultParent,
+                                                  String defaultFieldName) {
         String sortKey = option.getSortKey();
         String sortDirection = option.getSortDirection();
 

@@ -11,6 +11,7 @@ import java.util.List;
  * <pre>
  *      친구 관리 레포지토리 인터페이스
  * </pre>
+ *
  * @author 박봉균
  * @since JDK17
  */

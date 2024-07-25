@@ -67,7 +67,7 @@ public class FriendServiceImpl implements FriendService {
      * 친구 요청 저장
      *
      * @param fromUserId 보내는 회원 번호
-     * @param toUserId 받는 회원 번호
+     * @param toUserId   받는 회원 번호
      * @throws Exception
      */
     @Override
@@ -130,5 +130,5 @@ public class FriendServiceImpl implements FriendService {
     public void deleteFriend(int friendUserId, int userId) throws Exception {
         friendRepository.deleteFriend(friendUserId, userId);
     }
-    
+
 }
