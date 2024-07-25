@@ -1,12 +1,11 @@
 package com.studycow.repository.score;
 
 
-import com.studycow.domain.UserScoreTarget;
-import com.studycow.dto.ScoreDetailDto;
-import com.studycow.dto.ScoreDto;
-import com.studycow.dto.ScoreTargetDto;
+import com.studycow.dto.SubjectCodeDto;
+import com.studycow.dto.score.ScoreDetailDto;
+import com.studycow.dto.score.ScoreDto;
+import com.studycow.dto.score.ScoreTargetDto;
 import jakarta.persistence.PersistenceException;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -52,4 +51,7 @@ public interface ScoreRepository {
 
     /** 성적 목표 수정 */
     void modifyScoreTarget(Map<String, Object> targetMap) throws PersistenceException;
+
+    /** 목표 미설정 과목 조회 */
+    List<SubjectCodeDto> subjectList(int userId) throws PersistenceException;
 }
