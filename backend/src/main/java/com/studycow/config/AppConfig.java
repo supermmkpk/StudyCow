@@ -22,7 +22,6 @@ public class AppConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.registerModule(new Jsr310Module());
-
         return modelMapper;
     }
 

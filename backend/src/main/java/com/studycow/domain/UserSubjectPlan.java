@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "t_plan", indexes =
@@ -65,11 +67,23 @@ public class UserSubjectPlan {
 
     @Column(name = "plan_update_date", nullable = false)
     @NotNull
+
     private LocalDateTime planUpdateDate;
 
     @Column(name = "plan_sum_time", nullable = false)
     @ColumnDefault("0")
     @NotNull
     private int planSumTime;
+
+    @PrePersist
+    public void onCreate(){
+        planInDate = LocalDateTime.now();
+        planUpdateDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onUpdate(){
+        planUpdateDate = LocalDateTime.now();
+    }
 }
 
