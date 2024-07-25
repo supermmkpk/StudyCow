@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "t_plan", indexes =
@@ -30,7 +32,7 @@ public class UserSubjectPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "plan_id")
-    private Long id;
+    private Long planId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -47,29 +49,41 @@ public class UserSubjectPlan {
     private LocalDate planDate;
 
     @Column(name = "plan_content")
-    private String content;
+    private String planContent;
 
     @Column(name = "plan_study_time", nullable = false)
     @ColumnDefault("0")
     @NotNull
-    private int studyTime;
+    private int planStudyTime;
 
     @Column(name = "plan_in_date", nullable = false)
     @NotNull
-    private LocalDateTime inDate;
+    private LocalDateTime planInDate;
 
     @Column(name = "plan_status", nullable = false)
     @ColumnDefault("0")
     @NotNull
-    private int status;
+    private int planStatus;
 
     @Column(name = "plan_update_date", nullable = false)
     @NotNull
-    private LocalDateTime updateDate;
+
+    private LocalDateTime planUpdateDate;
 
     @Column(name = "plan_sum_time", nullable = false)
     @ColumnDefault("0")
     @NotNull
-    private int sumTime;
+    private int planSumTime;
+
+    @PrePersist
+    public void onCreate(){
+        planInDate = LocalDateTime.now();
+        planUpdateDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onUpdate(){
+        planUpdateDate = LocalDateTime.now();
+    }
 }
 

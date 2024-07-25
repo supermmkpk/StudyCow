@@ -1,10 +1,8 @@
 package com.studycow.service.user;
 
 
-import com.studycow.dto.user.LoginRequestDto;
-import com.studycow.dto.user.RegisterRequestDto;
-import com.studycow.dto.user.UserInfoDto;
-import com.studycow.dto.user.UserUpdateDto;
+import com.studycow.dto.plan.PlannerCreateDto;
+import com.studycow.dto.user.*;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
@@ -12,6 +10,7 @@ public interface UserService {
     String login(LoginRequestDto loginRequestDto);
     void register(RegisterRequestDto signUpRequestDto);
     UserInfoDto getUserInfo(Long userId);
-    void updateUserInfo(UserUpdateDto userUpdateDto);
+    void updateUserInfo(UserUpdateDto userUpdateDto, CustomUserDetails customUserDetails);
     UserInfoDto getUserInfoByNickName(String nickName);
+
 }
