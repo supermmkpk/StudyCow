@@ -1,20 +1,20 @@
-import '../styles/MyPage.css'
-import Sidebar from '../components/Sidebar/Sidebar'
+import "../styles/MyPage.css";
+import Sidebar from "../components/Sidebar/Sidebar";
+import FriendComponent from "../components/Friends/FriendComponent";
 
 function MyPage() {
-    return (
+  return (
     <>
-    <div className='MyPage'>
-      <div className="MyPageContainer">
-        <div className="MyPageSidebar">
-          <Sidebar/>
+      <div className="MyPage">
+        <div className="MyPageContainer">
+          <div className="MyPageSidebar">
+            <Sidebar />
+          </div>
+          <div className="MyPageContent">
+            <FriendComponent />
+          </div>
         </div>
-        <div className="MyPageContent">
-          <h1>프로필 페이지</h1>
-          <p>여기에 프로필 정보를 입력하세요.</p>
-        </div>
-      </div>  
-    </div>
+      </div>
     </>
   );
 }

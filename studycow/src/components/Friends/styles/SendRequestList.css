@@ -1,0 +1,8 @@
+.listBox02 {
+  width: 350px;
+  height: 200px;
+  background-color: #7092be;
+  border-radius: 5px;
+  background: linear-gradient(to bottom, #dee5f0, #ffffff);
+  border: solid 1px black;
+}
