@@ -1,7 +1,5 @@
 package com.studycow.service.score;
 
-import com.studycow.domain.UserScoreTarget;
-import com.studycow.dto.FriendRequestDto;
 import com.studycow.dto.ScoreDetailDto;
 import com.studycow.dto.ScoreDto;
 import com.studycow.dto.ScoreTargetDto;
