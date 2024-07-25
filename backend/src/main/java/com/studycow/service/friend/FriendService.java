@@ -1,11 +1,10 @@
 package com.studycow.service.friend;
 
-import com.studycow.dto.FriendDto;
-import com.studycow.dto.FriendRequestDto;
+import com.studycow.dto.friend.FriendDto;
+import com.studycow.dto.friend.FriendRequestDto;
 import com.studycow.dto.listoption.ListOptionDto;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <pre>
@@ -29,10 +28,10 @@ public interface FriendService {
     void saveFriendRequest(int fromUserId, int toUserId) throws Exception;
 
     /** 받은 친구 요청 목록 조회 */
-    List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception;
+    List<FriendRequestDto> listFriendRequestReceived(int userId, ListOptionDto listOptionDto) throws Exception;
 
     /** 보낸 친구 요청 목록 조회 */
-    List<FriendRequestDto> listFriendRequestSent(int userId) throws Exception;
+    List<FriendRequestDto> listFriendRequestSent(int userId, ListOptionDto listOptionDto) throws Exception;
 
     /** 친구 삭제 */
     void deleteFriend(int friendUserId, int userId) throws Exception;

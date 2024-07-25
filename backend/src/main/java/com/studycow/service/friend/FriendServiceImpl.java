@@ -1,8 +1,8 @@
 package com.studycow.service.friend;
 
 import com.studycow.domain.FriendRequest;
-import com.studycow.dto.FriendDto;
-import com.studycow.dto.FriendRequestDto;
+import com.studycow.dto.friend.FriendDto;
+import com.studycow.dto.friend.FriendRequestDto;
 import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.repository.friend.FriendRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -83,8 +82,8 @@ public class FriendServiceImpl implements FriendService {
      * @return FriendRequestDto 리스트
      * @throws Exception
      */
-    public List<FriendRequestDto> listFriendRequestReceived(int userId) throws Exception {
-        List<FriendRequest> friendRequestList = friendRepository.listFriendRequestReceived(userId);
+    public List<FriendRequestDto> listFriendRequestReceived(int userId, ListOptionDto listOptionDto) throws Exception {
+        List<FriendRequest> friendRequestList = friendRepository.listFriendRequestReceived(userId, listOptionDto);
 
         return friendRequestList
                 .stream()
@@ -104,8 +103,8 @@ public class FriendServiceImpl implements FriendService {
      * @return FriendRequestDto 리스트
      * @throws Exception
      */
-    public List<FriendRequestDto> listFriendRequestSent(int userId) throws Exception {
-        List<FriendRequest> friendRequestList = friendRepository.listFriendRequestSent(userId);
+    public List<FriendRequestDto> listFriendRequestSent(int userId, ListOptionDto listOptionDto) throws Exception {
+        List<FriendRequest> friendRequestList = friendRepository.listFriendRequestSent(userId, listOptionDto);
 
         return friendRequestList
                 .stream()

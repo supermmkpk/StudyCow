@@ -1,13 +1,11 @@
 package com.studycow.repository.friend;
 
 import com.studycow.domain.FriendRequest;
-import com.studycow.domain.User;
-import com.studycow.dto.FriendDto;
+import com.studycow.dto.friend.FriendDto;
 import com.studycow.dto.listoption.ListOptionDto;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <pre>
@@ -30,10 +28,10 @@ public interface FriendRepository {
     void saveFriendRequest(int fromUserId, int toUserId) throws PersistenceException;
 
     /** 받은 친구 요청 목록 조회 */
-    List<FriendRequest> listFriendRequestReceived(int userId) throws PersistenceException;
+    List<FriendRequest> listFriendRequestReceived(int userId, ListOptionDto listOptionDto) throws PersistenceException;
 
     /** 보낸 친구 요청 목록 조회 */
-    List<FriendRequest> listFriendRequestSent(int userId) throws PersistenceException;
+    List<FriendRequest> listFriendRequestSent(int userId, ListOptionDto listOptionDto) throws PersistenceException;
 
     /** 친구 삭제 */
     void deleteFriend(int friendUserId, int userId) throws PersistenceException;

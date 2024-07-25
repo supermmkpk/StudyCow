@@ -1,15 +1,17 @@
 package com.studycow.repository.friend;
 
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Path;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.studycow.domain.*;
-import com.studycow.dto.FriendDto;
+import com.studycow.dto.friend.FriendDto;
 import com.studycow.dto.listoption.ListOptionDto;
+import com.studycow.util.QueryDslUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.studycow.domain.QFriend.friend;
 import static com.studycow.domain.QFriendRequest.friendRequest;
@@ -46,7 +48,7 @@ public class FriendRepositoryImpl implements FriendRepository {
      * 친구 맺은 목록 조회
      * <pre>
      *  userId1 또는 userId2와 내 ID가 일치하는 행에 대하여,
-     *  중복을 제거하고 반대편 회원/친구 정보를 FriendDto로 반환
+     *  반대편 회원/친구 정보를 FriendDto로 반환
      * </pre>
      *
      * @param userId 내 회원 ID
@@ -55,42 +57,38 @@ public class FriendRepositoryImpl implements FriendRepository {
      */
     @Override
     public List<FriendDto> listFriends(int userId, ListOptionDto option) throws PersistenceException {
-        //user2와 같으면 user1 반환
-        List<FriendDto> user1List = queryFactory
-                .select(Projections.constructor(FriendDto.class,
-                        user.id,
-                        user.userNickname,
-                        user.userEmail,
-                        user.userThumb,
-                        friend.friendDate)
+        // userId1 또는 userId2와 내 ID가 일치하는 행에 대하여,
+        // 반대편 회원/친구 정보를 FriendDto로 반환
+        return queryFactory
+                .select(
+                        Projections.constructor(FriendDto.class,
+                                new CaseBuilder()
+                                        .when(friend.user1.id.eq(userId))
+                                        .then(friend.user2.id)
+                                        .otherwise(friend.user1.id),
+                                new CaseBuilder()
+                                        .when(friend.user1.id.eq(userId))
+                                        .then(friend.user2.userNickname)
+                                        .otherwise(friend.user1.userNickname),
+
+                                new CaseBuilder()
+                                        .when(friend.user1.id.eq(userId))
+                                        .then(friend.user2.userEmail)
+                                        .otherwise(friend.user1.userEmail),
+                                new CaseBuilder()
+                                        .when(friend.user1.id.eq(userId))
+                                        .then(friend.user2.userThumb)
+                                        .otherwise(friend.user1.userThumb),
+                                friend.friendDate
+                        )
                 )
                 .from(friend)
-                .join(friend.user1, user)
-                .where(friend.user2.id.eq(userId),
-                        searchTextContains(option.getSearchText())
+                .where(
+                        (friend.user1.id.eq(userId).and(nicknameContains(option.getSearchText(), friend.user2)))
+                        .or(friend.user2.id.eq(userId).and(nicknameContains(option.getSearchText(), friend.user1)))
                 )
+                .orderBy(createOrderSpecifier(option, user, Order.DESC, friend, "friendDate"))
                 .fetch();
-
-        //user1과 같으면 user2 반환
-        List<FriendDto> user2List = queryFactory
-                .select(Projections.constructor(FriendDto.class,
-                        user.id,
-                        user.userNickname,
-                        user.userEmail,
-                        user.userThumb,
-                        friend.friendDate)
-                )
-                .from(friend)
-                .join(friend.user2, user)
-                .where(friend.user1.id.eq(userId),
-                        searchTextContains(option.getSearchText())
-                )
-                .fetch();
-
-        //합치기
-        user1List.addAll(user2List);
-
-        return user1List;
     }
 
     /**
@@ -152,11 +150,14 @@ public class FriendRepositoryImpl implements FriendRepository {
      * @throws PersistenceException
      */
     @Override
-    public List<FriendRequest> listFriendRequestReceived(int userId) throws PersistenceException {
+    public List<FriendRequest> listFriendRequestReceived(int userId, ListOptionDto option) throws PersistenceException {
         return queryFactory
                 .selectFrom(friendRequest)
                 .join(friendRequest.toUser, user)
-                .where(user.id.eq(userId))
+                .where(user.id.eq(userId),
+                        nicknameContains(option.getSearchText(), user)
+                )
+                .orderBy(createOrderSpecifier(option, user, Order.DESC, friendRequest, "requestDate"))
                 .fetch();
     }
 
@@ -167,11 +168,14 @@ public class FriendRepositoryImpl implements FriendRepository {
      * @throws PersistenceException
      */
     @Override
-    public List<FriendRequest> listFriendRequestSent(int userId) throws PersistenceException {
+    public List<FriendRequest> listFriendRequestSent(int userId, ListOptionDto option) throws PersistenceException {
         return queryFactory
                 .selectFrom(friendRequest)
                 .join(friendRequest.fromUser, user)
-                .where(user.id.eq(userId))
+                .where(user.id.eq(userId),
+                        nicknameContains(option.getSearchText(), user)
+                )
+                .orderBy(createOrderSpecifier(option, user, Order.DESC, friendRequest, "requestDate"))
                 .fetch();
     }
 
@@ -194,8 +198,47 @@ public class FriendRepositoryImpl implements FriendRepository {
     }
 
 
-    private BooleanExpression searchTextContains(String searchText) {
-        return searchText != null ? user.userNickname.contains(searchText) : null;
+    /** 검색 동적 쿼리를 위한 BooleanExpression
+     * <pre>
+     *     searchText가 null이 아니면 LIKE '%searchText%'가 됨
+     *     null일 경우, 무시됨
+     * </pre>
+     *
+     * @param searchText 검색어
+     * @return BooleanExpression
+     */
+    private BooleanExpression nicknameContains(String searchText, QUser qUser) {
+        return searchText != null ? qUser.userNickname.contains(searchText) : null;
+    }
+
+    private OrderSpecifier[] createOrderSpecifier(ListOptionDto option,
+                                                  Path<?> parent,
+                                                  Order defaultDirection,
+                                                  Path<?> defaultParent,
+                                                  String defaultFieldName) {
+        String sortKey = option.getSortKey();
+        String sortDirection = option.getSortDirection();
+
+        List<OrderSpecifier> orderSpecifierList = new ArrayList<>();
+
+        // 정렬 기준이 null이 아니라면
+        if(sortKey != null && !sortKey.isBlank()){
+            if(sortDirection == null) {
+                //정렬 방향이 null이라면 오름차순
+                orderSpecifierList.add(QueryDslUtil.getSortedColumn(Order.ASC, parent, sortKey));
+            } else {
+                orderSpecifierList.add(QueryDslUtil.getSortedColumn(Order.DESC, parent, sortKey));
+            }
+        } else {
+            if(sortDirection == null) {
+                //정렬 기준이 null이고 방향도 null이라면
+                orderSpecifierList.add(QueryDslUtil.getSortedColumn(defaultDirection, defaultParent, defaultFieldName));
+            } else {
+                orderSpecifierList.add(QueryDslUtil.getSortedColumn(defaultDirection, defaultParent, defaultFieldName));
+            }
+        }
+
+        return orderSpecifierList.toArray(new OrderSpecifier[orderSpecifierList.size()]);
     }
 
 }
