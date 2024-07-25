@@ -1,12 +1,7 @@
 import "./App.css";
-import StudyPage from "./views/StudyPage";
 
 function App() {
-  return (
-    <>
-      <StudyPage />
-    </>
-  );
+  return <></>;
 }
 
 export default App;
