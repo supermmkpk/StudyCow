@@ -9,6 +9,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+/**
+ * 유저 정보 Dto
+ * <pre>
+ *     유저 상세 정보를 담아서 전송하는 Dto 입니다.
+ * </pre>
+ * @author 채기훈
+ * @since JDK17
+ */
 
 @Data
 @AllArgsConstructor

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Custom User Detail 클래스
  * <pre>
- *     SpringSecurity
+ *     Spring Security에 필요한 UserDetails를 상속해 Custom 한 객체입니다
  * </pre>
  * @author 채기훈
  * @since JDK17

@@ -10,16 +10,22 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * 회원가입 Dto
+ * @author 채기훈
+ * @since JDK17
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class RegisterRequestDto {
 
-
+    /** 유저 아아디 **/
     @NotNull
     @NotBlank
     private String userEmail;
 
+    /** 유저 비밀번호 **/
     @NotNull
     @NotBlank
     private String userPassword;
