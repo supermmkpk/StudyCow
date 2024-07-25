@@ -1,7 +1,7 @@
 package com.studycow.service.friend;
 
-import com.studycow.dto.FriendDto;
-import com.studycow.dto.FriendRequestDto;
+import com.studycow.dto.friend.FriendDto;
+import com.studycow.dto.friend.FriendRequestDto;
 import com.studycow.dto.listoption.ListOptionDto;
 
 import java.util.List;

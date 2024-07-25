@@ -1,8 +1,8 @@
 package com.studycow.web;
 
 import com.studycow.config.jwt.JwtUtil;
-import com.studycow.dto.FriendDto;
-import com.studycow.dto.FriendRequestDto;
+import com.studycow.dto.friend.FriendDto;
+import com.studycow.dto.friend.FriendRequestDto;
 import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.service.friend.FriendService;
