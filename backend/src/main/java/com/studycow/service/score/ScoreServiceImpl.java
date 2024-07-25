@@ -1,7 +1,10 @@
 package com.studycow.service.score;
 
+import com.studycow.domain.UserScoreTarget;
+import com.studycow.dto.FriendRequestDto;
 import com.studycow.dto.ScoreDetailDto;
 import com.studycow.dto.ScoreDto;
+import com.studycow.dto.ScoreTargetDto;
 import com.studycow.repository.score.ScoreRepository;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
@@ -133,9 +136,36 @@ public class ScoreServiceImpl implements ScoreService{
         scoreRepository.deleteScore(scoreId);
     }
 
+    /**
+     * 성적 목표 등록
+     * @param targetMap : 성적 목표 정보
+     * @throws Exception
+     */
     @Override
     @Transactional
     public void saveScoreTarget(Map<String, Object> targetMap) throws Exception {
         scoreRepository.saveScoreTarget(targetMap);
     }
+
+    /**
+     * 목표 목록 조회
+     * @param userId : 유저 id
+     * @throws Exception
+     */
+    @Override
+    public List<ScoreTargetDto> targetList(int userId) throws PersistenceException {
+        return scoreRepository.targetList(userId);
+    }
+
+    /**
+     * 성적 목표 삭제
+     * @param targetId : 목표 id
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void deleteTarget(Long targetId) throws Exception {
+        scoreRepository.deleteScoreTarget(targetId);
+    }
+
 }

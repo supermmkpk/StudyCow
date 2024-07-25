@@ -1,8 +1,10 @@
 package com.studycow.repository.score;
 
 
+import com.studycow.domain.UserScoreTarget;
 import com.studycow.dto.ScoreDetailDto;
 import com.studycow.dto.ScoreDto;
+import com.studycow.dto.ScoreTargetDto;
 import jakarta.persistence.PersistenceException;
 import org.springframework.stereotype.Repository;
 
@@ -39,5 +41,12 @@ public interface ScoreRepository {
     /** 단일 성적 수정 */
     void modifyScore(Map<String, Object> scoreMap) throws PersistenceException;
 
+    /** 성적 목표 등록 */
     void saveScoreTarget(Map<String, Object> targetMap) throws PersistenceException;
+
+    /** 성적 목표 조회 */
+    List<ScoreTargetDto> targetList(int userId) throws PersistenceException;
+
+    /** 성적 목표 등록 */
+    void deleteScoreTarget(Long targetId) throws PersistenceException;
 }
