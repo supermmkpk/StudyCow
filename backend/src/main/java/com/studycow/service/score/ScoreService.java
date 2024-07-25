@@ -1,8 +1,8 @@
 package com.studycow.service.score;
 
-import com.studycow.domain.UserScoreTarget;
-import com.studycow.dto.ScoreDto;
-import com.studycow.dto.ScoreTargetDto;
+import com.studycow.dto.SubjectCodeDto;
+import com.studycow.dto.score.ScoreDto;
+import com.studycow.dto.score.ScoreTargetDto;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
@@ -42,4 +42,7 @@ public interface ScoreService {
 
     /** 성적 목표 수정 */
     void modifyTarget(Map<String, Object> targetMap) throws Exception;
+
+    /** 미설정 목표 과목 조회 */
+    List<SubjectCodeDto> subjectList(int userId) throws PersistenceException;
 }

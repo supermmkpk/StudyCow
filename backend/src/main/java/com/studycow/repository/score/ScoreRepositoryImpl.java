@@ -1,11 +1,13 @@
 package com.studycow.repository.score;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.studycow.domain.*;
-import com.studycow.dto.ScoreDetailDto;
-import com.studycow.dto.ScoreDto;
-import com.studycow.dto.ScoreTargetDto;
+import com.studycow.dto.SubjectCodeDto;
+import com.studycow.dto.score.ScoreDetailDto;
+import com.studycow.dto.score.ScoreDto;
+import com.studycow.dto.score.ScoreTargetDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
@@ -18,9 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static com.studycow.domain.QFriendRequest.friendRequest;
 import static com.studycow.domain.QSubjectCode.subjectCode;
-import static com.studycow.domain.QUser.user;
 import static com.studycow.domain.QUserScoreTarget.userScoreTarget;
 import static com.studycow.domain.QUserSubjectScore.userSubjectScore;
 import static com.studycow.domain.QWrongProblem.wrongProblem;
@@ -54,7 +54,7 @@ public class ScoreRepositoryImpl implements ScoreRepository{
     @Override
     public List<ScoreDto> listScores(int userId, int subCode) throws PersistenceException {
         StringBuilder jpql = new StringBuilder();
-        jpql.append("SELECT new com.studycow.dto.ScoreDto( \n");
+        jpql.append("SELECT new com.studycow.dto.score.ScoreDto( \n");
         jpql.append("us.id                  as scoreId, \n");
         jpql.append("us.subjectCode.name    as subName, \n");
         jpql.append("us.subjectCode.code    as subCode, \n");
@@ -110,7 +110,7 @@ public class ScoreRepositoryImpl implements ScoreRepository{
     @Override
     public List<ScoreDetailDto> listScoreDetails(Long scoreId) throws PersistenceException {
         StringBuilder jpql = new StringBuilder();
-        jpql.append("SELECT new com.studycow.dto.ScoreDetailDto( \n");
+        jpql.append("SELECT new com.studycow.dto.score.ScoreDetailDto( \n");
         jpql.append("wp.id                      as wrongDetailId, \n");
         jpql.append("wp.userSubjectScore.id     as scoreId, \n");
         jpql.append("wp.problemCategory.id      as catCode, \n");
@@ -353,5 +353,30 @@ public class ScoreRepositoryImpl implements ScoreRepository{
         }catch(Exception e) {
             throw new PersistenceException("목표 삭제 중 에러 발생", e);
         }
+    }
+
+    /** 미등록 목표 과목 조회
+     * <pre>
+     *      목표 등록 시 아직 등록하지 않은 목표 과목을 조회한다
+     * </pre>
+     * @param userId : 유저 id
+     * @throws PersistenceException : JPA 표준 예외
+     */
+    @Override
+    public List<SubjectCodeDto> subjectList(int userId) throws PersistenceException {
+        return queryFactory
+                .select(Projections.constructor(SubjectCodeDto.class,
+                        subjectCode.code,
+                        subjectCode.name,
+                        subjectCode.maxScore))
+                .from(subjectCode)
+                .where(subjectCode.code.notIn(
+                        JPAExpressions
+                                .select(userScoreTarget.subjectCode.code)
+                                .from(userScoreTarget)
+                                .where(userScoreTarget.user.id.eq(userId))
+                ))
+                .orderBy(subjectCode.code.asc())
+                .fetch();
     }
 }
