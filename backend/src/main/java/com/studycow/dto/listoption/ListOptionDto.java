@@ -24,5 +24,5 @@ public class ListOptionDto {
     /** 정렬 기준 */
     private String sortKey;
     /** 정렬 방향 (asc(기본), desc) */
-    private String sortDirection;
+    private Boolean isDESC;
 }
