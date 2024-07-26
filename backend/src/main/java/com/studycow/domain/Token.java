@@ -37,4 +37,13 @@ public class Token {
     @Column(name = "IN_DATE")
     private LocalDateTime inDate;
 
+    @PrePersist
+    public void onCreate(){
+        this.inDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onUpdate(){
+
+    }
 }

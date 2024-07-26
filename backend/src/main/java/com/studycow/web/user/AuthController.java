@@ -39,6 +39,7 @@ public class AuthController {
             @Valid @RequestBody LoginRequestDto requestDto
     ){
         String token = this.userService.login(requestDto);
+
         return ResponseEntity.ok(token);
     }
 

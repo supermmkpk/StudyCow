@@ -1,6 +1,7 @@
 package com.studycow.dto.user;
 
 import com.studycow.domain.UserGrade;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,6 @@ import java.time.LocalDateTime;
 @Data
 public class RegisterRequestDto {
 
-
     @NotNull
     @NotBlank
     private String userEmail;
@@ -25,20 +25,16 @@ public class RegisterRequestDto {
     private String userPassword;
 
     @NotNull
-    @NotBlank
     private int userPublic = 0;
 
     private String userThumb;
 
     private UserGrade userGrade;
 
-    @NotNull
     private int userExp = 0;
 
-    @NotNull
     private LocalDateTime userJoinDate = LocalDateTime.now(); ;
 
-    @NotNull
     private LocalDateTime userUpdateDate = LocalDateTime.now();
 
     @NotNull
