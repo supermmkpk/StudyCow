@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -42,5 +43,21 @@ public class StudyRoomServiceImpl implements StudyRoomService {
 
         StudyRoom studyRoom = studyRoomDto.toEntity(user);
         studyRoomRepository.createStudyRoom(studyRoom);
+    }
+
+    /**
+     * 스터디룸 상세 조회
+     *
+     * @param studyRoomId 스터디룸 고유번호
+     * @return StudyRoomDto
+     * @throws Exception
+     */
+    @Override
+    public StudyRoomDto getStudyRoomInfo(Long studyRoomId) throws Exception {
+        StudyRoomDto studyRoomDto = studyRoomRepository.getStudyRoomInfo(studyRoomId);
+        if(studyRoomDto == null) {
+            throw new IllegalArgumentException("존재하지 않는 방입니다.");
+        }
+        return studyRoomDto;
     }
 }
