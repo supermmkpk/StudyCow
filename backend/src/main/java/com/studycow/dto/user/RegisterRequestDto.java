@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class RegisterRequestDto {
-
-
     @NotNull
     @NotBlank
     private String userEmail;
@@ -25,7 +23,6 @@ public class RegisterRequestDto {
     private String userPassword;
 
     @NotNull
-    @NotBlank
     private int userPublic = 0;
 
     private String userThumb;
@@ -46,6 +43,5 @@ public class RegisterRequestDto {
     private String userNickName;
 
     @NotNull
-    @NotBlank
     private LocalDate userBirthday;
 }
