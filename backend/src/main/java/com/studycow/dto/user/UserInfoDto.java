@@ -1,5 +1,8 @@
 package com.studycow.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.studycow.domain.UserGrade;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,14 +19,15 @@ import java.util.Date;
 public class UserInfoDto {
 
     private int userId;
-    private String userName;
     private String userEmail;
     private int userPublic;
     private String userThumb;
-    private int userGradeCode;
+
+
+    private UserGradeDto userGrade;
     private int userExp;
     private LocalDateTime userJoinDate;
     private LocalDateTime userUpdateDate;
     private String userNickName;
-    private LocalDate userBirthday;
+
 }

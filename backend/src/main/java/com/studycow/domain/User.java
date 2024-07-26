@@ -34,10 +34,6 @@ public class User {
     @Column(name = "USER_ID",nullable = false)
     private int id;
 
-    @Column(name = "USER_NAME", length = 20,nullable = false)
-    @NotNull
-    private String userName;
-
     @Column(name = "USER_EMAIL", length = 30, unique = true,nullable = false)
     @NotNull
     private String userEmail;
@@ -68,8 +64,6 @@ public class User {
     @Column(name = "USER_NICKNAME", length = 20, unique = true)
     private String userNickname;
 
-    @Column(name = "USER_BIRTHDAY",nullable = false)
-    private LocalDate userBirthday;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GRADE_CODE",nullable = false)
