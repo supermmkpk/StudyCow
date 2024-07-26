@@ -1,16 +1,37 @@
 DELIMITER //
 -- 방 입장 log 입력 시 방 참여유저 insert, 방 인원 수 최신화
-CREATE TRIGGER TRG_AFTER_INSERT_IN_LOG
-AFTER INSERT ON T_IN_LOG
+CREATE TRIGGER TRG_BEFORE_INSERT_IN_LOG
+BEFORE INSERT ON T_IN_LOG
 FOR EACH ROW
 BEGIN
 	DECLARE V_USER_ID INT;
     DECLARE V_ROOM_ID bigint;
     DECLARE V_ROOM_CNT INT;
+    DECLARE V_ROOM_MAX_PERSON INT;
+    DECLARE V_ROOM_NOW_PERSON INT;
     
     SET V_USER_ID = NEW.USER_ID;
     SET V_ROOM_ID = NEW.ROOM_ID;
     
+    -- 참석하려는 방의 최대정원과 현 인원 수 조회
+    SELECT ROOM_MAX_PERSON, ROOM_NOW_PERSON
+    INTO V_ROOM_MAX_PERSON, V_ROOM_NOW_PERSON
+    FROM T_ROOM
+    WHERE ROOM_ID = V_ROOM_ID;
+    
+    -- 방 인원이 다 찼을 경우 EXCEPTION 발생
+    IF V_ROOM_MAX_PERSON >= V_ROOM_NOW_PERSON THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '방 정원이 초과되었습니다. 입장할 수 없습니다.';
+	END IF;
+    
+    -- 정산일자를 06:00 기준으로 업데이트 하기위한 STUDY_DATE
+    IF NEW.IN_DATE - INTERVAL 6 HOUR < current_date() THEN
+		SET NEW.STUDY_DATE = current_date() - interval 1 day;
+	ELSE 
+		SET NEW.STUDY_DATE = current_date();
+    END IF;
+    
+    -- 참석자 정보 조회 후 없을 경우 INSERT 처리
 	IF NOT EXISTS (
         SELECT 1 
         FROM T_ATTEND 
@@ -25,6 +46,7 @@ BEGIN
     FROM T_ATTEND 
     WHERE ROOM_ID = V_ROOM_ID;
     
+    -- 현재 참석중인 인원 수 업데이트
     UPDATE T_ROOM 
     SET ROOM_NOW_PERSON = V_ROOM_CNT,
     ROOM_UPDATE_DATE = NOW()
