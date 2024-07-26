@@ -1,6 +1,7 @@
 package com.studycow.service.studyroom;
 
 
+import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.studyroom.StudyRoomDto;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface StudyRoomService {
     /** 스터디룸 상세 조회 */
     StudyRoomDto getStudyRoomInfo(Long studyRoomId) throws Exception;
 
+    /** 스터디룸 목록 조회 */
+    List<StudyRoomDto> listStudyRoom(ListOptionDto listOptionDto) throws Exception;
 }

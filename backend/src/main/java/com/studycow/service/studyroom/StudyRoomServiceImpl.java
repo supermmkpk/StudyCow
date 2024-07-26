@@ -2,6 +2,7 @@ package com.studycow.service.studyroom;
 
 import com.studycow.domain.StudyRoom;
 import com.studycow.domain.User;
+import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.studyroom.StudyRoomDto;
 import com.studycow.repository.studyroom.StudyRoomRepository;
 import com.studycow.repository.user.UserRepository;
@@ -59,5 +60,16 @@ public class StudyRoomServiceImpl implements StudyRoomService {
             throw new IllegalArgumentException("존재하지 않는 방입니다.");
         }
         return studyRoomDto;
+    }
+
+    /**
+     * 스터디룸 목록 조회
+     *
+     * @param listOptionDto 검색/정렬 조건
+     * @throws Exception
+     */
+    @Override
+    public List<StudyRoomDto> listStudyRoom(ListOptionDto listOptionDto) throws Exception {
+        return studyRoomRepository.listStudyRoom(listOptionDto);
     }
 }

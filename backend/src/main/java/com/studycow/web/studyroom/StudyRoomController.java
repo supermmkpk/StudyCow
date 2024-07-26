@@ -1,6 +1,7 @@
 package com.studycow.web.studyroom;
 
 
+import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.studyroom.StudyRoomDto;
 import com.studycow.dto.studyroom.StudyRoomRequestDto;
 import com.studycow.dto.user.CustomUserDetails;
@@ -67,6 +68,20 @@ public class StudyRoomController {
             return ResponseEntity.ok(studyRoomDto);
         } catch (Exception e) {
             return new ResponseEntity<>("스터디룸 상세 조회 실패 : " + e.getMessage(),  HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(
+            summary = "목록 조회",
+            description = "스터디룸 목록을 조회합니다.<br>" +
+                    "스터디룸명 검색어, 정렬 기준, 정렬 방향을 설정할 수 있고, null일 경우 전체 조회합니다.")
+    @GetMapping("/list")
+    public ResponseEntity<?> listStudyRoom(@ModelAttribute ListOptionDto listOptionDto) {
+        try {
+            List<StudyRoomDto> studyRoomDtoList = studyRoomService.listStudyRoom(listOptionDto);
+            return ResponseEntity.ok(studyRoomDtoList);
+        } catch(Exception e) {
+            return new ResponseEntity<>("스터디룸 목록 조회 실패 : " + e.getMessage(),  HttpStatus.BAD_REQUEST);
         }
     }
 
