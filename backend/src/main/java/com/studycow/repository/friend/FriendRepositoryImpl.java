@@ -82,7 +82,7 @@ public class FriendRepositoryImpl implements FriendRepository {
                         (friend.user1.id.eq(userId).and(nicknameContains(option.getSearchText(), friend.user2)))
                                 .or(friend.user2.id.eq(userId)
                                         .and(nicknameContains(option.getSearchText(), friend.user1))))
-                .orderBy(createOrderSpecifier(option, user, Order.DESC, friend, "friendDate"))
+                .orderBy(createOrderSpecifier(option, user, friend, "friendDate"))
                 .fetch();
     }
 
@@ -152,7 +152,7 @@ public class FriendRepositoryImpl implements FriendRepository {
                 .join(friendRequest.toUser, user)
                 .where(user.id.eq(userId),
                         nicknameContains(option.getSearchText(), user))
-                .orderBy(createOrderSpecifier(option, user, Order.DESC, friendRequest, "requestDate"))
+                .orderBy(createOrderSpecifier(option, user, friendRequest, "requestDate"))
                 .fetch();
     }
 
@@ -169,7 +169,7 @@ public class FriendRepositoryImpl implements FriendRepository {
                 .join(friendRequest.fromUser, user)
                 .where(user.id.eq(userId),
                         nicknameContains(option.getSearchText(), user))
-                .orderBy(createOrderSpecifier(option, user, Order.DESC, friendRequest, "requestDate"))
+                .orderBy(createOrderSpecifier(option, user, friendRequest, "requestDate"))
                 .fetch();
     }
 
@@ -205,31 +205,38 @@ public class FriendRepositoryImpl implements FriendRepository {
         return searchText != null ? qUser.userNickname.contains(searchText) : null;
     }
 
+    /**
+     * 정렬을 동적으로 구현
+     *
+     * @param option 검색 및 정렬 조건
+     * @param parent 정렬 대상 엔터티
+     * @param defaultParent 기본 정렬 대상 엔터티
+     * @param defaultFieldName 기본 정렬 대상 칼럼
+     * @return OrderSpecifier[] 정렬 조건 배열
+     */
     private OrderSpecifier[] createOrderSpecifier(ListOptionDto option,
                                                   Path<?> parent,
-                                                  Order defaultDirection,
                                                   Path<?> defaultParent,
                                                   String defaultFieldName) {
+        //정렬 기준 및 정렬 방향
         String sortKey = option.getSortKey();
-        String sortDirection = option.getSortDirection();
+        Order direction;
+        if(option.getIsDESC() == null) {
+            direction = Order.ASC;
+        } else if(option.getIsDESC()) {
+            direction = Order.DESC;
+        } else {
+            direction = Order.ASC;
+        }
+
 
         List<OrderSpecifier> orderSpecifierList = new ArrayList<>();
 
         // 정렬 기준이 null이 아니라면
         if (sortKey != null && !sortKey.isBlank()) {
-            if (sortDirection == null) {
-                // 정렬 방향이 null이라면 오름차순
-                orderSpecifierList.add(QueryDslUtil.getSortedColumn(Order.ASC, parent, sortKey));
-            } else {
-                orderSpecifierList.add(QueryDslUtil.getSortedColumn(Order.DESC, parent, sortKey));
-            }
+                orderSpecifierList.add(QueryDslUtil.getSortedColumn(direction, parent, sortKey));
         } else {
-            if (sortDirection == null) {
-                // 정렬 기준이 null이고 방향도 null이라면
-                orderSpecifierList.add(QueryDslUtil.getSortedColumn(defaultDirection, defaultParent, defaultFieldName));
-            } else {
-                orderSpecifierList.add(QueryDslUtil.getSortedColumn(defaultDirection, defaultParent, defaultFieldName));
-            }
+                orderSpecifierList.add(QueryDslUtil.getSortedColumn(direction, defaultParent, defaultFieldName));
         }
 
         return orderSpecifierList.toArray(new OrderSpecifier[orderSpecifierList.size()]);

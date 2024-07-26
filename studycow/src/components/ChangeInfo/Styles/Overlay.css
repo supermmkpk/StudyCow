@@ -1,0 +1,17 @@
+.overlay-container {
+  position: absolute;
+  top: 10px; /* Adjust this value to control the vertical position */
+  left: 28%; /* Adjust this value to align it with the form's left edge */
+  transform: translateX(-50%);
+  z-index: 1; /* Ensure the button is above the form */
+}
+
+.overlay-button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
