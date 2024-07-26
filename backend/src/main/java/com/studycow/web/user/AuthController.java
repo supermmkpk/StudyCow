@@ -1,7 +1,9 @@
 package com.studycow.web.user;
 
 import com.studycow.dto.user.LoginRequestDto;
+import com.studycow.dto.user.LoginResponseDto;
 import com.studycow.dto.user.RegisterRequestDto;
+import com.studycow.dto.user.SignUpResponseDto;
 import com.studycow.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,12 +37,18 @@ public class AuthController {
      */
     @PostMapping("login")
     @Operation(summary = "로그인 요청", description = "회원 이메일과 비밀번호로 로그인을 요청합니다.")
-    public ResponseEntity<String> getMemberProfile(
+    public ResponseEntity<?> getMemberProfile(
             @Valid @RequestBody LoginRequestDto requestDto
     ){
-        String token = this.userService.login(requestDto);
 
-        return ResponseEntity.ok(token);
+        try{
+            LoginResponseDto responseDto = this.userService.login(requestDto);
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+
+
     }
 
     /**
@@ -61,8 +69,9 @@ public class AuthController {
     @PostMapping("register")
     public ResponseEntity<?> registerMember(@Valid @RequestBody RegisterRequestDto requestDto){
         try{
-            userService.register(requestDto);
-            return new ResponseEntity<>("회원가입 완료", HttpStatus.CREATED);
+            SignUpResponseDto responseDto = userService.register(requestDto);
+
+            return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>("회원가입 실패" + e.getMessage(),HttpStatus.BAD_REQUEST);
         }

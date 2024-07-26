@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,10 +32,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String login(LoginRequestDto loginRequestDto){
+    public LoginResponseDto login(LoginRequestDto loginRequestDto){
         String userEmail = loginRequestDto.getUserEmail();
         String userPassword = loginRequestDto.getPassword();
-        User user = userRepository.findByUserEmail(userEmail);
+        User user = userRepository.findByUserEmail(userEmail)
+                .orElseThrow(()->new EntityNotFoundException("해당 아이디를 가진 유저가 없습니다."));
 
         if(user ==null || !passwordEncoder.matches(userPassword, user.getUserPassword())){
             throw new BadCredentialsException("아이디 또는 비밀번호가 일치하지 않습니다.");
@@ -42,11 +45,33 @@ public class UserServiceImpl implements UserService {
         CustomUserInfoDto info = modelMapper.map(user, CustomUserInfoDto.class);
 
         String accessToken = jwtUtil.createAccessToken(info);
-        return accessToken;
+
+
+        UserGrade currentUserGrade = userGradeRepository.findById(user.getUserGrade().getGradeCode())
+                .orElseThrow(()->new EntityNotFoundException("존재하지 않는 등급입니다."));
+        UserGradeDto userGradeDto = new UserGradeDto();
+
+        userGradeDto.setGradeCode(currentUserGrade.getGradeCode());
+        userGradeDto.setGradeName(currentUserGrade.getGradeName());
+        userGradeDto.setMaxExp(currentUserGrade.getMaxEXP());
+        userGradeDto.setMinExp(currentUserGrade.getMinEXP());
+
+        LoginResponseDto loginResponseDto = new LoginResponseDto();
+
+        loginResponseDto.setToken(accessToken);
+        loginResponseDto.setUserEmail(userEmail);
+        loginResponseDto.setUserId(user.getId());
+        loginResponseDto.setUserExp(user.getUserExp());
+        loginResponseDto.setUserNickName(user.getUserNickname());
+        loginResponseDto.setUserGrade(userGradeDto);
+        loginResponseDto.setUserJoinDate(user.getUserJoinDate());
+        loginResponseDto.setUserUpdateDate(user.getUserUpdateDate());
+        loginResponseDto.setUserThumb(user.getUserThumb());
+        return loginResponseDto;
     }
 
     @Transactional
-    public void register(RegisterRequestDto signUpRequestDto){
+    public SignUpResponseDto register(RegisterRequestDto signUpRequestDto){
 
         Optional<UserGrade> optionalUserGrade = userGradeRepository.findById(1);
 
@@ -61,6 +86,12 @@ public class UserServiceImpl implements UserService {
         User user = modelMapper.map(signUpRequestDto, User.class);
         userRepository.save(user);
 
+
+        SignUpResponseDto responseDto = new SignUpResponseDto();
+        responseDto.setUserId(user.getId());
+        responseDto.setMessage("회원가입 성공");
+
+        return responseDto;
     }
 
     @Transactional
@@ -92,7 +123,6 @@ public class UserServiceImpl implements UserService {
 
             User newuser = user.get();
             newuser.setUserEmail(userUpdateDto.getUserEmail());
-            newuser.setUserBirthday(userUpdateDto.getUserBirthday());
             newuser.setUserThumb(userUpdateDto.getUserThumb());
             newuser.setUserNickname(userUpdateDto.getUserNickname());
             newuser.setUserPublic(userUpdateDto.getUserPublic());
@@ -103,9 +133,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserInfoDto getUserInfoByNickName(String nickName){
-        return userRepository.findByUserNickname(nickName)
-                .map(user -> modelMapper.map(user,UserInfoDto.class))
-                .orElseThrow(()->new EntityNotFoundException("해당하는 유저가 없습니다"));
+    public List<UserInfoDto> getUserInfoByNickName(String nickName){
+        List<User> infos = userRepository.findByUserNicknameContainingIgnoreCase(nickName)
+                .orElseThrow(()->new EntityNotFoundException("오류 발생"));
+
+        return infos.stream()
+                .map(user->modelMapper.map(user, UserInfoDto.class))
+                .collect(Collectors.toList());
     }
 }
