@@ -15,13 +15,6 @@ function Sidebar() {
    navigate('/'); 
   }
   
-  if (!isLogin) {
-    return <Navigate to="/login" />;  // 로그인 상태가 아니면 로그인페이지로 redirect
-  } 
-
-
-
-
     return (
     <>
       <div className="Sidebar">
@@ -41,7 +34,7 @@ function Sidebar() {
           </div>
         </div>
         <div className="SidebarContent">
-         <Link to="edit">
+         <Link to="">
             회원정보 수정
           </Link>
           <Link to="friends">

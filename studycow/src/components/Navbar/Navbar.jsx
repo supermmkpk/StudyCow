@@ -3,6 +3,7 @@ import Logo from "./BrandLogo.jsx";
 import "./styles/Navbar.css";
 import useInfoStore from "../../stores/infos.js";
 import User from "./UserInformation.jsx";
+import { Link } from "react-router-dom";
 
 function Header() {
   const { isLogin } = useInfoStore();
@@ -14,32 +15,32 @@ function Header() {
           <div id="navContent" className="leftContainer">
             {isLogin && (
               <>
-                <Navbar.Brand href="#on">
+                <Link to="/">
                   <Logo />
-                </Navbar.Brand>
-                <Navbar.Brand className="navItem" href="#캠스터디">
-                  캠 스터디
-                </Navbar.Brand>
-                <Navbar.Brand className="navItem" href="#플래너">
-                  플래너
-                </Navbar.Brand>
-                <Navbar.Brand className="navItem" href="#성적 분석">
-                  성적 분석
-                </Navbar.Brand>
+                </Link>
+                <Link className="navItem" to="/study">
+                  <p>캠 스터디</p>
+                </Link>
+                <Link className="navItem" to="/plan">
+                  <p>플래너</p>
+                </Link>
+                <Link className="navItem" to="/analyze">
+                  <p>성적 분석</p>
+                </Link>
               </>
             )}
             {!isLogin && (
               <>
-                <Navbar.Brand href="#off">
+                <Link to="/">
                   <Logo />
-                </Navbar.Brand>
+                </Link>
               </>
             )}
           </div>
           <div id="navContent" className="rightContainer">
             {!isLogin && (
               <>
-                <Navbar.Brand href="#login">로그인/회원가입</Navbar.Brand>
+                <Link to="/login"><p>로그인/회원가입</p></Link>
               </>
             )}
             {isLogin && (

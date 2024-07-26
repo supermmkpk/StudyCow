@@ -6,7 +6,7 @@ import "./styles/UserInformation.css";
 import Navbar from "react-bootstrap/Navbar";
 
 function UserInformation() {
-  const { toggleDropdown, isOpen, userInfo } = useInfoStore();
+  const { toggleDropdown, isOpen, userInfo, logout } = useInfoStore();
 
   return (
     <>
@@ -60,16 +60,13 @@ function UserInformation() {
               <div className="userInfoDetail">
                   <p>등급: {userInfo.grade}</p>
                   <p>경험치: {userInfo.exp}</p>
-                  <p>
-                    접속중인 친구: {userInfo.onlineFriends}/{userInfo.friends}
-                  </p>
                   <p>오늘 공부시간: {userInfo.todayStudyTime}</p>
                   <p>현재 랭킹: {userInfo.ranks}</p>
                 </div>
-                <Navbar.Brand className="userInfoItem" href="#마이페이지">
+                <Navbar.Brand className="userInfoItem" href="/myaccount">
                   마이 페이지
                 </Navbar.Brand>
-                <Navbar.Brand className="userInfoItem" href="#로그아웃">
+                <Navbar.Brand className="userInfoItem" onClick={logout}>
                   로그아웃
                 </Navbar.Brand>
             </div>
