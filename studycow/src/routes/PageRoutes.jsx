@@ -1,5 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 
+// 메인페이지
+import MainPage from '../views/MainPage.jsx';
+// 비로그인
+import Main_Unlogin from '../components/MainPage/Main_Unlogin.jsx'
 
 // 로그인/회원가입페이지
 import SignPage from '../views/SignPage.jsx'
@@ -16,13 +20,14 @@ const PageRoutes = () => (
   <Routes> 
     {/* 마이페이지 */}
     <Route path="/myaccount" element={<MyPage />}>
-        <Route path="edit" element={<MyPageEdit />} />
+        <Route path="" element={<MyPageEdit />} />
         <Route path="friends" element={<FriendComponent/>} />
         <Route path="grade" element={<MyPageGrade/>} />
     </Route>
 
     {/* 홈 */}
-    <Route path="/" element={<a>home</a>}>
+    <Route path="/" element={<MainPage />}>
+     <Route path="" element={<Main_Unlogin />} />
     </Route>
 
     {/* 로그인 */}

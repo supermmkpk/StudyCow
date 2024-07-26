@@ -1,6 +1,6 @@
 .navContainer {
   z-index: 2;
-  position: sticky;
+  position: absolute;
   top: 0px;
   width: 100%;
   height: 100px;
@@ -21,6 +21,11 @@
   height: 75px;
   text-decoration-line: none;
   color: black;
+}
+
+.navItem p {
+  font-size: 30px;
+  margin: 0%;
 }
 
 .navBackground {
