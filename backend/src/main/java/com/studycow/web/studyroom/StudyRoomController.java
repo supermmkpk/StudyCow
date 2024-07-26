@@ -15,10 +15,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Tag(name = "StudyRoom", description = "스터디룸 CRUD")
 @RestController
@@ -54,6 +56,17 @@ public class StudyRoomController {
             return new ResponseEntity<>("스터디룸 생성 성공", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("스터디룸 생성 실패 : " + e.getMessage(),  HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "상세 조회", description = "스터디룸의 상세 정보를 조회합니다.")
+    @GetMapping("/{studyRoomId}")
+    public ResponseEntity<?> getStudyRoomInfo(@PathVariable("studyRoomId") Long studyRoomId) {
+        try {
+            StudyRoomDto studyRoomDto = studyRoomService.getStudyRoomInfo(studyRoomId);
+            return ResponseEntity.ok(studyRoomDto);
+        } catch (Exception e) {
+            return new ResponseEntity<>("스터디룸 상세 조회 실패 : " + e.getMessage(),  HttpStatus.BAD_REQUEST);
         }
     }
 
