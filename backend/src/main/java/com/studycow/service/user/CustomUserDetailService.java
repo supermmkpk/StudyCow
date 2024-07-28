@@ -12,6 +12,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 유저 로그인 Service
+ * <pre>
+ *     유저 로그인을 위한 UserDetailService
+ * </pre>
+ * @author 채기훈
+ * @since JDK17
+ */
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor

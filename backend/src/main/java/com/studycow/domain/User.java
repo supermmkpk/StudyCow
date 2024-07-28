@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
@@ -61,6 +62,7 @@ public class User {
     @Column(name = "USER_UPDATE_DATE",nullable = false)
     private LocalDateTime userUpdateDate;
 
+    @Unique
     @Column(name = "USER_NICKNAME", length = 20, unique = true)
     private String userNickname;
 
