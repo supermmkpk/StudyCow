@@ -74,7 +74,7 @@ public class StudyRoomControllerTest {
         studyRoomDto.setRoomContent("This is a test study room");
         studyRoomDto.setUserId(1);
 
-        // User 객체 생성
+        // CustomUserInfoDto 객체 생성
         CustomUserInfoDto customUserInfoDto = new CustomUserInfoDto(
                 1,
                 "testName",
