@@ -15,6 +15,7 @@ import java.util.List;
  * @since JDK17
  */
 public interface StudyRoomService {
+
     /** 스터디룸 생성 */
     void createStudyRoom(StudyRoomDto studyRoomDto) throws Exception;
 
