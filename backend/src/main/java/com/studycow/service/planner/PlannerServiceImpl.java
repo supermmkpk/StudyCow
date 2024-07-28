@@ -19,6 +19,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 플래너 Service
+ * <pre>
+ *     플래너 기본 CRUD와 조회 서비스
+ * </pre>
+ * @author 채기훈
+ * @since JDK17
+ */
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -29,6 +38,11 @@ public class PlannerServiceImpl implements PlannerService {
     public final UserRepository userRepository;
     public final SubjectCodeRepository subjectCodeRepository;
 
+    /**
+     * 플래너 생성
+     * @param customUserDetails 현재 생성자의 정보
+     * @param plannerCreateDto 플래너 생성 정보
+     */
     @Override
     public void createPlan(CustomUserDetails customUserDetails, PlannerCreateDto plannerCreateDto){
 
@@ -48,6 +62,12 @@ public class PlannerServiceImpl implements PlannerService {
         plannerRepository.save(userSubjectPlan);
     }
 
+    /**
+     * 플래너 생성일자 기준 조회
+     * @param userId 현재 사용자
+     * @param localDate 조회 일자
+     * @return List<PlannerGetDto>
+     */
     @Override
     public List<PlannerGetDto> getPlansByDateForUser(int userId, LocalDate localDate){
         List<UserSubjectPlan> plans = plannerRepository.findByUserIdAndPlanDate((long)userId,localDate)
@@ -55,6 +75,12 @@ public class PlannerServiceImpl implements PlannerService {
         return convertToDtoList(plans);
     }
 
+    /**
+     * 플래너 과목코드 기준 조회
+     * @param userId
+     * @param subjectId
+     * @return List<PlannerGetDto>
+     */
     @Override
     public List<PlannerGetDto> getPlansBySubjectForUser(int userId, int subjectId) {
         SubjectCode subjectCode = subjectCodeRepository.findById(subjectId)
@@ -65,6 +91,12 @@ public class PlannerServiceImpl implements PlannerService {
         return convertToDtoList(plans);
     }
 
+    /**
+     * 플래너 상세 정보 조회
+     * @param userId 작성자 정보
+     * @param planId 플래너 정보
+     * @return
+     */
     @Override
     public PlannerGetDto getPlanByIdForUser(int userId, int planId) {
         UserSubjectPlan plan = plannerRepository.findByUserIdAndPlanId((long)userId,(long)planId)
@@ -74,6 +106,12 @@ public class PlannerServiceImpl implements PlannerService {
         return currentPlan;
     }
 
+    /**
+     * 플래너 업데이트
+     * @param planId 업데이트할 플래너
+     * @param customUser 작성 요청하는 사용자
+     * @param plannerCreateDto 플래너 수정 사항
+     */
     @Override
     public void updatePlan(int planId, CustomUserDetails customUser,PlannerCreateDto plannerCreateDto ){
         int userId = customUser.getUser().getUserId();
@@ -100,6 +138,11 @@ public class PlannerServiceImpl implements PlannerService {
 
     }
 
+    /**
+     * 플래너 삭제
+     * @param planId 삭제할 플래너
+     * @param customUser 요청하는 유저
+     */
     @Override
     public void deletePlan(int planId, CustomUserDetails customUser) {
         UserSubjectPlan plan = plannerRepository.findById((long)planId)
@@ -114,6 +157,11 @@ public class PlannerServiceImpl implements PlannerService {
         plannerRepository.delete(plan);
     }
 
+    /**
+     * 플래너 Entity > Dto 변환 메서드
+     * @param plans
+     * @return
+     */
     private List<PlannerGetDto> convertToDtoList(List<UserSubjectPlan> plans){
         return plans.stream()
                 .map(plan -> modelMapper.map(plan, PlannerGetDto.class))

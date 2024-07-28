@@ -17,6 +17,13 @@ import retrofit2.http.Path;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * <pre>
+ *     플래너 관리 컨트롤러 클래스
+ * </pre>
+ * @author 채기훈
+ * @since JDK17
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/planner")

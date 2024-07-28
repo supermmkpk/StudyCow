@@ -17,6 +17,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * <pre>
+ *     회원 관리 컨트롤러 클래스
+ * </pre>
+ *
+ * @author 채기훈
+ * @since JDK17
+ */
 @Tag(name = "User", description = "회원 관리")
 @RestController
 @RequestMapping("/user")

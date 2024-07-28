@@ -7,6 +7,12 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * 플래너 정보 상세 조회 Dto
+ *
+ * @author 채기훈
+ * @since JDK17
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

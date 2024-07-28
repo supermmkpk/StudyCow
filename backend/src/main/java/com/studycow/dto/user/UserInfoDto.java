@@ -22,8 +22,6 @@ public class UserInfoDto {
     private String userEmail;
     private int userPublic;
     private String userThumb;
-
-
     private UserGradeDto userGrade;
     private int userExp;
     private LocalDateTime userJoinDate;

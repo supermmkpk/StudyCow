@@ -4,6 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 토큰 발급 Dto
+ * @author 채기훈
+ * @since JDK17
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
