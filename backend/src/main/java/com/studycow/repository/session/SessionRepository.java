@@ -26,11 +26,11 @@ public interface SessionRepository {
     SessionDto enterRoom(Map<String, Object> enterMap) throws PersistenceException;
 
     /** 방 퇴장 시 log 업데이트 */
-    SessionDto exitRoom(Map<String, Object> enterMap) throws PersistenceException;
+    SessionDto exitRoom(Map<String, Object> enterMap, int userId) throws PersistenceException;
 
     /** 해당 방에서 금일 공부한 시간 조회 */
     Integer roomStudyTime(int userId, Long roomId, LocalDate studyDate) throws PersistenceException;
 
     /** 방 퇴장 시 log 업데이트 */
-    void modifyStudyTime(Map<String, Object> enterMap) throws PersistenceException;
+    void modifyStudyTime(Map<String, Object> enterMap, int userId) throws PersistenceException;
 }
