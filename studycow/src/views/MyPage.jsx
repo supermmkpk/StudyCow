@@ -8,9 +8,9 @@ function MyPage() {
   const { isLogin } = useInfoStore();
 
   console.log(isLogin)
-  // if (!isLogin) {
-  //   return <Navigate to="/login" />;  // 로그인 상태가 아니면 로그인페이지로 redirect
-  // } 
+  if (!isLogin) {
+    return <Navigate to="/login" />;  // 로그인 상태가 아니면 로그인페이지로 redirect
+  } 
     return (
     <>
     <div className='MyPage'>
