@@ -34,7 +34,7 @@ import java.util.Map;
 public class FriendController {
 
     private final FriendService friendService;
-    private final JwtUtil jwtUtil;
+    //private final JwtUtil jwtUtil;
 
     @Operation(
             summary = "친구 요청 승인",
@@ -43,7 +43,7 @@ public class FriendController {
     public ResponseEntity<?> acceptFriend(@PathVariable("friendRequestId") int friendRequestId) {
         try {
             friendService.acceptFriendRequest(friendRequestId);
-            return new ResponseEntity<>("친구 요청 승인 성공", HttpStatus.CREATED);
+            return new ResponseEntity<>("친구 요청 승인 성공", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("친구 요청 승인 실패", HttpStatus.BAD_REQUEST);

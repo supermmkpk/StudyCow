@@ -1,5 +1,4 @@
 import useInfoStore from "../../stores/infos.js";
-import profileImg from "./img/7.jpg";
 import upImg from "./img/up.png";
 import downImg from "./img/down.png";
 import "./styles/UserInformation.css";
@@ -17,13 +16,13 @@ function UserInformation() {
               <div>
                 <img
                   className="profileImg"
-                  src={profileImg}
+                  src={userInfo.userThumb}
                   alt="프로필이미지"
                 />
               </div>
               <div>
                 <a>
-                  {userInfo.name}님
+                  {userInfo.userNickName}님
                   <br />
                   안녕하세요!
                 </a>
@@ -39,15 +38,14 @@ function UserInformation() {
             <div className="userInfoOpen" onClick={toggleDropdown}>
               <div>
                 <img
-                  width="65px"
                   className="profileImg"
-                  src={profileImg}
+                  src={userInfo.userThumb}
                   alt="프로필이미지"
                 />
               </div>
               <div>
                 <a>
-                  {userInfo.name}님
+                  {userInfo.userNickName}님
                   <br />
                   안녕하세요!
                 </a>
@@ -58,10 +56,9 @@ function UserInformation() {
             </div>
             <div className="userDropdownContent">
               <div className="userInfoDetail">
-                  <p>등급: {userInfo.grade}</p>
-                  <p>경험치: {userInfo.exp}</p>
-                  <p>오늘 공부시간: {userInfo.todayStudyTime}</p>
-                  <p>현재 랭킹: {userInfo.ranks}</p>
+                  <p>등급: {userInfo.userGrade.gradeName}</p>
+                  <p>경험치: {userInfo.userExp}</p>
+                  <p>이메일: {userInfo.userEmail}</p>
                 </div>
                 <Navbar.Brand className="userInfoItem" href="/myaccount">
                   마이 페이지
