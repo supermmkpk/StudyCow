@@ -71,10 +71,10 @@ pipeline {
     
     post {
         success {
-            echo 'Pipeline succeeded! Application deployed successfully.'
+            updateGitlabCommitStatus name: 'build', state: 'success'
         }
         failure {
-            echo 'Pipeline failed. Please check the logs for details.'
+            updateGitlabCommitStatus name: 'build', state: 'failed'
         }
     }
 }
