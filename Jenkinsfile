@@ -1,53 +1,29 @@
 pipeline {
     agent any
-
-
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-
-        stage('Frontend Build') {
+        stage('Build') {
             steps {
-                dir('studycow') {
-                    sh 'npm ci'
-                    sh 'npm run build'
+                sh 'docker build -t myapp .'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sshagent(credentials: ['ec2-ssh-key']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ec2-user@i11c202.p.ssafy.io"
+                            docker pull myapp:latest
+                            docker stop myapp || true
+                            docker rm myapp || true
+                            docker run -d --name myapp -p 80:80 myapp:latest
+                        "
+                    '''
                 }
             }
-        }
-
-        stage('Backend Build') {
-            steps {
-                dir('backend') {
-                    // Gradle 프로젝트라고 가정
-                    sh './gradlew clean build'
-
-                    // Maven 프로젝트인 경우 아래 줄 사용
-                    // sh 'mvn clean package'
-                }
-            }
-        }
-
-        stage('Archive Artifacts') {
-            steps {
-                archiveArtifacts artifacts: 'studycow/build/**/*', fingerprint: true
-                archiveArtifacts artifacts: 'backend/build/libs/*.jar', fingerprint: true
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Build finished'
-            cleanWs()
-        }
-        success {
-            echo 'Build succeeded'
-        }
-        failure {
-            echo 'Build failed'
         }
     }
 }
