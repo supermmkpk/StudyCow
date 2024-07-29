@@ -10,7 +10,7 @@ pipeline {
 
         stage('Frontend Build') {
             steps {
-                dir('frontend') {
+                dir('studycow') {
                     nodejs(nodeJSInstallationName: 'NodeJS 18.x') {  // Jenkins에 설정된 Node.js 버전
                         sh 'npm ci'  // npm install 대신 ci를 사용하여 정확한 버전 설치
                         sh 'npm run build'
