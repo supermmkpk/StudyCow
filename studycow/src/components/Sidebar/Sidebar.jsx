@@ -1,9 +1,9 @@
 import Navbar from "react-bootstrap/Navbar";
 import Logo from "./BrandLogo.jsx";
-import './styles/Sidebar.css'
-import profileImg from'./img/UserProfile.jpg';
+import "./styles/Sidebar.css";
+import profileImg from "./img/UserProfile.jpg";
 import useInfoStore from "../../stores/infos.js";
-import { Link, useNavigate, Navigate } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from "react-router-dom";
 
 function Sidebar() {
   // 상태 - 유저 정보 가져오기
@@ -12,16 +12,16 @@ function Sidebar() {
   // 이동 - 홈으로 단순 이동
   const navigate = useNavigate();
   function goHome() {
-   navigate('/'); 
+    navigate("/");
   }
-  
-    return (
+
+  return (
     <>
       <div className="Sidebar">
         <div className="SidebarLogo" onClick={goHome}>
           <Logo />
         </div>
-        <div className="SidebarUserInfo" >
+        <div className="SidebarUserInfo">
           <img
             width="114px"
             className="profileImg"
@@ -34,26 +34,16 @@ function Sidebar() {
           </div>
         </div>
         <div className="SidebarContent">
-         <Link to="">
-            회원정보 수정
-          </Link>
-          <Link to="friends">
-            친구 관리
-          </Link>
-          <Link to="grade">
-            회원등급 정보
-          </Link>
-          <hr/>
+          <Link to="Edit">회원정보 수정</Link>
+          <Link to="friends">친구 관리</Link>
+          <Link to="grade">회원등급 정보</Link>
+          <hr />
         </div>
         <div className="SidebarFooter">
           <div className="SidebarFooterItem">
-            <a onClick={logout}>
-              로그아웃
-            </a>
+            <a onClick={logout}>로그아웃</a>
             <a>/</a>
-            <a onClick={resign}>
-              회원탈퇴
-            </a>
+            <a onClick={resign}>회원탈퇴</a>
           </div>
           <div className="SidebarFooterLogo">
             <div className="LogoItem">
@@ -62,7 +52,6 @@ function Sidebar() {
           </div>
         </div>
       </div>
-
     </>
   );
 }

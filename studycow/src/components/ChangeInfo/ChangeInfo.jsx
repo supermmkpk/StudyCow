@@ -6,14 +6,9 @@ import "./Styles/ChangeInfo.css";
 
 const ChangeInfo = () => {
   const [isPasswordChange, setIsPasswordChange] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleButtonClick = () => {
-    setIsAnimating(true);
-    setTimeout(() => {
-      setIsPasswordChange(true);
-      setIsAnimating(false);
-    }, 600); // Match the duration of the animation
+    setIsPasswordChange(true);
   };
 
   const handleCancelClick = () => {
@@ -22,17 +17,8 @@ const ChangeInfo = () => {
 
   return (
     <div className="change-info-container">
-      {!isPasswordChange && (
-        <Overlay
-          setRightPanelActive={handleButtonClick}
-          isAnimating={isAnimating}
-        />
-      )}
-      <div
-        className={`form-container ${isPasswordChange ? "next-form" : ""} ${
-          isAnimating ? "animate" : ""
-        }`}
-      >
+      {!isPasswordChange && <Overlay setRightPanelActive={handleButtonClick} />}
+      <div className={`form-container ${isPasswordChange ? "next-form" : ""}`}>
         {isPasswordChange ? (
           <ChangePassword setIsPasswordChange={handleCancelClick} />
         ) : (
