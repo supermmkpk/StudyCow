@@ -90,8 +90,6 @@ public class FriendServiceImpl implements FriendService {
                 .map(friendRequest -> new FriendRequestDto(
                         friendRequest.getId(),
                         friendRequest.getFromUser().getId(),
-                        friendRequest.getToUser().getUserNickname(),
-                        friendRequest.getToUser().getUserThumb(),
                         friendRequest.getRequestStatus(),
                         friendRequest.getRequestDate(),
                         friendRequest.getRequestUpdateDate()
@@ -113,8 +111,6 @@ public class FriendServiceImpl implements FriendService {
                 .map(friendRequest -> new FriendRequestDto(
                         friendRequest.getId(),
                         friendRequest.getToUser().getId(),
-                        friendRequest.getToUser().getUserNickname(),
-                        friendRequest.getToUser().getUserThumb(),
                         friendRequest.getRequestStatus(),
                         friendRequest.getRequestDate(),
                         friendRequest.getRequestUpdateDate()
