@@ -27,8 +27,6 @@ const FriendList = () => {
         setFriends(response.data);
       } catch (error) {
         console.error("API 요청 실패:", error);
-        console.log(token);
-        console.log(useInfoStore.getState());
       }
     };
 
@@ -43,7 +41,7 @@ const FriendList = () => {
         {friends.length > 0 ? (
           friends.map((friend) => (
             <div key={friend.friendUserId} className="friendItem">
-              <p>Email: {friend.friendEmail}</p>
+              <p>{friend.friendEmail}</p>
             </div>
           ))
         ) : (
