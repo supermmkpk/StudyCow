@@ -36,7 +36,7 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     @Operation(summary="회원", description = "회원")
-    @GetMapping("me")
+    @GetMapping("/me")
     public ResponseEntity<?> getUser(@RequestParam("id") Long id) {
 
         UserInfoDto userInfoDto = userService.getUserInfo(id);
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @Operation(summary = "회원 정보 수정", description = "회원의 기본정보를 수정합니다.")
-    @PatchMapping("me")
+    @PatchMapping("/me")
     public ResponseEntity<?> UpdateUser(@Valid @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserUpdateDto userUpdateDto) {
         //String token = authorizationHeader.replace("Bearer ", "");
         //int currentUserId = jwtUtil.getUserId(token);
