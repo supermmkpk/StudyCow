@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useInfoStore from "../../stores/infos";
 
 const SignIn = () => {
-  const { sendLoginRequest } = useInfoStore();
+  const { sendLoginRequest, token, isLogin } = useInfoStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error] = useState("");
@@ -15,6 +15,7 @@ const SignIn = () => {
     const success = await sendLoginRequest(email, password);
     if (success) {
       // 로그인 성공 시, 필요한 동작을 수행합니다.
+      console.log(token, isLogin)
       alert('로그인 성공!');
     } else {
       // 로그인 실패 시, 에러 메시지를 표시합니다.
