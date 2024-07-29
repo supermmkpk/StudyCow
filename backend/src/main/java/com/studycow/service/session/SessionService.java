@@ -3,7 +3,9 @@ package com.studycow.service.session;
 import com.studycow.dto.SubjectCodeDto;
 import com.studycow.dto.score.ScoreDto;
 import com.studycow.dto.score.ScoreTargetDto;
+import com.studycow.dto.session.EnterRequestDto;
 import com.studycow.dto.session.SessionDto;
+import com.studycow.dto.session.SessionRequestDto;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
@@ -18,9 +20,9 @@ import java.util.Map;
  */
 public interface SessionService {
     /** 방 입장 시도 */
-    SessionDto enterRoom(Map<String, Object> enterMap) throws Exception;
+    SessionDto enterRoom(EnterRequestDto enterRequestDto, int userId) throws Exception;
     /** 방 퇴장 시도 */
-    SessionDto exitRoom(Map<String, Object> enterMap, int userId) throws Exception;
+    SessionDto exitRoom(SessionRequestDto sessionRequestDto, int userId) throws Exception;
     /** 공부시간 갱신 */
-    public void modifyStudyTime(Map<String, Object> enterMap, int userId) throws Exception;
+    public void modifyStudyTime(SessionRequestDto sessionRequestDto, int userId) throws Exception;
 }

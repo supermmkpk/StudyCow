@@ -1,6 +1,8 @@
 package com.studycow.service.session;
 
+import com.studycow.dto.session.EnterRequestDto;
 import com.studycow.dto.session.SessionDto;
+import com.studycow.dto.session.SessionRequestDto;
 import com.studycow.repository.session.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +20,9 @@ public class SessionServiceImpl implements SessionService{
 
     @Override
     @Transactional
-    public SessionDto enterRoom(Map<String, Object> enterMap) throws Exception {
+    public SessionDto enterRoom(EnterRequestDto enterRequestDto, int userId) throws Exception {
         /** 방 입장 시 log 입력 */
-        SessionDto sessionDto = sessionRepository.enterRoom(enterMap);
+        SessionDto sessionDto = sessionRepository.enterRoom(enterRequestDto, userId);
 
         /** 해당 방에서 금일 공부한 시간 조회 */
         sessionDto.setRoomStudyTime(sessionRepository.roomStudyTime(
@@ -33,9 +35,9 @@ public class SessionServiceImpl implements SessionService{
 
     @Override
     @Transactional
-    public SessionDto exitRoom(Map<String, Object> enterMap, int userId) throws Exception {
+    public SessionDto exitRoom(SessionRequestDto sessionRequestDto, int userId) throws Exception {
         /** 방 퇴장 시 log 갱신 */
-        SessionDto sessionDto = sessionRepository.exitRoom(enterMap, userId);
+        SessionDto sessionDto = sessionRepository.exitRoom(sessionRequestDto, userId);
 
         /** 해당 방에서 금일 공부한 시간 조회 */
         sessionDto.setRoomStudyTime(sessionRepository.roomStudyTime(
@@ -48,8 +50,8 @@ public class SessionServiceImpl implements SessionService{
 
     @Override
     @Transactional
-    public void modifyStudyTime(Map<String, Object> enterMap, int userId) throws Exception {
+    public void modifyStudyTime(SessionRequestDto sessionRequestDto, int userId) throws Exception {
         /** 세션 공부시간 갱신 */
-        sessionRepository.modifyStudyTime(enterMap, userId);
+        sessionRepository.modifyStudyTime(sessionRequestDto, userId);
     }
 }

@@ -2,7 +2,9 @@ package com.studycow.repository.session;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.studycow.domain.*;
+import com.studycow.dto.session.EnterRequestDto;
 import com.studycow.dto.session.SessionDto;
+import com.studycow.dto.session.SessionRequestDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
@@ -36,15 +38,16 @@ public class SessionRepositoryImpl implements SessionRepository{
      *      방으로 입장을 시도한다.
      *      trigger : TRG_BEFORE_INSERT_IN_LOG
      * </pre>
-     * @param enterMap : 방 입장시 유저 id, 방 id
+     * @param enterRequestDto : 방 Id DTO
+     * @param userId : 유저 id
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public SessionDto enterRoom(Map<String, Object> enterMap) throws PersistenceException {
+    public SessionDto enterRoom(EnterRequestDto enterRequestDto, int userId) throws PersistenceException {
         try {
-            User user = em.find(User.class, (Integer)enterMap.get("userId"));
+            User user = em.find(User.class, userId);
             StudyRoom studyRoom = em.find(StudyRoom.class,
-                    Long.parseLong((String)enterMap.get("roomId")));
+                    Long.parseLong(enterRequestDto.getRoomId()));
 
             UserStudyRoomEnter ure = new UserStudyRoomEnter(
                     null,
@@ -79,21 +82,22 @@ public class SessionRepositoryImpl implements SessionRepository{
      *      세션 id를 기반으로 방 퇴장 log를 최신화한다
      *      trigger : TRG_AFTER_UPDATE_IN_LOG
      * </pre>
-     * @param enterMap : 방 퇴장 시 세션 id
+     * @param sessionRequestDto : 세션 id, 공부시간
+     * @param userId : 유저 id
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public SessionDto exitRoom(Map<String, Object> enterMap, int userId) throws PersistenceException {
+    public SessionDto exitRoom(SessionRequestDto sessionRequestDto, int userId) throws PersistenceException {
         try {
             UserStudyRoomEnter ure = em.find(UserStudyRoomEnter.class,
-                    Long.parseLong((String)enterMap.get("sessionId")));
+                    Long.parseLong(sessionRequestDto.getSessionId()));
 
             if(ure != null) {
                 if (ure.getUser().getId() != userId) {
                     throw new IllegalStateException("세션ID의 사용자가 일치하지 않습니다.");
                 }
 
-                Integer studyTime = (Integer) enterMap.get("studyTime");
+                Integer studyTime = sessionRequestDto.getStudyTime();
 
                 queryFactory
                         .update(userStudyRoomEnter)
@@ -146,20 +150,21 @@ public class SessionRepositoryImpl implements SessionRepository{
      * <pre>
      *      세션 id를 기반으로 공부시간을 갱신한다
      * </pre>
-     * @param enterMap : 갱신할 세션 id
+     * @param sessionRequestDto : 세션 id, 공부시간
+     * @param userId : 유저 id
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public void modifyStudyTime(Map<String, Object> enterMap, int userId) throws PersistenceException {
+    public void modifyStudyTime(SessionRequestDto sessionRequestDto, int userId) throws PersistenceException {
         try {
             UserStudyRoomEnter ure = em.find(UserStudyRoomEnter.class,
-                    Long.parseLong((String)enterMap.get("sessionId")));
+                    Long.parseLong(sessionRequestDto.getSessionId()));
 
             if(ure != null) {
                 if (ure.getUser().getId() != userId) {
                     throw new IllegalStateException("세션ID의 사용자가 일치하지 않습니다.");
                 }
-                Integer studyTime = (Integer) enterMap.get("studyTime");
+                Integer studyTime = sessionRequestDto.getStudyTime();
 
                 queryFactory
                         .update(userStudyRoomEnter)

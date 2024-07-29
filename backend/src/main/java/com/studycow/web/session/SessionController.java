@@ -4,12 +4,15 @@ package com.studycow.web.session;
 import com.studycow.dto.SubjectCodeDto;
 import com.studycow.dto.score.ScoreDto;
 import com.studycow.dto.score.ScoreTargetDto;
+import com.studycow.dto.session.EnterRequestDto;
 import com.studycow.dto.session.SessionDto;
+import com.studycow.dto.session.SessionRequestDto;
 import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.service.score.ScoreService;
 import com.studycow.service.session.SessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,12 +43,11 @@ public class SessionController {
     @Operation(summary = "방 입장", description="방에 입장하여 세션id를 부여받고 금일 방에서 공부한 시간을 받습니다.")
     @PostMapping("/enter")
     public ResponseEntity<?> enterRoom(
-            @RequestBody Map<String, Object> requestBody,
+            @RequestBody @Valid EnterRequestDto enterRequestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
             int userId = userDetails.getUser().getUserId();
-            requestBody.put("userId", userId);
-            SessionDto sessionDto = sessionService.enterRoom(requestBody);
+            SessionDto sessionDto = sessionService.enterRoom(enterRequestDto, userId);
             return ResponseEntity.ok(sessionDto);
 
         } catch(Exception e) {
@@ -57,11 +59,11 @@ public class SessionController {
     @Operation(summary = "방 퇴장", description="방에서 퇴장하여 지금까지 공부한 시간 및 퇴장시간을 갱신합니다.")
     @PatchMapping("/exit")
     public ResponseEntity<?> exitRoom(
-            @RequestBody Map<String, Object> requestBody,
+            @RequestBody @Valid SessionRequestDto sessionRequestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
             int userId = userDetails.getUser().getUserId();
-            SessionDto sessionDto = sessionService.exitRoom(requestBody, userId);
+            SessionDto sessionDto = sessionService.exitRoom(sessionRequestDto, userId);
             return ResponseEntity.ok(sessionDto);
 
         } catch(Exception e) {
@@ -73,12 +75,11 @@ public class SessionController {
     @Operation(summary = "공부시간 갱신", description="현 세션에서 지금까지 공부한 시간을 갱신합니다.")
     @PatchMapping("/record")
     public ResponseEntity<?> modifyStudyTime(
-            @RequestBody Map<String, Object> requestBody,
+            @RequestBody @Valid SessionRequestDto sessionRequestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
             int userId = userDetails.getUser().getUserId();
-            requestBody.put("userId", userId);
-            sessionService.modifyStudyTime(requestBody, userId);
+            sessionService.modifyStudyTime(sessionRequestDto, userId);
             return new ResponseEntity<>("시간 갱신 성공", HttpStatus.OK);
         } catch(Exception e) {
             e.printStackTrace();
