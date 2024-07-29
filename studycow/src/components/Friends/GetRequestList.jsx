@@ -39,7 +39,7 @@ const GetRequestList = () => {
         {getRequests.length > 0 ? (
           getRequests.map((getRequest) => (
             <div key={getRequest.counterpartUserId} className="getRequestItem">
-              <p>{getRequest.counterpartUserId}번 친구</p>
+              <p>{getRequest.counterpartUserNickname}</p>
             </div>
           ))
         ) : (

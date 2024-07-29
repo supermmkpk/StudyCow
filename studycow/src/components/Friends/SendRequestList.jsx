@@ -42,7 +42,7 @@ const SendRequestList = () => {
               key={sendRequest.counterpartUserId}
               className="sendRequestItem"
             >
-              <p>{sendRequest.counterpartUserId}번 친구</p>
+              <p>{sendRequest.counterpartUserNickname}</p>
             </div>
           ))
         ) : (
