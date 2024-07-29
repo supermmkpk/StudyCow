@@ -15,7 +15,6 @@ const SignIn = () => {
     const success = await sendLoginRequest(email, password);
     if (success) {
       // 로그인 성공 시, 필요한 동작을 수행합니다.
-      console.log(token, isLogin)
       alert('로그인 성공!');
     } else {
       // 로그인 실패 시, 에러 메시지를 표시합니다.

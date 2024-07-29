@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
-import defaultProfileImg from "/src/assets/defaultProfile.png";
 
 const API_URL = "http://localhost:8080/studycow/";
 
@@ -14,16 +13,15 @@ const useInfoStore = create(
       userInfo: {
         userEmail: null,
         userPublic: 0,
-        userThumb: { defaultProfileImg },
+        userThumb: "/src/assets/defaultProfile.png",
         userGrade: {
           gradeCode: 0,
           gradeName: "브론즈",
-          minEXP: 0,
-          maxEXP: 0,
+          minExp: 0,
+          maxExp: 0,
         },
         userExp: 0,
-        userNickName: null,
-        userBirthday: null,
+        userNickName: null
       },
 
       // 임시 회원가입 로직
@@ -31,9 +29,7 @@ const useInfoStore = create(
         const data = {
           userEmail,
           userPassword,
-          userThumb: { defaultProfileImg },
-          userNickName,
-          userBirthday: "0001-01-01",
+          userNickName
         };
         try {
           const response = await axios.post(
@@ -64,21 +60,27 @@ const useInfoStore = create(
             set({
               token: response.data ?? null,
               isLogin: true,
-              // userInfo: {
-              //   // 여기에서 response 데이터에 따라 userInfo를 업데이트 합니다.
-              //   userEmail: response.data?.userEmail ?? null,
-              //   userNickName: response.data?.userNickName ?? null,
-              //   userThumb: response.data?.userThumb ?? { defaultProfileImg },
-              //   userGrade: {
-              //     gradeCode: response.data?.userGrade?.gradeCode ?? 0,
-              //     gradeName: response.data?.userGrade?.gradeName ?? "브론즈",
-              //     minEXP: response.data?.userGrade?.minEXP ?? 0,
-              //     maxEXP: response.data?.userGrade?.maxEXP ?? 0
-              //   },
-              //   userExp: response.data?.userExp ?? 0,
-              //   userBirthday: response.data?.userBirthday ?? null,
-              // },
+              userInfo: {
+                // 여기에서 response 데이터에 따라 userInfo를 업데이트 합니다.
+                userEmail: response.data.userEmail ?? null,
+                userNickName: response.data.userNickName ?? null,
+                userThumb: response.data?.userThumb ?? "/src/assets/defaultProfile.png",
+                userGrade: {
+                  gradeCode: response.data.userGrade.gradeCode ?? 0,
+                  gradeName: response.data.userGrade.gradeName ?? "브론즈",
+                  minExp: response.data.userGrade.minExp ?? 0,
+                  maxExp: response.data.userGrade.maxExp ?? 0
+                },
+                userExp: response.data.userExp ?? 0
+              },
             });
+            console.log(response.data.userEmail)
+            console.log(response.data.userNickName)
+            console.log(response.data.userExp)
+            console.log(response.data.userGrade.gradeCode)
+            console.log(response.data.userGrade.gradeName)
+            console.log(response.data.userGrade.minExp)
+            console.log(response.data.userGrade.maxExp)           
             return true;
           } else {
             throw new Error("로그인에러");

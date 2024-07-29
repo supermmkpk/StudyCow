@@ -1,55 +1,30 @@
 import React, { useState } from "react";
+import useInfoStore from "../../stores/infos";
 
 const SignUp = () => {
+  const { sendLoginRequest, sendRegisterRequest } = useInfoStore();
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error] = useState("");
+  const [success] = useState("");
 
-  const handleSignUp = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError("비밀번호가 일치하지 않소");
-      setSuccess("");
-      return;
-    }
-
-    setError("");
-    try {
-      const response = await fetch("http://주소추후연결하기", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userEmail: email,
-          userPassword: password,
-          userName: nickname, // nickname을 userName으로 사용
-        }),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setSuccess("가입을 환영하겠소");
-        setNickname("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-      } else {
-        setError(data.message || "회원가입에 실패했습니다.");
-        setSuccess("");
-      }
-    } catch (error) {
-      setError("네트워크 오류가 발생했습니다.");
-      setSuccess("");
+    const success = await sendRegisterRequest(email, password, nickname);
+    if (success) {
+      alert('회원가입 성공!');
+      sendLoginRequest(email, password);
+    } else {
+      // 로그인 실패 시, 에러 메시지를 표시합니다.
+      alert('회원가입 실패!');
     }
   };
 
   return (
     <div className="form-container sign-up-container">
-      <form onSubmit={handleSignUp}>
+      <form onSubmit={handleSubmit}>
         <h1>Sign Up</h1>
 
         <input
