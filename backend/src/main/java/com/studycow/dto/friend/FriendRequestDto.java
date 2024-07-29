@@ -25,6 +25,10 @@ public class FriendRequestDto {
     private int id;
     /** 상대방 회원 번호 */
     private int counterpartUserId;
+    /** 회원 닉네임 */
+    private String counterpartUserNickname;
+    /** 회원 프로필 사진 */
+    private String counterpartUserThumb;
     /** 요청 상태 */
     private int requestStatus;
     /** 요청일시 */

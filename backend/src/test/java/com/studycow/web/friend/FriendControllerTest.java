@@ -132,7 +132,7 @@ public class FriendControllerTest {
     @Test
     @WithMockUser
     void sentFriendRequests_ShouldReturnRequestList() throws Exception {
-        FriendRequestDto requestDto = new FriendRequestDto(1, 2, 0, LocalDateTime.now(), LocalDateTime.now());
+        FriendRequestDto requestDto = new FriendRequestDto(1, 2, "testNickname", "thumb_url",0, LocalDateTime.now(), LocalDateTime.now());
         when(friendService.listFriendRequestSent(anyInt(), any(ListOptionDto.class)))
                 .thenReturn(Arrays.asList(requestDto));
 
@@ -141,7 +141,10 @@ public class FriendControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].counterpartUserId").value(2));
+                .andExpect(jsonPath("$[0].counterpartUserId").value(2))
+                .andExpect(jsonPath("$[0].counterpartUserNickname").value("testNickname"))
+                .andExpect(jsonPath("$[0].counterpartUserThumb").value("thumb_url"));
+
     }
 
     /**
@@ -152,7 +155,7 @@ public class FriendControllerTest {
     @Test
     @WithMockUser
     void receivedFriendRequests_ShouldReturnRequestList() throws Exception {
-        FriendRequestDto requestDto = new FriendRequestDto(1, 2, 0, LocalDateTime.now(), LocalDateTime.now());
+        FriendRequestDto requestDto = new FriendRequestDto(1, 2, "testNickname", "thumb_url", 0,LocalDateTime.now(), LocalDateTime.now());
         when(friendService.listFriendRequestReceived(anyInt(), any(ListOptionDto.class)))
                 .thenReturn(Arrays.asList(requestDto));
 
@@ -161,7 +164,10 @@ public class FriendControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].counterpartUserId").value(2));
+                .andExpect(jsonPath("$[0].counterpartUserId").value(2))
+                .andExpect(jsonPath("$[0].counterpartUserNickname").value("testNickname"))
+                .andExpect(jsonPath("$[0].counterpartUserThumb").value("thumb_url"));
+
     }
 
     /**
