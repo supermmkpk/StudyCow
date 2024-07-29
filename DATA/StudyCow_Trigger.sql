@@ -20,7 +20,7 @@ BEGIN
     WHERE ROOM_ID = V_ROOM_ID;
     
     -- 방 인원이 다 찼을 경우 EXCEPTION 발생
-    IF V_ROOM_MAX_PERSON >= V_ROOM_NOW_PERSON THEN
+    IF V_ROOM_NOW_PERSON >= V_ROOM_MAX_PERSON THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '방 정원이 초과되었습니다. 입장할 수 없습니다.';
 	END IF;
     

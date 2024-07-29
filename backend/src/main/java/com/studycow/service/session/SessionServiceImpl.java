@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -15,7 +17,7 @@ public class SessionServiceImpl implements SessionService{
 
     @Override
     @Transactional
-    public void inviteRoom(int userId, Long roomId) throws Exception {
-        sessionRepository.inviteRoom(userId, roomId);
+    public Long enterRoom(Map<String, Object> enterMap) throws Exception {
+        return sessionRepository.enterRoom(enterMap);
     }
 }
