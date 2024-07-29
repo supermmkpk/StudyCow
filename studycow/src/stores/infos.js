@@ -21,7 +21,7 @@ const useInfoStore = create(
           maxExp: 0,
         },
         userExp: 0,
-        userNickName: null
+        userNickName: null,
       },
 
       // 임시 회원가입 로직
@@ -29,7 +29,7 @@ const useInfoStore = create(
         const data = {
           userEmail,
           userPassword,
-          userNickName
+          userNickName,
         };
         try {
           const response = await axios.post(
@@ -58,29 +58,30 @@ const useInfoStore = create(
           console.log(response.data);
           if (response.status === 200) {
             set({
-              token: response.data ?? null,
+              token: response.data.token ?? null,
               isLogin: true,
               userInfo: {
                 // 여기에서 response 데이터에 따라 userInfo를 업데이트 합니다.
                 userEmail: response.data.userEmail ?? null,
                 userNickName: response.data.userNickName ?? null,
-                userThumb: response.data?.userThumb ?? "/src/assets/defaultProfile.png",
+                userThumb:
+                  response.data?.userThumb ?? "/src/assets/defaultProfile.png",
                 userGrade: {
                   gradeCode: response.data.userGrade.gradeCode ?? 0,
                   gradeName: response.data.userGrade.gradeName ?? "브론즈",
                   minExp: response.data.userGrade.minExp ?? 0,
-                  maxExp: response.data.userGrade.maxExp ?? 0
+                  maxExp: response.data.userGrade.maxExp ?? 0,
                 },
-                userExp: response.data.userExp ?? 0
+                userExp: response.data.userExp ?? 0,
               },
             });
-            console.log(response.data.userEmail)
-            console.log(response.data.userNickName)
-            console.log(response.data.userExp)
-            console.log(response.data.userGrade.gradeCode)
-            console.log(response.data.userGrade.gradeName)
-            console.log(response.data.userGrade.minExp)
-            console.log(response.data.userGrade.maxExp)           
+            console.log(response.data.userEmail);
+            console.log(response.data.userNickName);
+            console.log(response.data.userExp);
+            console.log(response.data.userGrade.gradeCode);
+            console.log(response.data.userGrade.gradeName);
+            console.log(response.data.userGrade.minExp);
+            console.log(response.data.userGrade.maxExp);
             return true;
           } else {
             throw new Error("로그인에러");
