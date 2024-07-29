@@ -33,9 +33,9 @@ public class SessionServiceImpl implements SessionService{
 
     @Override
     @Transactional
-    public SessionDto exitRoom(Map<String, Object> enterMap) throws Exception {
+    public SessionDto exitRoom(Map<String, Object> enterMap, int userId) throws Exception {
         /** 방 퇴장 시 log 갱신 */
-        SessionDto sessionDto = sessionRepository.exitRoom(enterMap);
+        SessionDto sessionDto = sessionRepository.exitRoom(enterMap, userId);
 
         /** 해당 방에서 금일 공부한 시간 조회 */
         sessionDto.setRoomStudyTime(sessionRepository.roomStudyTime(
@@ -48,8 +48,8 @@ public class SessionServiceImpl implements SessionService{
 
     @Override
     @Transactional
-    public void modifyStudyTime(Map<String, Object> enterMap) throws Exception {
+    public void modifyStudyTime(Map<String, Object> enterMap, int userId) throws Exception {
         /** 세션 공부시간 갱신 */
-        sessionRepository.modifyStudyTime(enterMap);
+        sessionRepository.modifyStudyTime(enterMap, userId);
     }
 }
