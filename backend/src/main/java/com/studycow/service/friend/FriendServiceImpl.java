@@ -90,8 +90,8 @@ public class FriendServiceImpl implements FriendService {
                 .map(friendRequest -> new FriendRequestDto(
                         friendRequest.getId(),
                         friendRequest.getFromUser().getId(),
-                        friendRequest.getToUser().getUserNickname(),
-                        friendRequest.getToUser().getUserThumb(),
+                        friendRequest.getFromUser().getUserNickname(),
+                        friendRequest.getFromUser().getUserThumb(),
                         friendRequest.getRequestStatus(),
                         friendRequest.getRequestDate(),
                         friendRequest.getRequestUpdateDate()
