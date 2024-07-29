@@ -4,6 +4,7 @@ import com.studycow.domain.StudyRoom;
 import com.studycow.domain.User;
 import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.studyroom.StudyRoomDto;
+import com.studycow.dto.studyroom.StudyRoomRequestDto;
 import com.studycow.repository.studyroom.StudyRoomRepository;
 import com.studycow.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 
 /**
  * <pre>
- *      스터디룸 서비스 구현 클래스
+ *      스터디룸 CRUD 서비스 구현 클래스
  * </pre>
  *
  * @author 박봉균
@@ -56,7 +56,7 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     @Override
     public StudyRoomDto getStudyRoomInfo(Long studyRoomId) throws Exception {
         StudyRoomDto studyRoomDto = studyRoomRepository.getStudyRoomInfo(studyRoomId);
-        if(studyRoomDto == null) {
+        if (studyRoomDto == null) {
             throw new IllegalArgumentException("존재하지 않는 방입니다.");
         }
         return studyRoomDto;
@@ -72,4 +72,19 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     public List<StudyRoomDto> listStudyRoom(ListOptionDto listOptionDto) throws Exception {
         return studyRoomRepository.listStudyRoom(listOptionDto);
     }
+
+    /**
+     * 스터디룸 수정
+     *
+     * @param studyRoomId         스터디룸 고유번호
+     * @param studyRoomRequestDto 수정 정보를 담은 DTO
+     * @param userId              요청 회원 고유번호
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void updateStudyRoom(Long studyRoomId, StudyRoomRequestDto studyRoomRequestDto, int userId) throws Exception {
+        studyRoomRepository.updateStudyRoom(studyRoomId, studyRoomRequestDto, userId);
+    }
+
 }

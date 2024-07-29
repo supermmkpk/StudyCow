@@ -5,8 +5,13 @@ import com.studycow.dto.SubjectCodeDto;
 import com.studycow.dto.score.ScoreDetailDto;
 import com.studycow.dto.score.ScoreDto;
 import com.studycow.dto.score.ScoreTargetDto;
+import com.studycow.dto.session.EnterRequestDto;
+import com.studycow.dto.session.SessionDto;
+import com.studycow.dto.session.SessionRequestDto;
 import jakarta.persistence.PersistenceException;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +25,14 @@ import java.util.Map;
 
 public interface SessionRepository {
     /** 방 입장 시 log 입력 */
-    void inviteRoom(int userId, Long roomId) throws PersistenceException;
+    SessionDto enterRoom(EnterRequestDto enterRequestDto, int userId) throws PersistenceException;
 
+    /** 방 퇴장 시 log 업데이트 */
+    SessionDto exitRoom(SessionRequestDto sessionRequestDto, int userId) throws PersistenceException;
+
+    /** 해당 방에서 금일 공부한 시간 조회 */
+    Integer roomStudyTime(int userId, Long roomId, LocalDate studyDate) throws PersistenceException;
+
+    /** 방 퇴장 시 log 업데이트 */
+    void modifyStudyTime(SessionRequestDto sessionRequestDto, int userId) throws PersistenceException;
 }

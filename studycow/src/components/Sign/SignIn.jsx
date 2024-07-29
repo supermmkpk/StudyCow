@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useInfoStore from "../../stores/infos";
 
 const SignIn = () => {
-  const { sendLoginRequest } = useInfoStore();
+  const { sendLoginRequest, token, isLogin } = useInfoStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error] = useState("");
