@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static com.studycow.domain.QUserScoreTarget.userScoreTarget;
 import static com.studycow.domain.QUserStudyRoomEnter.userStudyRoomEnter;
@@ -34,15 +35,15 @@ public class SessionRepositoryImpl implements SessionRepository{
      *      방으로 입장을 시도한다.
      *      trigger : TRG_BEFORE_INSERT_IN_LOG
      * </pre>
-     * @param userId : 유저 id
-     * @param roomId : 방 id
+     * @param enterMap : 방 입장시 유저 id, 방 id
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public void inviteRoom(int userId, Long roomId) throws PersistenceException {
+    public Long enterRoom(Map<String, Object> enterMap) throws PersistenceException {
         try {
-            User user = em.find(User.class, userId);
-            StudyRoom studyRoom = em.find(StudyRoom.class, roomId);
+            User user = em.find(User.class, (Integer)enterMap.get("userId"));
+            StudyRoom studyRoom = em.find(StudyRoom.class,
+                    Long.parseLong((String)enterMap.get("roomId")));
 
             UserStudyRoomEnter userStudyRoomEnter = new UserStudyRoomEnter(
                     null,
@@ -55,6 +56,9 @@ public class SessionRepositoryImpl implements SessionRepository{
             );
 
             em.persist(userStudyRoomEnter);
+            em.flush();
+
+            return userStudyRoomEnter.getId();
         }catch(Exception e){
             throw new PersistenceException("목표 등록 중 에러 발생", e);
         }

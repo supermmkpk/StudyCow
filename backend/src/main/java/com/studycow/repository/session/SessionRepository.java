@@ -20,6 +20,6 @@ import java.util.Map;
 
 public interface SessionRepository {
     /** 방 입장 시 log 입력 */
-    void inviteRoom(int userId, Long roomId) throws PersistenceException;
+    Long enterRoom(Map<String, Object> enterMap) throws PersistenceException;
 
 }

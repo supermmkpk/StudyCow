@@ -17,5 +17,5 @@ import java.util.Map;
  */
 public interface SessionService {
     /** 방 입장 시도 */
-    void inviteRoom(int userId, Long roomId) throws Exception;
+    Long enterRoom(Map<String, Object> enterMap) throws Exception;
 }
