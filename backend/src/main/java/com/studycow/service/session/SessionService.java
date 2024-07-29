@@ -20,7 +20,7 @@ public interface SessionService {
     /** 방 입장 시도 */
     SessionDto enterRoom(Map<String, Object> enterMap) throws Exception;
     /** 방 퇴장 시도 */
-    SessionDto exitRoom(Map<String, Object> enterMap) throws Exception;
+    SessionDto exitRoom(Map<String, Object> enterMap, int userId) throws Exception;
     /** 공부시간 갱신 */
-    public void modifyStudyTime(Map<String, Object> enterMap) throws Exception;
+    public void modifyStudyTime(Map<String, Object> enterMap, int userId) throws Exception;
 }

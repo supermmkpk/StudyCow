@@ -83,12 +83,16 @@ public class SessionRepositoryImpl implements SessionRepository{
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public SessionDto exitRoom(Map<String, Object> enterMap) throws PersistenceException {
+    public SessionDto exitRoom(Map<String, Object> enterMap, int userId) throws PersistenceException {
         try {
             UserStudyRoomEnter ure = em.find(UserStudyRoomEnter.class,
                     Long.parseLong((String)enterMap.get("sessionId")));
 
             if(ure != null) {
+                if (ure.getUser().getId() != userId) {
+                    throw new IllegalStateException("세션ID의 사용자가 일치하지 않습니다.");
+                }
+
                 Integer studyTime = (Integer) enterMap.get("studyTime");
 
                 queryFactory
@@ -146,12 +150,15 @@ public class SessionRepositoryImpl implements SessionRepository{
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public void modifyStudyTime(Map<String, Object> enterMap) throws PersistenceException {
+    public void modifyStudyTime(Map<String, Object> enterMap, int userId) throws PersistenceException {
         try {
             UserStudyRoomEnter ure = em.find(UserStudyRoomEnter.class,
                     Long.parseLong((String)enterMap.get("sessionId")));
 
             if(ure != null) {
+                if (ure.getUser().getId() != userId) {
+                    throw new IllegalStateException("세션ID의 사용자가 일치하지 않습니다.");
+                }
                 Integer studyTime = (Integer) enterMap.get("studyTime");
 
                 queryFactory
