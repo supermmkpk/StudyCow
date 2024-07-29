@@ -41,7 +41,7 @@ const FriendList = () => {
         {friends.length > 0 ? (
           friends.map((friend) => (
             <div key={friend.friendUserId} className="friendItem">
-              <p>{friend.friendEmail}</p>
+              <p>{friend.friendNickname}</p>
             </div>
           ))
         ) : (
