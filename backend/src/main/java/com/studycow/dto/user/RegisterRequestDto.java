@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -66,7 +67,7 @@ public class RegisterRequestDto {
     /** 유저 닉네임,중복 불가 **/
     @NotNull
     @NotBlank(message = "닉네임은 필수입니다.")
-    @Range(min = 2, max = 20 ,message = "닉네임은 2글자 이상, 20글자 이하입니다.")
+    @Size(min = 2, max = 20 ,message = "닉네임은 2글자 이상, 20글자 이하입니다.")
     private String userNickName;
 
 }

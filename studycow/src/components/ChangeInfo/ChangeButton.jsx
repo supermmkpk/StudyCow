@@ -1,7 +1,7 @@
 import React from "react";
-import "./Styles/Overlay.css";
+import "./Styles/ChangeButton.css";
 
-const Overlay = ({ setRightPanelActive, isAnimating }) => {
+const ChangeButton = ({ setRightPanelActive, isAnimating }) => {
   return (
     <div className={`overlay-container ${isAnimating ? "animating" : ""}`}>
       <button
@@ -14,4 +14,4 @@ const Overlay = ({ setRightPanelActive, isAnimating }) => {
   );
 };
 
-export default Overlay;
+export default ChangeButton;
