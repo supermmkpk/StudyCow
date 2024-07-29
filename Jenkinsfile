@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         jdk 'JDK 17'  // Jenkins에 설정된 JDK 11 버전 이름과 일치해야 합니다.
-        nodejs 'NodeJS '20.15.1'  // Jenkins에 설정된 Node.js 버전 이름과 일치해야 합니다.
+        nodejs 'NodeJS' '20.15.1'  // Jenkins에 설정된 Node.js 버전 이름과 일치해야 합니다.
     }
 
     stages {
