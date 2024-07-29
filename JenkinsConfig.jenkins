@@ -2,7 +2,8 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_IMAGE = "studycow:${BUILD_NUMBER}"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKER_IMAGE = "sioe9/studycow:{BUILD_NUMBER}"
         EC2_INSTANCE = "i11C202.p.ssafy.io"
         EC2_USER = "ubuntu"
     }
@@ -10,7 +11,14 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://lab.ssafy.com/-/ide/project/s11-webmobile1-sub2/S11P12C202/',
+                        credentialsId: 'gitlab-credentials'
+                    ]]
+                ])
             }
         }
         
