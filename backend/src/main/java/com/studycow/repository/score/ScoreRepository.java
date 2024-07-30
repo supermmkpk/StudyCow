@@ -2,9 +2,7 @@ package com.studycow.repository.score;
 
 
 import com.studycow.dto.SubjectCodeDto;
-import com.studycow.dto.score.ScoreDetailDto;
-import com.studycow.dto.score.ScoreDto;
-import com.studycow.dto.score.ScoreTargetDto;
+import com.studycow.dto.score.*;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
@@ -41,16 +39,16 @@ public interface ScoreRepository {
     void modifyScore(Map<String, Object> scoreMap) throws PersistenceException;
 
     /** 성적 목표 등록 */
-    void saveScoreTarget(Map<String, Object> targetMap) throws PersistenceException;
+    void saveScoreTarget(RequestTargetDto requestTargetDto, int userId) throws PersistenceException;
 
     /** 성적 목표 조회 */
-    List<ScoreTargetDto> targetList(int userId) throws PersistenceException;
+    List<ScoreTargetDto> targetList(int userId, int myId) throws PersistenceException;
 
     /** 성적 목표 삭제 */
-    void deleteScoreTarget(Long targetId) throws PersistenceException;
+    void deleteScoreTarget(int userId, Long targetId) throws PersistenceException;
 
     /** 성적 목표 수정 */
-    void modifyScoreTarget(Map<String, Object> targetMap) throws PersistenceException;
+    void modifyScoreTarget(RequestTargetDto requestTargetDto, int userId, Long targetId) throws PersistenceException;
 
     /** 목표 미설정 과목 조회 */
     List<SubjectCodeDto> subjectList(int userId) throws PersistenceException;
