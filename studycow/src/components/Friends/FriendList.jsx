@@ -23,7 +23,7 @@ const FriendList = () => {
         }
 
         const response = await axios.get(
-          "http://localhost:8080/studycow/friend/list",
+          "https://localhost:8443/studycow/friend/list",
           {
             headers: {
               Authorization: `Bearer ${token}`,
