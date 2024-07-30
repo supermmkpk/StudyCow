@@ -29,9 +29,9 @@ const Calendar = () => {
   };
 
   const handleDateClick = (day) => {
-    getDatePlanRequest(date);
-    saveDate(formatDate(selectedDate));
     setSelectedDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
+    saveDate(formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day)));
+    getDatePlanRequest(formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day)));
   };
 
   const isToday = (day) => {
