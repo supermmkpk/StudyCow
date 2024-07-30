@@ -42,7 +42,7 @@ stage('Frontend - Build and Deploy') {
                     
                     sh 'docker stop backend || true'
                     sh 'docker rm backend || true'
-                    sh "docker run -d --name backend --network ${DOCKER_NETWORK} -p 8443:8443 backend:${BUILD_NUMBER}"
+                    sh "docker run -d --name backend --network ${DOCKER_NETWORK} -p 8080:8080 backend:${BUILD_NUMBER}"
                     
 
                 }
@@ -53,7 +53,7 @@ stage('Frontend - Build and Deploy') {
             steps {
                 script {
                     sh 'sleep 3'
-                    sh 'curl https://13.125.238.202:8443 || echo "Backend health check failed"'
+                    sh 'curl https://13.125.238.202:8080 || echo "Backend health check failed"'
                     sh 'curl http://localhost:8080 || echo "local test"'
                 }
             }
