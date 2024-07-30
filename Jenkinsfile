@@ -24,7 +24,7 @@ pipeline {
         
 stage('Frontend - Build and Deploy') {
     steps {
-        dir('frontend') {
+        dir('studycow') {
             sh 'npm install'
             sh 'npm run build'
             sh 'docker build -t frontend:${BUILD_NUMBER} .'
