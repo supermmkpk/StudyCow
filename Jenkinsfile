@@ -39,7 +39,6 @@ pipeline {
                         }
                     }
                 }
-                // 프론트엔드 테스트가 필요하다면 여기에 추가할 수 있습니다.
             }
         }
         
@@ -53,22 +52,24 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: 'backend/build/libs/*.jar',
                                     removePrefix: 'backend/build/libs',
-                                    remoteDirectory: '/opt/studycow/backend',
+                                    remoteDirectory: '',
                                     execCommand: '''
                                         sudo mkdir -p /opt/studycow/backend
-                                        sudo cp /opt/studycow/backend/*.jar /opt/studycow/backend/studycow-backend.jar
+                                        sudo cp -f ${WORKSPACE}/backend/build/libs/*.jar /opt/studycow/backend/studycow-backend.jar
                                         sudo chown -R ubuntu:ubuntu /opt/studycow/backend
-                                        sudo systemctl restart studycow-backend
+                                        sudo systemctl restart studycow-backend || sudo systemctl start studycow-backend
                                     '''
                                 ),
                                 sshTransfer(
                                     sourceFiles: 'studycow/dist/**/*',
                                     removePrefix: 'studycow/dist',
-                                    remoteDirectory: '/var/www/studycow',
+                                    remoteDirectory: '',
                                     execCommand: '''
                                         sudo mkdir -p /var/www/studycow
+                                        sudo rm -rf /var/www/studycow/*
+                                        sudo cp -R ${WORKSPACE}/studycow/dist/* /var/www/studycow/
                                         sudo chown -R ubuntu:ubuntu /var/www/studycow
-                                        sudo systemctl restart nginx
+                                        sudo systemctl restart nginx || sudo systemctl start nginx
                                     '''
                                 )
                             ],
