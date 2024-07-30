@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import usePlanStore from '../../stores/plan';
 import './styles/Calendar.css'
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const { date, saveDate, getDatePlanRequest } = usePlanStore((state) => ({
+    date: state.date,
+    saveDate: state.saveDate,
+    getDatePlanRequest: state.getDatePlanRequest,
+  }));
+
+  useEffect(() => {
+    getDatePlanRequest(date);
+  }, [date, getDatePlanRequest]);
 
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -19,6 +29,8 @@ const Calendar = () => {
   };
 
   const handleDateClick = (day) => {
+    getDatePlanRequest(date);
+    saveDate(formatDate(selectedDate));
     setSelectedDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
   };
 
@@ -51,17 +63,20 @@ const Calendar = () => {
     };
   };
 
+  
+
+
   return (
     <>
       <div className="Calendar">
-        <div className="Header">
-          <button className="Button" onClick={handlePrevMonth}>&lsaquo;</button>
+        <div className="calendarHeader">
+          <button className="calendarButton" onClick={handlePrevMonth}>&lsaquo;</button>
           <div className="MonthYear">
             {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
           </div>
-          <button className="Button" onClick={handleNextMonth}>&rsaquo;</button>
+          <button className="calendarButton" onClick={handleNextMonth}>&rsaquo;</button>
         </div>
-        <div className="Grid">
+        <div className="calendarGrid">
           {weekDays.map(day => <div className="DayBase WeekDay" key={day}>{day}</div>)}
           {Array.from({ length: firstDayOfMonth }).map((_, index) => (
             <div className="DayBase Day" key={`empty-${index}`} />
@@ -81,11 +96,6 @@ const Calendar = () => {
           })}
         </div>
       </div>
-      {selectedDate && (
-        <div className="SelectedDate">
-          선택한 날짜: {formatDate(selectedDate)}
-        </div>
-      )}
   </>
   );
 };

@@ -9,34 +9,37 @@
     background-color: #e9e9eb;
   }
   
-  .Header {
+  .calendarHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
+    padding: 10px;
     background-color: #b0b6b7;
     color: #f8f8f8;
   }
   
-  .Button {
+  .calendarButton {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 40px;
     color: white;
     cursor: pointer;
     transition: transform 0.2s;
+    margin: 0;
+    padding: 0px 20px;
   }
   
-  .Button:hover {
+  .calendarButton:hover {
     transform: scale(1.2);
   }
   
   .MonthYear {
-    font-size: 18px;
-    font-weight: bold;
+    margin-top: 7px;
+    font-family: "CustomFontGothic", sans-serif;
+    font-size: 25px;
   }
   
-  .Grid {
+  .calendarGrid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
