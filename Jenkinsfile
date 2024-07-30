@@ -51,7 +51,7 @@ pipeline {
         stage('Health Check') {
             steps {
                 script {
-                    sh 'sleep 30'
+                    sh 'sleep 3'
                     sh 'curl https://13.125.238.202:8443 || echo "Backend health check failed"'
                     sh 'curl http://localhost:8080 || echo "local test"'
                 }
