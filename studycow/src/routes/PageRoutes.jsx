@@ -15,6 +15,10 @@ import MyPageEdit from "../components/ChangeInfo/ChangeInfo.jsx";
 import FriendComponent from "../components/Friends/FriendComponent";
 import MyPageGrade from "../components/MyPage/MyPageGrade.jsx";
 
+
+// 플래너페이지 - 개인
+import PlanPage from "../views/PlanPage.jsx";
+
 const PageRoutes = () => (
   <Routes>
     {/* 마이페이지 */}
@@ -36,7 +40,7 @@ const PageRoutes = () => (
     <Route path="/study" element={<a>study</a>}></Route>
 
     {/* 플랜 */}
-    <Route path="/plan" element={<a>plan</a>}></Route>
+    <Route path="/plan" element={<PlanPage />}></Route>
 
     {/* 성적분석 */}
     <Route path="/analyze" element={<a>analyze</a>}></Route>
