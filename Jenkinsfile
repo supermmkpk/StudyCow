@@ -19,8 +19,10 @@ pipeline {
             }
         }
         
-        stage('Create Docker Network') {
+        stage('Prepare Environment') {
             steps {
+                sh 'docker-compose down || true'
+                sh 'docker rm -f $(docker ps -aq) || true'
                 sh 'docker network create ${DOCKER_NETWORK} || true'
             }
         }
@@ -81,7 +83,7 @@ pipeline {
                     sh 'npm run build'
                     sh 'docker build -t frontend:${BUILD_NUMBER} .'
                     sh '''
-                        docker run -d --name frontend \
+                        docker run -d --name frontend-${BUILD_NUMBER} \
                             --network ${DOCKER_NETWORK} \
                             -p 80:80 \
                             frontend:${BUILD_NUMBER}
@@ -94,8 +96,10 @@ pipeline {
             steps {
                 script {
                     sh 'sleep 60'  // 서비스가 완전히 시작될 때까지 더 오래 기다립니다.
-                    sh 'curl http://localhost:8080 || echo "Backend health check failed"'
-                    sh 'curl http://localhost || echo "Frontend health check failed"'
+                    retry(3) {
+                        sh 'curl -f http://localhost:8080/api/health || (sleep 10 && false)'
+                        sh 'curl -f http://localhost || (sleep 10 && false)'
+                    }
                 }
             }
         }
@@ -104,11 +108,12 @@ pipeline {
     post {
         always {
             sh 'docker logs study_cow_app || echo "No backend logs available"'
-            sh 'docker logs frontend || echo "No frontend logs available"'
+            sh 'docker logs frontend-${BUILD_NUMBER} || echo "No frontend logs available"'
         }
         failure {
-            sh 'docker stop study_cow_db kurento study_cow_app frontend || true'
-            sh 'docker rm study_cow_db kurento study_cow_app frontend || true'
+            sh 'docker-compose down || true'
+            sh 'docker stop $(docker ps -aq) || true'
+            sh 'docker rm $(docker ps -aq) || true'
             sh 'docker network rm ${DOCKER_NETWORK} || true'
         }
         cleanup {
