@@ -23,7 +23,7 @@ pipeline {
         
         stage('Build Frontend') {
             steps {
-                dir('studycow') {
+                dir('studycow') { // 디렉토리 이름을 'studycow'로 수정
                     sh 'npm install'
                     sh 'npm run build'
                 }
@@ -39,7 +39,7 @@ pipeline {
                         }
                     }
                 }
-
+                // 추가적인 테스트 스테이지가 필요한 경우 여기에 추가할 수 있습니다.
             }
         }
         
@@ -48,7 +48,7 @@ pipeline {
                 sshagent(['ec2-ssh-key-credential-id']) {
                     sh '''
                         scp -o StrictHostKeyChecking=no backend/build/libs/*.jar ec2-user@your-ec2-instance:/path/to/deployment
-                        scp -o StrictHostKeyChecking=no -r frontend/build/* ec2-user@your-ec2-instance:/path/to/deployment/frontend
+                        scp -o StrictHostKeyChecking=no -r studycow/build/* ec2-user@your-ec2-instance:/path/to/deployment/studycow
                         ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-instance "sudo systemctl restart your-application"
                     '''
                 }
