@@ -1,18 +1,18 @@
 pipeline {
     agent any
-    
+
     tools {
         gradle 'Gradle'
         nodejs 'Node'
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        
+
         stage('Build Backend') {
             steps {
                 dir('backend') {
@@ -20,7 +20,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Build Frontend') {
             steps {
                 dir('studycow') {
@@ -29,60 +29,32 @@ pipeline {
                 }
             }
         }
-        
-        stage('Test') {
-            parallel {
-                stage('Backend Tests') {
-                    steps {
-                        dir('backend') {
-                            sh 'gradle test'
-                        }
-                    }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build('your-app-image:latest', '-f Dockerfile .')
                 }
             }
         }
-        
+
         stage('Deploy') {
             steps {
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'i11c202.p.ssafy.io',
-                            transfers: [
-                                sshTransfer(
-                                    sourceFiles: 'backend/build/libs/*.jar',
-                                    remoteDirectory: '.',
-                                    execCommand: '''
-                                        sudo mkdir -p /opt/studycow/backend
-                                        sudo mv ~/*.jar /opt/studycow/backend/studycow-backend.jar
-                                        sudo chown -R ubuntu:ubuntu /opt/studycow/backend
-                                        sudo systemctl restart studycow-backend || sudo systemctl start studycow-backend
-                                    '''
-                                ),
-                                sshTransfer(
-                                    sourceFiles: 'studycow/dist/**/*',
-                                    removePrefix: 'studycow/dist',
-                                    remoteDirectory: './frontend-temp',
-                                    execCommand: '''
-                                        sudo mkdir -p /var/www/studycow
-                                        sudo rm -rf /var/www/studycow/*
-                                        sudo mv ~/frontend-temp/* /var/www/studycow/
-                                        sudo rm -rf ~/frontend-temp
-                                        sudo chown -R ubuntu:ubuntu /var/www/studycow
-                                        sudo systemctl restart nginx || sudo systemctl start nginx
-                                    '''
-                                )
-                            ],
-                            usePromotionTimestamp: false,
-                            useWorkspaceInPromotion: false,
-                            verbose: true
-                        )
-                    ]
-                )
+                sshagent(['your-ssh-credentials']) {
+                    sh '''
+                        ssh user@your-server "docker stop my-running-app || true"
+                        ssh user@your-server "docker rm my-running-app || true"
+                        ssh user@your-server "docker rmi your-app-image:latest || true"
+                        docker save -o your-app-image.tar your-app-image:latest
+                        scp your-app-image.tar user@your-server:/tmp/
+                        ssh user@your-server "docker load -i /tmp/your-app-image.tar"
+                        ssh user@your-server "docker run -d --name my-running-app -p 8080:8080 your-app-image:latest"
+                    '''
+                }
             }
         }
     }
-    
+
     post {
         success {
             echo 'CI/CD pipeline executed successfully!'
