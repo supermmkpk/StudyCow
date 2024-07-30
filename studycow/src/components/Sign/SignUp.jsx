@@ -17,7 +17,6 @@ const SignUp = () => {
       alert("회원가입 성공!");
       sendLoginRequest(email, password);
     } else {
-      // 로그인 실패 시, 에러 메시지를 표시합니다.
       alert("회원가입 실패!");
     }
   };
@@ -26,7 +25,6 @@ const SignUp = () => {
     <div className="form-container sign-up-container">
       <form onSubmit={handleSubmit}>
         <h1>Sign Up</h1>
-
         <input
           type="text"
           placeholder="닉네임"
