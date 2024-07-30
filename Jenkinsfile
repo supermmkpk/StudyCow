@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     sh 'sleep 30'
-                    sh 'curl http://localhost:8443/api/health || echo "Backend health check failed"'
+                    sh 'curl http://localhost:8443/studycow || echo "Backend health check failed"'
                     sh 'curl http://localhost || echo "Frontend health check failed"'
                 }
             }
