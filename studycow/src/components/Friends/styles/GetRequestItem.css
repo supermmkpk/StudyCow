@@ -1,0 +1,29 @@
+.getRequestItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid black;
+  padding: 0px 10px;
+}
+
+.getRequestInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.getRequestThumbnail {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.getRequestNickname {
+  font-size: 20px;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.btnposition01 {
+  margin: 0;
+}
