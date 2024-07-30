@@ -83,29 +83,37 @@ public class ScoreController {
         }
     }
 
-    @Operation(summary = "성적 수정", description="성적을 수정합니다.<br>필수 : scoreId, subCode, testDate, testScore" +
-            "<br>선택 : testGrade, scoreDetail")
-    @PatchMapping("/modify")
-    public ResponseEntity<?> modifyScore(@RequestBody Map<String, Object> requestBody) {
+    @Operation(summary = "성적 수정", description="성적을 수정합니다.")
+    @PatchMapping("/modify/{scoreId}")
+    public ResponseEntity<?> modifyScore(
+            @RequestBody @Valid RequestScoreDto requestScoreDto,
+            @PathVariable Long scoreId,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
         try {
-            scoreService.modifyScore(requestBody);
+            int userId = userDetails.getUser().getUserId();
+            scoreService.modifyScore(requestScoreDto, userId, scoreId);
             return new ResponseEntity<>("성적 수정 성공", HttpStatus.OK);
         } catch(Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("성적 수정 실패", HttpStatus.BAD_REQUEST);
+            //e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @Operation(summary = "성적 삭제", description="성적을 삭제합니다.")
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteScore(@RequestParam("scoreId") Long scoreId) {
+    @DeleteMapping("/delete/{scoreId}")
+    public ResponseEntity<?> deleteScore(
+            @PathVariable Long scoreId,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
         try {
-            scoreService.deleteScore(scoreId);
+            int userId = userDetails.getUser().getUserId();
+            scoreService.deleteScore(userId, scoreId);
             return new ResponseEntity<>("성적 삭제 성공", HttpStatus.OK);
 
         } catch(Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("성적 삭제 실패", HttpStatus.BAD_REQUEST);
+            //e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

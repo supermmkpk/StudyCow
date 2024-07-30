@@ -203,24 +203,27 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public void deleteScore(Long scoreId) throws PersistenceException {
+    public void deleteScore(int userId, Long scoreId) throws PersistenceException {
         try{
             UserSubjectScore us = em.find(UserSubjectScore.class, scoreId);
 
             if(us != null) {
-                StringBuilder jpql = new StringBuilder();
-                jpql.append("DELETE FROM WrongProblem wp \n");
-                jpql.append("WHERE wp.userSubjectScore.id = :scoreId \n");
+                if(us.getUser().getId() != userId){
+                    throw new IllegalStateException("권한이 없습니다.");
+                }
+                queryFactory
+                        .delete(wrongProblem)
+                        .where(wrongProblem.userSubjectScore.id.eq(us.getId()))
+                        .execute();
 
-                em.createQuery(jpql.toString())
-                        .setParameter("scoreId", scoreId)
-                        .executeUpdate();
-
-                em.remove(us);
+                queryFactory
+                        .delete(userSubjectScore)
+                        .where(userSubjectScore.id.eq(us.getId()))
+                        .execute();
             }else{
                 throw new EntityNotFoundException("해당 성적을 찾을 수 없습니다.");
             }
-        }catch(EntityNotFoundException e) {
+        }catch(EntityNotFoundException | IllegalStateException e) {
             throw e;
         }catch(Exception e){
             throw new PersistenceException("성적 삭제 중 에러 발생", e);
@@ -233,20 +236,23 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      *      등록된 오답 유형은 삭제된 뒤 입력된다.
      *      입력 : saveScoreDetail
      * </pre>
-     * @param scoreMap : 수정 성적 정보
+     * @param requestScoreDto : 수정 성적 정보
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public void modifyScore(Map<String, Object> scoreMap) throws PersistenceException {
+    public void modifyScore(RequestScoreDto requestScoreDto, int userId, Long scoreId) throws PersistenceException {
         try {
+            UserSubjectScore us = em.find(UserSubjectScore.class, scoreId);
 
-            UserSubjectScore us = em.find(UserSubjectScore.class,
-                    Long.parseLong((String)scoreMap.get("scoreId")));
             if(us != null) {
-                SubjectCode subjectCode = em.find(SubjectCode.class, (int) scoreMap.get("subCode"));
-                LocalDate testDate = LocalDate.parse((String)scoreMap.get("testDate"));
-                int testScore = (Integer) scoreMap.get("testScore");
-                Integer testGrade = (Integer) scoreMap.get("testGrade");
+                if(us.getUser().getId() != userId){
+                    throw new IllegalStateException("권한이 없습니다.");
+                }
+
+                SubjectCode subjectCode = em.find(SubjectCode.class, requestScoreDto.getSubCode());
+                LocalDate testDate = requestScoreDto.getTestDate();
+                int testScore = requestScoreDto.getTestScore();
+                Integer testGrade = requestScoreDto.getTestGrade();
 
                 queryFactory
                         .delete(wrongProblem)
@@ -265,7 +271,7 @@ public class ScoreRepositoryImpl implements ScoreRepository{
             }else{
                 throw new EntityNotFoundException("해당 성적을 찾을 수 없습니다.");
             }
-        }catch(EntityNotFoundException e) {
+        }catch(EntityNotFoundException | IllegalStateException e) {
             throw e;
         }catch(Exception e){
             throw new PersistenceException("성적 수정 중 에러 발생", e);
@@ -418,7 +424,8 @@ public class ScoreRepositoryImpl implements ScoreRepository{
                                 .select(userScoreTarget.subjectCode.code)
                                 .from(userScoreTarget)
                                 .where(userScoreTarget.user.id.eq(userId))
-                ))
+                )
+                        .and(subjectCode.status.eq(1)))
                 .orderBy(subjectCode.code.asc())
                 .fetch();
     }

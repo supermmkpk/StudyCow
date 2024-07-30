@@ -77,51 +77,31 @@ public class ScoreServiceImpl implements ScoreService{
         Long scoreId = scoreRepository.saveScore(requestScoreDto, userId);
         log.info("return scoreId : {}", scoreId);
 
-        for(RequestDetailDto details : requestScoreDto.getScoreDetails()){
-            scoreRepository.saveScoreDetails(details, scoreId);
-        }
-
-        /*//scoreDetail 데이터가 있고 List 형식일 경우
-        if(scoreDetail instanceof List<?>) {
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> scoreDetailList =
-                    (List<Map<String, Object>>) scoreMap.get("scoreDetail");
-
-            //반복해서 상세 성적을 등록
-            for (Map<String, Object> detail : scoreDetailList) {
-                int catCode = (Integer) detail.get("catCode");
-                int wrongCnt = (Integer) detail.get("wrongCnt");
-                scoreRepository.saveScoreDetails(scoreId, catCode, wrongCnt);
+        if(requestScoreDto.getScoreDetails() != null
+                && requestScoreDto.getScoreDetails() instanceof RequestDetailDto) {
+            for (RequestDetailDto details : requestScoreDto.getScoreDetails()) {
+                scoreRepository.saveScoreDetails(details, scoreId);
             }
-        }*/
+        }
     }
 
     /**
      * 상세 포함 성적 수정
-     * @param scoreMap : 성적 정보(상세 포함)
+     * @param requestScoreDto : 성적 정보(상세 포함)
+     * @param scoreId : 성적 id
      * @throws Exception
      */
     @Override
     @Transactional
-    public void modifyScore(Map<String, Object> scoreMap) throws Exception {
-        Long scoreId = Long.parseLong((String) scoreMap.get("scoreId"));
-        scoreRepository.modifyScore(scoreMap);
+    public void modifyScore(RequestScoreDto requestScoreDto, int userId, Long scoreId) throws Exception {
+        scoreRepository.modifyScore(requestScoreDto, userId, scoreId);
 
-        Object scoreDetail = scoreMap.get("scoreDetail");
-
-        /*//scoreDetail 데이터가 있고 List 형식일 경우
-        if(scoreDetail instanceof List<?>) {
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> scoreDetailList =
-                    (List<Map<String, Object>>) scoreMap.get("scoreDetail");
-
-            //반복해서 상세 성적을 등록
-            for (Map<String, Object> detail : scoreDetailList) {
-                int catCode = (Integer) detail.get("catCode");
-                int wrongCnt = (Integer) detail.get("wrongCnt");
-                scoreRepository.saveScoreDetails(scoreId, catCode, wrongCnt);
+        if(requestScoreDto.getScoreDetails() != null
+                && requestScoreDto.getScoreDetails() instanceof RequestDetailDto) {
+            for (RequestDetailDto details : requestScoreDto.getScoreDetails()) {
+                scoreRepository.saveScoreDetails(details, scoreId);
             }
-        }*/
+        }
     }
 
     /**
@@ -131,13 +111,13 @@ public class ScoreServiceImpl implements ScoreService{
      */
     @Override
     @Transactional
-    public void deleteScore(Long scoreId) throws Exception {
-        scoreRepository.deleteScore(scoreId);
+    public void deleteScore(int userId, Long scoreId) throws Exception {
+        scoreRepository.deleteScore(userId, scoreId);
     }
 
     /**
      * 성적 목표 등록
-     * @param targetMap : 성적 목표 정보
+     * @param requestTargetDto : 성적 목표 정보
      * @throws Exception
      */
     @Override
@@ -169,7 +149,7 @@ public class ScoreServiceImpl implements ScoreService{
 
     /**
      * 성적 목표 수정
-     * @param targetMap : 목표 정보
+     * @param requestTargetDto : 목표 정보
      * @throws Exception
      */
     @Override
