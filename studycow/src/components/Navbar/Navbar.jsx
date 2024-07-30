@@ -40,7 +40,7 @@ function Header() {
           <div id="navContent" className="rightContainer">
             {!isLogin && (
               <>
-                <Link to="/login"><p>로그인/회원가입</p></Link>
+                <Link to="/login" className="loginItem"><p>로그인/회원가입</p></Link>
               </>
             )}
             {isLogin && (

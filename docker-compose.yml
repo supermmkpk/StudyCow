@@ -1,0 +1,61 @@
+# Docker  compose 버전
+# version: "2.29.1"
+# 가동할 컨테이너 목록
+services:
+  db:
+    # 사용할 이미지 (Docker  Hub 또는 로컬에 저장된 Image)
+    image: mysql:5.7
+    container_name: study_cow_db
+    restart: always
+    # 외부에서 컨테이너 내부로 연결되는 포트 목록
+    ports:
+      - "32000:3306"
+      # 컨테이너 내에서 사용되는 환경 변수
+    environment:
+      MYSQL_ROOT_PASSWORD: 1emdgkrhthajrwk
+      TZ: "Asia/Seoul"
+    privileged: true
+    # 실제 드라이브와 컨테이너의 드라이브를 연결(Mount)
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+      # 컨테이너 내부에서 사용되는 네트워크
+    networks:
+      - backend
+  kurento:
+    image: kurento/kurento-media-server:latest
+    restart: always
+    ports:
+      - "8888:8888"
+    environment:
+      TZ: "Asia/Seoul"
+      KMS_STUN_IP: "13.125.238.202"
+      KMS_STUN_PORT: "3478"
+      KMS_TURN_URL: "myuser:mypassword@13.125.238.202:3478?transport=udp"
+    networks:
+      - backend
+  app:
+    # 공개된 Image가 아닌 Dockerfile을 통한 빌드 이미지 사용
+    build:
+      context: ./
+    container_name: study_cow_app
+    restart: always
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      TZ: "Asia/Seoul"
+      #Spring  application.properties DB 설정
+      SPRING_DATASOURCE_URL: "jdbc:mysql://i11c202.p.ssafy.io:3306/study_cow?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true"
+      #Kurento  Media  Client 동작을 위한 Kurent Media Server URL 설정
+      JAVA_TOOL_OPTIONS: "-Dkms.url=ws://kurento:8888/kurento"
+      server.address: 0.0.0.0
+    # 의존 컨테이너
+    depends_on:
+      - db
+      - kurento
+    networks:
+      - backend
+
+networks:
+  backend:
+

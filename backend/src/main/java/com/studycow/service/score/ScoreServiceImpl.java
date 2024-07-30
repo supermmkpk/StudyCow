@@ -1,9 +1,7 @@
 package com.studycow.service.score;
 
-import com.studycow.dto.SubjectCodeDto;
-import com.studycow.dto.score.ScoreDetailDto;
-import com.studycow.dto.score.ScoreDto;
-import com.studycow.dto.score.ScoreTargetDto;
+import com.studycow.dto.common.SubjectCodeDto;
+import com.studycow.dto.score.*;
 import com.studycow.repository.score.ScoreRepository;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +33,9 @@ public class ScoreServiceImpl implements ScoreService{
      * @throws Exception
      */
     @Override
-    public List<ScoreDto> listScores(int userId, int subCode) throws Exception {
+    public List<ScoreDto> listScores(int userId, int subCode, int myId) throws Exception {
         // 과목별 성적 리스트
-        List<ScoreDto> scoreDtoList = scoreRepository.listScores(userId, subCode);
+        List<ScoreDto> scoreDtoList = scoreRepository.listScores(userId, subCode, myId);
 
         // 오답 유형 리스트 조회
         for(ScoreDto scores : scoreDtoList){
@@ -57,8 +55,8 @@ public class ScoreServiceImpl implements ScoreService{
      * @throws Exception
      */
     @Override
-    public ScoreDto scoreDetail(Long scoreId) throws Exception {
-        ScoreDto scoreDto = scoreRepository.scoreDetail(scoreId);
+    public ScoreDto scoreDetail(Long scoreId, int userId, int myId) throws Exception {
+        ScoreDto scoreDto = scoreRepository.scoreDetail(scoreId, userId, myId);
 
         List<ScoreDetailDto> scoreDetailDtoList = scoreRepository.listScoreDetails(scoreId);
         if(scoreDetailDtoList != null && !scoreDetailDtoList.isEmpty())
@@ -69,57 +67,39 @@ public class ScoreServiceImpl implements ScoreService{
 
     /**
      * 상세 포함 성적 등록
-     * @param scoreMap : 성적 정보(상세 포함)
+     * @param requestScoreDto : 성적 정보(상세 포함)
      * @throws Exception
      */
     @Override
     @Transactional
-    public void saveScore(Map<String, Object> scoreMap) throws Exception {
+    public void saveScore(RequestScoreDto requestScoreDto, int userId) throws Exception {
         //성적 등록 후 scoreId를 return
-        Long scoreId = scoreRepository.saveScore(scoreMap);
+        Long scoreId = scoreRepository.saveScore(requestScoreDto, userId);
         log.info("return scoreId : {}", scoreId);
 
-        Object scoreDetail = scoreMap.get("scoreDetail");
-
-        //scoreDetail 데이터가 있고 List 형식일 경우
-        if(scoreDetail instanceof List<?>) {
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> scoreDetailList =
-                    (List<Map<String, Object>>) scoreMap.get("scoreDetail");
-
-            //반복해서 상세 성적을 등록
-            for (Map<String, Object> detail : scoreDetailList) {
-                int catCode = (Integer) detail.get("catCode");
-                int wrongCnt = (Integer) detail.get("wrongCnt");
-                scoreRepository.saveScoreDetails(scoreId, catCode, wrongCnt);
+        if(requestScoreDto.getScoreDetails() != null
+                && requestScoreDto.getScoreDetails() instanceof RequestDetailDto) {
+            for (RequestDetailDto details : requestScoreDto.getScoreDetails()) {
+                scoreRepository.saveScoreDetails(details, scoreId);
             }
         }
     }
 
     /**
      * 상세 포함 성적 수정
-     * @param scoreMap : 성적 정보(상세 포함)
+     * @param requestScoreDto : 성적 정보(상세 포함)
+     * @param scoreId : 성적 id
      * @throws Exception
      */
     @Override
     @Transactional
-    public void modifyScore(Map<String, Object> scoreMap) throws Exception {
-        Long scoreId = Long.parseLong((String) scoreMap.get("scoreId"));
-        scoreRepository.modifyScore(scoreMap);
+    public void modifyScore(RequestScoreDto requestScoreDto, int userId, Long scoreId) throws Exception {
+        scoreRepository.modifyScore(requestScoreDto, userId, scoreId);
 
-        Object scoreDetail = scoreMap.get("scoreDetail");
-
-        //scoreDetail 데이터가 있고 List 형식일 경우
-        if(scoreDetail instanceof List<?>) {
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> scoreDetailList =
-                    (List<Map<String, Object>>) scoreMap.get("scoreDetail");
-
-            //반복해서 상세 성적을 등록
-            for (Map<String, Object> detail : scoreDetailList) {
-                int catCode = (Integer) detail.get("catCode");
-                int wrongCnt = (Integer) detail.get("wrongCnt");
-                scoreRepository.saveScoreDetails(scoreId, catCode, wrongCnt);
+        if(requestScoreDto.getScoreDetails() != null
+                && requestScoreDto.getScoreDetails() instanceof RequestDetailDto) {
+            for (RequestDetailDto details : requestScoreDto.getScoreDetails()) {
+                scoreRepository.saveScoreDetails(details, scoreId);
             }
         }
     }
@@ -131,19 +111,19 @@ public class ScoreServiceImpl implements ScoreService{
      */
     @Override
     @Transactional
-    public void deleteScore(Long scoreId) throws Exception {
-        scoreRepository.deleteScore(scoreId);
+    public void deleteScore(int userId, Long scoreId) throws Exception {
+        scoreRepository.deleteScore(userId, scoreId);
     }
 
     /**
      * 성적 목표 등록
-     * @param targetMap : 성적 목표 정보
+     * @param requestTargetDto : 성적 목표 정보
      * @throws Exception
      */
     @Override
     @Transactional
-    public void saveScoreTarget(Map<String, Object> targetMap) throws Exception {
-        scoreRepository.saveScoreTarget(targetMap);
+    public void saveScoreTarget(RequestTargetDto requestTargetDto, int userId) throws Exception {
+        scoreRepository.saveScoreTarget(requestTargetDto, userId);
     }
 
     /**
@@ -152,8 +132,8 @@ public class ScoreServiceImpl implements ScoreService{
      * @throws Exception
      */
     @Override
-    public List<ScoreTargetDto> targetList(int userId) throws PersistenceException {
-        return scoreRepository.targetList(userId);
+    public List<ScoreTargetDto> targetList(int userId, int myId) throws PersistenceException {
+        return scoreRepository.targetList(userId, myId);
     }
 
     /**
@@ -163,19 +143,19 @@ public class ScoreServiceImpl implements ScoreService{
      */
     @Override
     @Transactional
-    public void deleteTarget(Long targetId) throws Exception {
-        scoreRepository.deleteScoreTarget(targetId);
+    public void deleteTarget(int userId, Long targetId) throws Exception {
+        scoreRepository.deleteScoreTarget(userId, targetId);
     }
 
     /**
      * 성적 목표 수정
-     * @param targetMap : 목표 정보
+     * @param requestTargetDto : 목표 정보
      * @throws Exception
      */
     @Override
     @Transactional
-    public void modifyTarget(Map<String, Object> targetMap) throws Exception {
-        scoreRepository.modifyScoreTarget(targetMap);
+    public void modifyTarget(RequestTargetDto requestTargetDto, int userId, Long targetId) throws Exception {
+        scoreRepository.modifyScoreTarget(requestTargetDto, userId, targetId);
     }
 
     /**

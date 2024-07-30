@@ -7,21 +7,15 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [error] = useState("");
 
-
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const success = await sendLoginRequest(email, password);
     if (success) {
-      // 로그인 성공 시, 필요한 동작을 수행합니다.
-      alert('로그인 성공!');
+      alert("로그인 성공!");
     } else {
-      // 로그인 실패 시, 에러 메시지를 표시합니다.
-      alert('로그인 실패!');
+      alert("로그인 실패!");
     }
   };
-
 
   return (
     <div className="form-container sign-in-container">

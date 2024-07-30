@@ -1,11 +1,20 @@
 import React from "react";
 import "./styles/CarouselContents.css";
+import { useNavigate } from "react-router-dom";
 
 const CarouselContents = ({ src, alt, text, left = "0px", top = "0px" }) => {
+
+  // 이동 - 로그인화면으로 단순 이동
+  const navigate = useNavigate();
+  function goHome() {
+    navigate("/login");
+  }
+
+
   return (
     <div className="carousel-container">
       <img className="d-block" src={src} alt={alt} />
-      <button className="start-button">START 🚀</button>
+      <button className="start-button" onClick={goHome}>START 🚀</button>
 
       {text &&
         text.trim() && ( // text가 존재하고 비어있지 않을 때만 렌더링

@@ -20,6 +20,16 @@ public class ScoreDto {
     private int testScore;
     private Integer testGrade;
     private LocalDate testDate;
-    private LocalDateTime scoreUpdateDate;
     private List<ScoreDetailDto> scoreDetails;
+
+    public ScoreDto(Long scoreId, int subCode, String subName,
+                    int testScore, Integer testGrade, LocalDate testDate) {
+        this.scoreId = scoreId;
+        this.subCode = subCode;
+        this.subName = subName;
+        this.testScore = testScore;
+        this.testGrade = testGrade;
+        this.testDate = testDate;
+        this.scoreDetails = null;
+    }
 }

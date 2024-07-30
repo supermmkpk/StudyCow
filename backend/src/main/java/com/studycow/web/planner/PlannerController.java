@@ -6,6 +6,7 @@ import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.service.planner.PlannerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/planner")
+@CrossOrigin("*")
 @Tag(name = "Planner", description = "플래너 기본 기능")
 public class PlannerController {
 
@@ -36,7 +38,7 @@ public class PlannerController {
     @Operation(summary = "플래너 생성", description = "해당 유저의 플래너를 추가합니다")
     @PostMapping("create")
     public ResponseEntity<?> createSubjectPlan(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                               PlannerCreateDto plannerCreateDto) {
+                                               @RequestBody @Valid PlannerCreateDto plannerCreateDto) {
         try {
             plannerService.createPlan(customUserDetails, plannerCreateDto);
             return new ResponseEntity<>("등록 성공", HttpStatus.CREATED);
