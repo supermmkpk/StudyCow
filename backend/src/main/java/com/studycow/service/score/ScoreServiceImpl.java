@@ -1,6 +1,6 @@
 package com.studycow.service.score;
 
-import com.studycow.dto.SubjectCodeDto;
+import com.studycow.dto.common.SubjectCodeDto;
 import com.studycow.dto.score.*;
 import com.studycow.repository.score.ScoreRepository;
 import jakarta.persistence.PersistenceException;
@@ -33,9 +33,9 @@ public class ScoreServiceImpl implements ScoreService{
      * @throws Exception
      */
     @Override
-    public List<ScoreDto> listScores(int userId, int subCode) throws Exception {
+    public List<ScoreDto> listScores(int userId, int subCode, int myId) throws Exception {
         // 과목별 성적 리스트
-        List<ScoreDto> scoreDtoList = scoreRepository.listScores(userId, subCode);
+        List<ScoreDto> scoreDtoList = scoreRepository.listScores(userId, subCode, myId);
 
         // 오답 유형 리스트 조회
         for(ScoreDto scores : scoreDtoList){
@@ -67,19 +67,21 @@ public class ScoreServiceImpl implements ScoreService{
 
     /**
      * 상세 포함 성적 등록
-     * @param scoreMap : 성적 정보(상세 포함)
+     * @param requestScoreDto : 성적 정보(상세 포함)
      * @throws Exception
      */
     @Override
     @Transactional
-    public void saveScore(Map<String, Object> scoreMap) throws Exception {
+    public void saveScore(RequestScoreDto requestScoreDto, int userId) throws Exception {
         //성적 등록 후 scoreId를 return
-        Long scoreId = scoreRepository.saveScore(scoreMap);
+        Long scoreId = scoreRepository.saveScore(requestScoreDto, userId);
         log.info("return scoreId : {}", scoreId);
 
-        Object scoreDetail = scoreMap.get("scoreDetail");
+        for(RequestDetailDto details : requestScoreDto.getScoreDetails()){
+            scoreRepository.saveScoreDetails(details, scoreId);
+        }
 
-        //scoreDetail 데이터가 있고 List 형식일 경우
+        /*//scoreDetail 데이터가 있고 List 형식일 경우
         if(scoreDetail instanceof List<?>) {
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> scoreDetailList =
@@ -91,7 +93,7 @@ public class ScoreServiceImpl implements ScoreService{
                 int wrongCnt = (Integer) detail.get("wrongCnt");
                 scoreRepository.saveScoreDetails(scoreId, catCode, wrongCnt);
             }
-        }
+        }*/
     }
 
     /**
@@ -107,7 +109,7 @@ public class ScoreServiceImpl implements ScoreService{
 
         Object scoreDetail = scoreMap.get("scoreDetail");
 
-        //scoreDetail 데이터가 있고 List 형식일 경우
+        /*//scoreDetail 데이터가 있고 List 형식일 경우
         if(scoreDetail instanceof List<?>) {
             @SuppressWarnings("unchecked")
             List<Map<String, Object>> scoreDetailList =
@@ -119,7 +121,7 @@ public class ScoreServiceImpl implements ScoreService{
                 int wrongCnt = (Integer) detail.get("wrongCnt");
                 scoreRepository.saveScoreDetails(scoreId, catCode, wrongCnt);
             }
-        }
+        }*/
     }
 
     /**

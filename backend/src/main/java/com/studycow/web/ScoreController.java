@@ -1,7 +1,8 @@
 package com.studycow.web;
 
 
-import com.studycow.dto.SubjectCodeDto;
+import com.studycow.dto.common.SubjectCodeDto;
+import com.studycow.dto.score.RequestScoreDto;
 import com.studycow.dto.score.RequestTargetDto;
 import com.studycow.dto.score.ScoreDto;
 import com.studycow.dto.score.ScoreTargetDto;
@@ -37,15 +38,19 @@ public class ScoreController {
     private final ScoreService scoreService;
 
     @Operation(summary = "과목별 성적 조회", description = "등록한 과목별 성적을 조회합니다.")
-    @GetMapping("/list")
-    public ResponseEntity<?> listScore(@RequestParam("userId") int userId,
-                                       @RequestParam("subCode") int subCode) {
+    @GetMapping("/{userId}/list/{subCode}")
+    public ResponseEntity<?> listScore(
+            @PathVariable int userId,
+            @PathVariable int subCode,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
         try {
-            List<ScoreDto> scoreList = scoreService.listScores(userId, subCode);
+            int myId = userDetails.getUser().getUserId();
+            List<ScoreDto> scoreList = scoreService.listScores(userId, subCode, myId);
             return ResponseEntity.ok(scoreList);
         } catch(Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("성적 조회 실패", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -61,12 +66,15 @@ public class ScoreController {
         }
     }
 
-    @Operation(summary = "성적 등록", description="성적을 등록합니다.<br>필수 : userId, subCode, testDate, testScore" +
-            "<br>선택 : testGrade, scoreDetail")
+    @Operation(summary = "성적 등록", description="성적을 등록합니다.")
     @PostMapping("/regist")
-    public ResponseEntity<?> registScore(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<?> registScore(
+            @RequestBody @Valid RequestScoreDto requestScoreDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
         try {
-            scoreService.saveScore(requestBody);
+            int userId = userDetails.getUser().getUserId();
+            scoreService.saveScore(requestScoreDto, userId);
             return new ResponseEntity<>("성적 등록 성공", HttpStatus.OK);
 
         } catch(Exception e) {
