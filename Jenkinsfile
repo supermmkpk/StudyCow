@@ -51,7 +51,7 @@ pipeline {
                             transfers: [
                                 sshTransfer(
                                     sourceFiles: 'backend/build/libs/*.jar',
-                                    remoteDirectory: '',
+                                    remoteDirectory: '.',
                                     execCommand: '''
                                         sudo mkdir -p /opt/studycow/backend
                                         sudo mv ~/*.jar /opt/studycow/backend/studycow-backend.jar
@@ -62,7 +62,7 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: 'studycow/dist/**/*',
                                     removePrefix: 'studycow/dist',
-                                    remoteDirectory: 'frontend-temp',
+                                    remoteDirectory: './frontend-temp',
                                     execCommand: '''
                                         sudo mkdir -p /var/www/studycow
                                         sudo rm -rf /var/www/studycow/*
