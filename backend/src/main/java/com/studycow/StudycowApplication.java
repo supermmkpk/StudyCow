@@ -6,11 +6,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@OpenAPIDefinition(
-		servers = {
-				@Server(url="i11c202.p.ssafy.io")
-		}
-)
+//@OpenAPIDefinition(
+//		servers = {
+//				@Server(url="i11c202.p.ssafy.io")
+//		}
+//)
 @SpringBootApplication
 public class StudycowApplication {
 
