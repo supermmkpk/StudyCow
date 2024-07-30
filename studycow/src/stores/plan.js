@@ -1,24 +1,25 @@
 // planStore.js
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import axios from 'axios';
-import useInfoStore from './infos';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import axios from "axios";
+import useInfoStore from "./infos";
 
-const API_URL = 'https://localhost:8443/studycow/';
+const API_URL = "https://localhost:8443/studycow/";
 
 const usePlanStore = create(
   persist(
     (set) => ({
-      date: '2024-07-02',
+      date: "2024-07-02",
       plans: [],
       updatePlanStatus: (planId) => {
         set((state) => ({
-          plans: state.plans.map(plan =>
+          plans: state.plans.map((plan) =>
             plan.planId === planId
               ? { ...plan, planStatus: plan.planStatus === 0 ? 1 : 0 }
               : plan
-          )
-        }))},
+          ),
+        }));
+      },
       saveDate: (day) => set({ date: day }),
       getDatePlanRequest: async (date) => {
         const { token } = useInfoStore.getState();
@@ -26,7 +27,7 @@ const usePlanStore = create(
           Authorization: `Bearer ${token}`,
         };
         try {
-          const response = await axios.get(API_URL + 'planner/list/day', {
+          const response = await axios.get(API_URL + "planner/list/day", {
             params: { date },
             headers,
           });
@@ -34,7 +35,7 @@ const usePlanStore = create(
             set({ plans: response.data ?? [] });
             return true;
           } else {
-            throw new Error('정보불러오기 에러');
+            throw new Error("정보불러오기 에러");
           }
         } catch (e) {
           console.log(e);
@@ -43,7 +44,7 @@ const usePlanStore = create(
       },
     }),
     {
-      name: 'plan-storage',
+      name: "plan-storage",
     }
   )
 );

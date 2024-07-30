@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./styles/CreateModify.css";
 import useInfoStore from "../../../stores/infos"; // store 경로에 맞게 수정하세요
 
@@ -61,6 +62,7 @@ const sub_subjects_dic = {
 };
 
 const Modal = ({ closeModal }) => {
+  const navigate = useNavigate();
   const { token } = useInfoStore((state) => ({
     token: state.token,
   }));
@@ -98,7 +100,7 @@ const Modal = ({ closeModal }) => {
       planStatus: 0, // 기본값으로 설정
     };
 
-    const url = "http://localhost:8080/studycow/planner/create";
+    const url = "https://localhost:8443/studycow/planner/create";
 
     console.log("보내는 데이터:", data);
     console.log("보내는 주소:", url);
@@ -116,13 +118,22 @@ const Modal = ({ closeModal }) => {
 
       if (response.ok) {
         alert("플래너가 성공적으로 생성되었습니다.");
-        closeModal();
+        navigate("/plan");
       } else {
         alert("플래너 생성에 실패했습니다.");
       }
     } catch (error) {
       alert("플래너 생성 중 오류가 발생했습니다.");
     }
+  };
+
+  const handleCancel = () => {
+    navigate("/plan");
+  };
+
+  const handleAutoComplete = () => {
+    // 여기에 자동완성 기능을 추가하세요
+    console.log("자동완성 기능 호출됨");
   };
 
   return (
@@ -184,7 +195,7 @@ const Modal = ({ closeModal }) => {
               id="estimatedTime"
               name="estimatedTime"
               min="1"
-              max="24"
+              max="9"
               value={selectedTime}
               onChange={(e) => setSelectedTime(e.target.value)}
             />
@@ -203,12 +214,16 @@ const Modal = ({ closeModal }) => {
             <button type="submit" className="CreateModify-register-button">
               등록
             </button>
-            <button type="button" className="CreateModify-autocomplete-button">
+            <button
+              type="button"
+              onClick={handleAutoComplete}
+              className="CreateModify-autocomplete-button"
+            >
               자동완성
             </button>
             <button
               type="button"
-              onClick={closeModal}
+              onClick={handleCancel}
               className="CreateModify-cancel-button"
             >
               취소
