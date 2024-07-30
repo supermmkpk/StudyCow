@@ -39,7 +39,7 @@ pipeline {
                     
                     sh 'docker stop backend || true'
                     sh 'docker rm backend || true'
-                    sh "docker run -d --name backend --network ${DOCKER_NETWORK} -p 8080:8080 backend:${BUILD_NUMBER}"
+                    sh "docker run -d --name backend --network ${DOCKER_NETWORK} -p 8085:8085 backend:${BUILD_NUMBER}"
                     
                     sh 'docker stop frontend || true'
                     sh 'docker rm frontend || true'
