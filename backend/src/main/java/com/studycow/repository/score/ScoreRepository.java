@@ -33,10 +33,10 @@ public interface ScoreRepository {
     void saveScoreDetails(RequestDetailDto requestDetailDto, Long scoreId) throws PersistenceException;
 
     /** 단일 성적 삭제 */
-    void deleteScore(Long scoreId) throws PersistenceException;
+    void deleteScore(int userId, Long scoreId) throws PersistenceException;
 
     /** 단일 성적 수정 */
-    void modifyScore(Map<String, Object> scoreMap) throws PersistenceException;
+    void modifyScore(RequestScoreDto requestScoreDto, int userId, Long scoreId) throws PersistenceException;
 
     /** 성적 목표 등록 */
     void saveScoreTarget(RequestTargetDto requestTargetDto, int userId) throws PersistenceException;

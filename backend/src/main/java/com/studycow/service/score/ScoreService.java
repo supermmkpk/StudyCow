@@ -28,10 +28,10 @@ public interface ScoreService {
     void saveScore(RequestScoreDto requestScoreDto, int userId) throws Exception;
 
     /** 단일 성적 수정 */
-    void modifyScore(Map<String, Object> scoreMap) throws Exception;
+    void modifyScore(RequestScoreDto requestScoreDto, int userId, Long scoreId) throws Exception;
 
     /** 단일 성적 삭제 */
-    void deleteScore(Long scoreId) throws Exception;
+    void deleteScore(int userId, Long scoreId) throws Exception;
 
     /** 성적 목표 등록 */
     void saveScoreTarget(RequestTargetDto requestTargetDto, int userId) throws Exception;
