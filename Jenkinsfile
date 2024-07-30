@@ -1,29 +1,73 @@
 pipeline {
     agent any
+    
+    tools {
+        gradle 'Gradle'
+        nodejs 'Node'
+    }
+    
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Build') {
+        
+        stage('Build Backend') {
             steps {
-                sh 'docker build -t myapp .'
+                dir('backend') {
+                    sh 'gradle clean build'
+                }
             }
         }
+        
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
+            }
+        }
+        
+        stage('Test') {
+            parallel {
+                stage('Backend Tests') {
+                    steps {
+                        dir('backend') {
+                            sh 'gradle test'
+                        }
+                    }
+                }
+                stage('Frontend Tests') {
+                    steps {
+                        dir('frontend') {
+                            sh 'npm test'
+                        }
+                    }
+                }
+            }
+        }
+        
         stage('Deploy') {
             steps {
-                sshagent(credentials: ['ec2-ssh-key']) {
+                sshagent(['ec2-ssh-key-credential-id']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ec2-user@i11c202.p.ssafy.io"
-                            docker pull myapp:latest
-                            docker stop myapp || true
-                            docker rm myapp || true
-                            docker run -d --name myapp -p 80:80 myapp:latest
-                        "
+                        scp -o StrictHostKeyChecking=no backend/build/libs/*.jar ec2-user@your-ec2-instance:/path/to/deployment
+                        scp -o StrictHostKeyChecking=no -r frontend/build/* ec2-user@your-ec2-instance:/path/to/deployment/frontend
+                        ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-instance "sudo systemctl restart your-application"
                     '''
                 }
             }
+        }
+    }
+    
+    post {
+        success {
+            echo 'CI/CD pipeline executed successfully!'
+        }
+        failure {
+            echo 'CI/CD pipeline failed. Please check the logs for details.'
         }
     }
 }
