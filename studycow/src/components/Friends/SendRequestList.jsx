@@ -17,7 +17,7 @@ const SendRequestList = () => {
         }
 
         const response = await axios.get(
-          "http://localhost:8080/studycow/friend/request/sent",
+          "https://localhost:8443/studycow/friend/request/sent",
           {
             headers: {
               Authorization: `Bearer ${token}`,

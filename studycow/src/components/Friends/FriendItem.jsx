@@ -4,7 +4,7 @@ import axios from "axios";
 const FriendItem = ({ thumbnail, nickname, userId, onDelete, token }) => {
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/studycow/friend/${userId}`, {
+      await axios.delete(`https://localhost:8443/studycow/friend/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

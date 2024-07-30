@@ -11,8 +11,9 @@ const GetRequestItem = ({ requestId, userId, nickname, thumbnail }) => {
         />
         <p className="getRequestNickname">{nickname}</p>
       </div>
-      <div>
-        <p className="btnposition01">버튼위치</p>
+      <div className="getbtns">
+        <button>➕</button>
+        <button>➖</button>
       </div>
     </div>
   );
