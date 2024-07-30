@@ -1,9 +1,8 @@
-/* Sign.css */
-* {
+.sign-container * {
   box-sizing: border-box;
 }
 
-body {
+.sign-container {
   background: #f6f5f7;
   display: flex;
   justify-content: center;
@@ -13,16 +12,16 @@ body {
   margin: -20px 0 50px;
 }
 
-h1 {
+.sign-container h1 {
   font-weight: bold;
   margin: 0;
 }
 
-h2 {
+.sign-container h2 {
   text-align: center;
 }
 
-p {
+.sign-container p {
   font-size: 14px;
   font-weight: 100;
   line-height: 20px;
@@ -30,18 +29,18 @@ p {
   margin: 20px 0 30px;
 }
 
-span {
+.sign-container span {
   font-size: 12px;
 }
 
-a {
+.sign-container a {
   color: #333;
   font-size: 14px;
   text-decoration: none;
   margin: 15px 0;
 }
 
-button {
+.sign-container button {
   border-radius: 20px;
   border: 1px solid #7092be;
   background-color: #7092be;
@@ -54,20 +53,20 @@ button {
   transition: transform 80ms ease-in;
 }
 
-button:active {
+.sign-container button:active {
   transform: scale(0.95);
 }
 
-button:focus {
+.sign-container button:focus {
   outline: none;
 }
 
-button.ghost {
+.sign-container button.ghost {
   background-color: transparent;
   border-color: #ffffff;
 }
 
-form {
+.sign-container form {
   background-color: #ffffff;
   display: flex;
   align-items: center;
@@ -78,7 +77,7 @@ form {
   text-align: center;
 }
 
-input {
+.sign-container input {
   background-color: #eee;
   border: none;
   padding: 12px 15px;
@@ -86,7 +85,7 @@ input {
   width: 100%;
 }
 
-.container {
+.sign-container .container {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
@@ -97,31 +96,31 @@ input {
   min-height: 480px;
 }
 
-.form-container {
+.sign-container .form-container {
   position: absolute;
   top: 0;
   height: 100%;
   transition: all 0.6s ease-in-out;
 }
 
-.sign-in-container {
+.sign-container .sign-in-container {
   left: 0;
   width: 50%;
   z-index: 2;
 }
 
-.container.right-panel-active .sign-in-container {
+.sign-container .container.right-panel-active .sign-in-container {
   transform: translateX(100%);
 }
 
-.sign-up-container {
+.sign-container .sign-up-container {
   left: 0;
   width: 50%;
   opacity: 0;
   z-index: 1;
 }
 
-.container.right-panel-active .sign-up-container {
+.sign-container .container.right-panel-active .sign-up-container {
   transform: translateX(100%);
   opacity: 1;
   z-index: 5;
@@ -142,7 +141,7 @@ input {
   }
 }
 
-.overlay-container {
+.sign-container .overlay-container {
   position: absolute;
   top: 0;
   left: 50%;
@@ -153,11 +152,11 @@ input {
   z-index: 100;
 }
 
-.container.right-panel-active .overlay-container {
+.sign-container .container.right-panel-active .overlay-container {
   transform: translateX(-100%);
 }
 
-.overlay {
+.sign-container .overlay {
   background: #83a1ca;
   background: -webkit-linear-gradient(to right, #7092be, #83a1ca);
   background: linear-gradient(to right, #7092be, #83a1ca);
@@ -173,11 +172,11 @@ input {
   transition: transform 0.6s ease-in-out;
 }
 
-.container.right-panel-active .overlay {
+.sign-container .container.right-panel-active .overlay {
   transform: translateX(50%);
 }
 
-.overlay-panel {
+.sign-container .overlay-panel {
   position: absolute;
   display: flex;
   align-items: center;
@@ -192,28 +191,28 @@ input {
   transition: transform 0.6s ease-in-out;
 }
 
-.overlay-left {
+.sign-container .overlay-left {
   transform: translateX(-20%);
 }
 
-.container.right-panel-active .overlay-left {
+.sign-container .container.right-panel-active .overlay-left {
   transform: translateX(0);
 }
 
-.overlay-right {
+.sign-container .overlay-right {
   right: 0;
   transform: translateX(0);
 }
 
-.container.right-panel-active .overlay-right {
+.sign-container .container.right-panel-active .overlay-right {
   transform: translateX(20%);
 }
 
-.social-container {
+.sign-container .social-container {
   margin: 20px 0;
 }
 
-.social-container a {
+.sign-container .social-container a {
   border: 1px solid #dddddd;
   border-radius: 50%;
   display: inline-flex;
@@ -224,13 +223,13 @@ input {
   width: 40px;
 }
 
-.error {
+.sign-container .error {
   color: red;
   font-size: 14px;
   margin-top: 10px;
 }
 
-.success {
+.sign-container .success {
   color: green;
   font-size: 14px;
   margin-top: 10px;
