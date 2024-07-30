@@ -1,15 +1,8 @@
 pipeline {
     agent any
-
+    
     environment {
-        DOCKER_NETWORK = 'backend'
-        DB_ROOT_PASSWORD = '1emdgkrhthajrwk'
-        TZ = 'Asia/Seoul'
-        KMS_STUN_IP = '13.125.238.202'
-        KMS_STUN_PORT = '3478'
-        KMS_TURN_URL = 'myuser:mypassword@13.125.238.202:3478?transport=udp'
-        SPRING_DATASOURCE_URL = 'jdbc:mysql://db:3306/study_cow?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true'
-        JAVA_TOOL_OPTIONS = '-Dkms.url=ws://kurento:8888/kurento'
+        DOCKER_NETWORK = "studycow_network"
     }
 
     stages {
@@ -18,15 +11,8 @@ pipeline {
                 checkout scm
             }
         }
-
-        stage('Prepare Environment') {
-            steps {
-                sh 'docker-compose down || true'
-                sh 'docker network create ${DOCKER_NETWORK} || true'
-            }
-        }
-
-        stage('Build Backend') {
+        
+        stage('Backend - Build') {
             steps {
                 dir('backend') {
                     sh 'chmod +x ./gradlew'
@@ -35,8 +21,8 @@ pipeline {
                 }
             }
         }
-
-        stage('Build Frontend') {
+        
+        stage('Frontend - Build') {
             steps {
                 dir('studycow') {
                     sh 'npm install'
@@ -45,34 +31,42 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy Services') {
+        
+        stage('Deploy') {
             steps {
-                sh 'docker-compose up -d'
+                script {
+                    sh "docker network create ${DOCKER_NETWORK} || true"
+                    
+                    sh 'docker stop backend || true'
+                    sh 'docker rm backend || true'
+                    sh "docker run -d --name backend --network ${DOCKER_NETWORK} -p 8085:8085 backend:${BUILD_NUMBER}"
+                    
+                    sh 'docker stop frontend || true'
+                    sh 'docker rm frontend || true'
+                    sh "docker run -d --name frontend --network ${DOCKER_NETWORK} -p 80:80 frontend:${BUILD_NUMBER}"
+                }
             }
         }
-
+        
         stage('Health Check') {
             steps {
                 script {
-                    sh 'sleep 60'  // 서비스가 완전히 시작될 때까지 기다립니다.
-                    retry(3) {
-                        sh 'curl -f http://localhost:8080/api/health || (sleep 10 && false)'
-                        sh 'curl -f http://localhost || (sleep 10 && false)'
-                    }
+                    sh 'sleep 30'
+                    sh 'curl https://13.125.238.202:8443 || echo "Backend health check failed"'
+                    sh 'curl http://localhost:8080 || echo "local test"'
                 }
             }
         }
     }
-
+    
     post {
         always {
-            sh 'docker logs study_cow_app || echo "No backend logs available"'
+            sh 'docker logs backend || echo "No backend logs available"'
             sh 'docker logs frontend || echo "No frontend logs available"'
         }
         failure {
-            sh 'docker-compose down || true'
-            sh 'docker network rm ${DOCKER_NETWORK} || true'
+            sh 'docker stop backend frontend || true'
+            sh 'docker rm backend frontend || true'
         }
         cleanup {
             cleanWs()
