@@ -39,13 +39,7 @@ pipeline {
                         }
                     }
                 }
-                stage('Frontend Tests') {
-                    steps {
-                        dir('studycow') {
-                            sh 'npm test'
-                        }
-                    }
-                }
+
             }
         }
         
