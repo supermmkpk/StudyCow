@@ -47,9 +47,9 @@ pipeline {
             steps {
                 sshagent(['ec2-ssh-key-credential-id']) {
                     sh '''
-                        scp -o StrictHostKeyChecking=no backend/build/libs/*.jar ec2-user@your-ec2-instance:/path/to/deployment
-                        scp -o StrictHostKeyChecking=no -r studycow/build/* ec2-user@your-ec2-instance:/path/to/deployment/studycow
-                        ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-instance "sudo systemctl restart your-application"
+                        scp -o StrictHostKeyChecking=no backend/build/libs/*.jar ec2-user@i11c202.p.ssafy.io:/path/to/deployment
+                        scp -o StrictHostKeyChecking=no -r studycow/build/* ec2-user@i11c202.p.ssafy.io:/path/to/deployment/studycow
+                        ssh -o StrictHostKeyChecking=no ec2-user@i11c202.p.ssafy.io "sudo systemctl restart your-application"
                     '''
                 }
             }
