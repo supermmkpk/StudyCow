@@ -1,9 +1,7 @@
 package com.studycow.service.score;
 
 import com.studycow.dto.SubjectCodeDto;
-import com.studycow.dto.score.ScoreDetailDto;
-import com.studycow.dto.score.ScoreDto;
-import com.studycow.dto.score.ScoreTargetDto;
+import com.studycow.dto.score.*;
 import com.studycow.repository.score.ScoreRepository;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
@@ -142,8 +140,8 @@ public class ScoreServiceImpl implements ScoreService{
      */
     @Override
     @Transactional
-    public void saveScoreTarget(Map<String, Object> targetMap) throws Exception {
-        scoreRepository.saveScoreTarget(targetMap);
+    public void saveScoreTarget(RequestTargetDto requestTargetDto, int userId) throws Exception {
+        scoreRepository.saveScoreTarget(requestTargetDto, userId);
     }
 
     /**
@@ -152,8 +150,8 @@ public class ScoreServiceImpl implements ScoreService{
      * @throws Exception
      */
     @Override
-    public List<ScoreTargetDto> targetList(int userId) throws PersistenceException {
-        return scoreRepository.targetList(userId);
+    public List<ScoreTargetDto> targetList(int userId, int myId) throws PersistenceException {
+        return scoreRepository.targetList(userId, myId);
     }
 
     /**
@@ -163,8 +161,8 @@ public class ScoreServiceImpl implements ScoreService{
      */
     @Override
     @Transactional
-    public void deleteTarget(Long targetId) throws Exception {
-        scoreRepository.deleteScoreTarget(targetId);
+    public void deleteTarget(int userId, Long targetId) throws Exception {
+        scoreRepository.deleteScoreTarget(userId, targetId);
     }
 
     /**
@@ -174,8 +172,8 @@ public class ScoreServiceImpl implements ScoreService{
      */
     @Override
     @Transactional
-    public void modifyTarget(Map<String, Object> targetMap) throws Exception {
-        scoreRepository.modifyScoreTarget(targetMap);
+    public void modifyTarget(RequestTargetDto requestTargetDto, int userId, Long targetId) throws Exception {
+        scoreRepository.modifyScoreTarget(requestTargetDto, userId, targetId);
     }
 
     /**
