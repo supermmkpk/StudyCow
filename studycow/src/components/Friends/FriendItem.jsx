@@ -1,21 +1,13 @@
 import "./styles/FriendItem.css";
-import axios from "axios";
+import { useCallback } from "react";
+import useFriendsStore from "../../stores/friends";
 
-const FriendItem = ({ thumbnail, nickname, userId, onDelete, token }) => {
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`https://localhost:8443/studycow/friend/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (onDelete) {
-        onDelete(userId);
-      }
-    } catch (error) {
-      console.error("친구 삭제 실패:", error);
-    }
-  };
+const FriendItem = ({ thumbnail, nickname, userId }) => {
+  const removeFriend = useFriendsStore((state) => state.removeFriend);
+
+  const handleDelete = useCallback(() => {
+    removeFriend(userId);
+  }, [removeFriend, userId]);
 
   return (
     <div className="friendItem">

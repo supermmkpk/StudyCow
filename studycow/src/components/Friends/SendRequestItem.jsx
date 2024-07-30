@@ -1,6 +1,13 @@
 import "./styles/SendRequestItem.css";
+import useFriendsStore from "../../stores/friends";
 
-const SendRequestItem = ({ requestId, userId, nickname, thumbnail }) => {
+const SendRequestItem = ({ requestId, nickname, thumbnail }) => {
+  const cancelSendRequest = useFriendsStore((state) => state.cancelSendRequest);
+
+  const handleSendCancel = () => {
+    cancelSendRequest(requestId);
+  };
+
   return (
     <div className="sendRequestItem">
       <div className="sendRequestInfo">
@@ -12,7 +19,9 @@ const SendRequestItem = ({ requestId, userId, nickname, thumbnail }) => {
         <p className="sendRequestNickname">{nickname}</p>
       </div>
       <div>
-        <p className="btnposition02">버튼위치</p>
+        <button className="sendCancel" onClick={handleSendCancel}>
+          ➖
+        </button>
       </div>
     </div>
   );

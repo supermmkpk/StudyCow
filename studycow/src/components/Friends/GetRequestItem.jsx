@@ -1,6 +1,13 @@
 import "./styles/GetRequestItem.css";
+import useFriendsStore from "../../stores/friends";
 
-const GetRequestItem = ({ requestId, userId, nickname, thumbnail }) => {
+const GetRequestItem = ({ requestId, nickname, thumbnail }) => {
+  const acceptGetRequest = useFriendsStore((state) => state.acceptGetRequest);
+
+  const handleGetAccept = () => {
+    acceptGetRequest(requestId);
+  };
+
   return (
     <div className="getRequestItem">
       <div className="getRequestInfo">
@@ -11,9 +18,10 @@ const GetRequestItem = ({ requestId, userId, nickname, thumbnail }) => {
         />
         <p className="getRequestNickname">{nickname}</p>
       </div>
-      <div className="getbtns">
-        <button>➕</button>
-        <button>➖</button>
+      <div>
+        <button className="getAccept" onClick={handleGetAccept}>
+          ➕
+        </button>
       </div>
     </div>
   );

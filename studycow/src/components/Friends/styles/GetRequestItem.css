@@ -24,6 +24,13 @@
   vertical-align: middle;
 }
 
-.btnposition01 {
-  margin: 0;
+.getAccept {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0px;
+  border: none;
+  background: none;
 }
