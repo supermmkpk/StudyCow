@@ -8,18 +8,56 @@ pipeline {
             }
         }
         
-        stage('Build') {
+        stage('Backend - Test') {
             steps {
-                sh 'docker build -t myapp:${GIT_COMMIT} .'
+                dir('backend') {
+                    sh './gradlew test'
+                }
             }
         }
         
-        stage('Deploy') {
+        stage('Backend - Build') {
             steps {
-                sh 'docker stop myapp || true'
-                sh 'docker rm myapp || true'
-                sh 'docker run -d --name myapp -p 8082:8080 myapp:${GIT_COMMIT}'
+                dir('backend') {
+                    sh './gradlew build -x test'
+                }
             }
+        }
+        
+        stage('Frontend - Build') {
+            steps {
+                dir('studycow') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
+            }
+        }
+        
+        stage('Docker Build and Deploy') {
+            steps {
+                sh 'docker-compose down || true'
+                sh 'docker-compose build'
+                sh 'docker-compose up -d'
+            }
+        }
+        
+        stage('Health Check') {
+            steps {
+                script {
+                    sh 'sleep 30'  // 애플리케이션 시작 대기
+                    sh 'curl http://localhost:8080/api/health || exit 1'  // 백엔드 헬스 체크
+                    sh 'curl http://localhost || exit 1'  // 프론트엔드 헬스 체크
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            junit '**/backend/build/test-results/test/*.xml'
+        }
+        failure {
+            sh 'docker-compose logs'
         }
     }
 }
