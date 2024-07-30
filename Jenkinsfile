@@ -23,7 +23,7 @@ pipeline {
         
         stage('Build Frontend') {
             steps {
-                dir('frontend') {
+                dir('studycow') {
                     sh 'npm install'
                     sh 'npm run build'
                 }
