@@ -22,17 +22,20 @@ pipeline {
             }
         }
         
-        stage('Frontend - Build') {
-            steps {
-                dir('studycow') {
-                    sh 'npm install'
-                    sh 'npm run build'
-                    sh 'docker build -t frontend:${BUILD_NUMBER} .'
-                }
-            }
+stage('Frontend - Build and Deploy') {
+    steps {
+        dir('frontend') {
+            sh 'npm install'
+            sh 'npm run build'
+            sh 'docker build -t frontend:${BUILD_NUMBER} .'
+            sh 'docker stop frontend || true'
+            sh 'docker rm frontend || true'
+            sh 'docker run -d --name frontend --network studycow_network frontend:${BUILD_NUMBER}'
         }
+    }
+}
         
-        stage('Deploy') {
+        stage('Backend - Deploy') {
             steps {
                 script {
                     sh "docker network create ${DOCKER_NETWORK} || true"
@@ -41,9 +44,7 @@ pipeline {
                     sh 'docker rm backend || true'
                     sh "docker run -d --name backend --network ${DOCKER_NETWORK} -p 8443:8443 backend:${BUILD_NUMBER}"
                     
-                    sh 'docker stop frontend || true'
-                    sh 'docker rm frontend || true'
-                    sh "docker run -d --name frontend --network studycow_network -p 333:80 frontend:${BUILD_NUMBER}"
+
                 }
             }
         }
