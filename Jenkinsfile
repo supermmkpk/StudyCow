@@ -52,10 +52,10 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: 'backend/build/libs/*.jar',
                                     removePrefix: 'backend/build/libs',
-                                    remoteDirectory: '',
+                                    remoteDirectory: '/home/ubuntu',
                                     execCommand: '''
                                         sudo mkdir -p /opt/studycow/backend
-                                        sudo cp -f ${WORKSPACE}/backend/build/libs/*.jar /opt/studycow/backend/studycow-backend.jar
+                                        sudo mv /home/ubuntu/*.jar /opt/studycow/backend/studycow-backend.jar
                                         sudo chown -R ubuntu:ubuntu /opt/studycow/backend
                                         sudo systemctl restart studycow-backend || sudo systemctl start studycow-backend
                                     '''
@@ -63,11 +63,11 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: 'studycow/dist/**/*',
                                     removePrefix: 'studycow/dist',
-                                    remoteDirectory: '',
+                                    remoteDirectory: '/home/ubuntu/frontend-temp',
                                     execCommand: '''
                                         sudo mkdir -p /var/www/studycow
                                         sudo rm -rf /var/www/studycow/*
-                                        sudo cp -R ${WORKSPACE}/studycow/dist/* /var/www/studycow/
+                                        sudo mv /home/ubuntu/frontend-temp/* /var/www/studycow/
                                         sudo chown -R ubuntu:ubuntu /var/www/studycow
                                         sudo systemctl restart nginx || sudo systemctl start nginx
                                     '''
