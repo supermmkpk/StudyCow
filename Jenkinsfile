@@ -43,7 +43,7 @@ pipeline {
                     
                     sh 'docker stop frontend || true'
                     sh 'docker rm frontend || true'
-                    sh "docker run -d --name frontend --network ${DOCKER_NETWORK} -p 80:80 frontend:${BUILD_NUMBER}"
+                    sh "docker run -d --name frontend --network ${DOCKER_NETWORK} -p 333:333 frontend:${BUILD_NUMBER}"
                 }
             }
         }
