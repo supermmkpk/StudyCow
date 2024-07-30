@@ -2,6 +2,7 @@ import "./styles/SendRequestList.css";
 import Reacgt, { useEffect, useState } from "react";
 import axios from "axios";
 import useInfoStore from "../../stores/infos";
+import SendRequestItem from "./SendRequestItem";
 
 const SendRequestList = () => {
   const [sendRequests, setSendRequests] = useState([]);
@@ -23,7 +24,15 @@ const SendRequestList = () => {
             },
           }
         );
-        setSendRequests(response.data);
+
+        const sendRequestsData = response.data.map((sendRequest) => ({
+          ...sendRequest,
+          counterpartUserThumb:
+            sendRequest.counterpartUserThumb ??
+            "/src/assets/defaultProfile.png",
+        }));
+
+        setSendRequests(sendRequestsData);
       } catch (error) {
         console.error("API 요청 실패:", error);
       }
@@ -38,15 +47,16 @@ const SendRequestList = () => {
       <div className="listBox02">
         {sendRequests.length > 0 ? (
           sendRequests.map((sendRequest) => (
-            <div
-              key={sendRequest.counterpartUserId}
-              className="sendRequestItem"
-            >
-              <p>{sendRequest.counterpartUserNickname}</p>
-            </div>
+            <SendRequestItem
+              key={sendRequest.id}
+              requestId={sendRequest.id}
+              userId={sendRequest.counterpartUserId}
+              nickname={sendRequest.counterpartUserNickname}
+              thumbnail={sendRequest.counterpartUserThumb}
+            />
           ))
         ) : (
-          <p>보낸 친구 요청 목록을 불러오는 중...</p>
+          <p>보낸 친구 요청이 없소</p>
         )}
       </div>
     </div>
