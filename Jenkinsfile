@@ -23,7 +23,7 @@ pipeline {
         
         stage('Build Frontend') {
             steps {
-                dir('studycow') { // 디렉토리 이름을 'studycow'로 수정
+                dir('studycow') {
                     sh 'npm install'
                     sh 'npm run build'
                 }
@@ -39,17 +39,42 @@ pipeline {
                         }
                     }
                 }
-                // 추가적인 테스트 스테이지가 필요한 경우 여기에 추가할 수 있습니다.
+                stage('Frontend Tests') {
+                    steps {
+                        dir('studycow') {
+                            sh 'npm test'
+                        }
+                    }
+                }
             }
         }
         
         stage('Deploy') {
             steps {
-                sshagent(['ec2-ssh-key-credential-id']) {
-                    sh '''
-                         ssh -o StrictHostKeyChecking=no ec2-user@i11c202.p.ssafy.io "ls -al"
-                    '''
-                }
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'i11c202.p.ssafy.io',
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: 'backend/build/libs/*.jar',
+                                    removePrefix: 'backend/build/libs',
+                                    remoteDirectory: '/path/to/deployment',
+                                    execCommand: 'sudo systemctl restart your-application'
+                                ),
+                                sshTransfer(
+                                    sourceFiles: 'studycow/build/**/*',
+                                    removePrefix: 'studycow/build',
+                                    remoteDirectory: '/path/to/deployment/frontend',
+                                    execCommand: ''
+                                )
+                            ],
+                            usePromotionTimestamp: false,
+                            useWorkspaceInPromotion: false,
+                            verbose: false
+                        )
+                    ]
+                )
             }
         }
     }
