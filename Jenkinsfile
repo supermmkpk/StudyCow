@@ -39,7 +39,6 @@ pipeline {
                         }
                     }
                 }
-
             }
         }
         
@@ -53,19 +52,26 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: 'backend/build/libs/*.jar',
                                     removePrefix: 'backend/build/libs',
-                                    remoteDirectory: '/path/to/deployment',
-                                    execCommand: 'sudo systemctl restart your-application'
+                                    remoteDirectory: '/opt/studycow/backend',
+                                    execCommand: '''
+                                        mkdir -p /opt/studycow/backend
+                                        cp /opt/studycow/backend/*.jar /opt/studycow/backend/studycow-backend.jar
+                                        sudo systemctl restart studycow-backend
+                                    '''
                                 ),
                                 sshTransfer(
-                                    sourceFiles: 'studycow/build/**/*',
-                                    removePrefix: 'studycow/build',
-                                    remoteDirectory: '/path/to/deployment/frontend',
-                                    execCommand: ''
+                                    sourceFiles: 'studycow/dist/**/*',
+                                    removePrefix: 'studycow/dist',
+                                    remoteDirectory: '/var/www/studycow',
+                                    execCommand: '''
+                                        mkdir -p /var/www/studycow
+                                        sudo systemctl restart nginx
+                                    '''
                                 )
                             ],
                             usePromotionTimestamp: false,
                             useWorkspaceInPromotion: false,
-                            verbose: false
+                            verbose: true
                         )
                     ]
                 )
