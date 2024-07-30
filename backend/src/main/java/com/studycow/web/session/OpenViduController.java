@@ -19,6 +19,14 @@ import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 
+/**
+ * <pre>
+ *  OpenVidu 세션 컨트롤러 클래스
+ * </pre>
+ *
+ * @author 박봉균
+ * @since JDK17
+ */
 @Tag(name = "OpenVidu")
 @CrossOrigin(origins = "*")
 //@RequestMapping("/OpenVidu")
@@ -38,11 +46,12 @@ public class OpenViduController {
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
+
     /**
      * @param params The Session properties
      * @return The Session ID
      */
-    @Operation(summary = "initializeSession")
+    @Operation(summary = "세션 생성", description = "커스텀 세션 ID로 세션을 생성합니다. <br> customSessionId: \"string\" 전달")
     @PostMapping("/api/sessions")
     public ResponseEntity<String> initializeSession(@RequestBody Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
@@ -57,7 +66,7 @@ public class OpenViduController {
      * @param params    The Connection properties
      * @return The Token associated to the Connection
      */
-    @Operation(summary = "createConnection")
+    @Operation(summary = "createConnection", description = "커스텀 세션 ID로 세션을 조회하고 연결합니다. 커넥션 토큰을 반환합니다.")
     @PostMapping("/api/sessions/{sessionId}/connections")
     public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
                                                    @RequestBody(required = false) Map<String, Object> params)
