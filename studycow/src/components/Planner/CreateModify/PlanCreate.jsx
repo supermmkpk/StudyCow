@@ -98,7 +98,7 @@ const Modal = ({ closeModal }) => {
       planStatus: 0, // 기본값으로 설정
     };
 
-    const url = "http://localhost:8080/studycow/planner/create";
+    const url = "http://localhost:8443/studycow/planner/create";
 
     console.log("보내는 데이터:", data);
     console.log("보내는 주소:", url);
