@@ -21,12 +21,14 @@
 .CreateModify-modal-form {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .CreateModify-form-group {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  width: 100%;
 }
 
 .CreateModify-form-group label {
@@ -36,8 +38,9 @@
 }
 
 .CreateModify-form-group input,
+.CreateModify-form-group select,
 .CreateModify-form-group textarea {
-  flex-grow: 1;
+  width: calc(100% - 120px); /* 레이블 너비를 뺀 나머지 공간을 차지합니다 */
   padding: 8px;
   box-sizing: border-box;
   border: 1px solid #ccc;
@@ -49,10 +52,47 @@
   height: 80px;
 }
 
+.CreateModify-form-group input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: calc(100% - 160px); /* 슬라이더 길이를 조정했습니다 */
+  height: 8px;
+  background: #ddd;
+  outline: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.CreateModify-form-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #4a90e2;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.CreateModify-form-group input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #4a90e2;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.CreateModify-form-group .time-display {
+  margin-left: 10px;
+  width: 50px; /* 시간 표시의 너비를 조정합니다 */
+  text-align: left; /* 시간 표시를 왼쪽 정렬합니다 */
+  white-space: nowrap; /* 줄바꿈을 방지합니다 */
+}
+
 .CreateModify-form-buttons {
   display: flex;
   justify-content: space-between;
   margin-top: 15px;
+  width: 100%;
 }
 
 .CreateModify-form-buttons button {
