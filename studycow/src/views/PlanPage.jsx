@@ -1,31 +1,14 @@
+import React, {useEffect} from 'react';
 import Navbar from "../components/Navbar/Navbar";
-import React from 'react';
 import Calendar from "../components/Planner/Calendar.jsx";
 import PlanList from "../components/Planner/PlanList";
+import usePlanStore from "../stores/plan.js";
 import '../styles/PlanPage.css'
+import addButton from'../components/Planner/img/createButton.png'
 
 const PlanPage = () => {
-  // 예시 데이터
-  const plans = [
-    {
-      "planId": 1,
-      "userId": 6,
-      "subCode": 1,
-      "planDate": "2024-07-29",
-      "planContent": "string",
-      "planStudyTime": 5,
-      "planStatus": 0
-    },
-    {
-      "planId": 2,
-      "userId": 6,
-      "subCode": 2,
-      "planDate": "2024-07-29",
-      "planContent": "string",
-      "planStudyTime": 2,
-      "planStatus": 0
-    }
-  ];
+  const date = usePlanStore(state => state.date);
+  const plans = usePlanStore(state => state.plans);
 
   return (
     <>
@@ -36,7 +19,18 @@ const PlanPage = () => {
             <Calendar />
           </div>
           <div className="datePlanbox">
-           <PlanList className="planListItem" plans={plans} />
+            <div className="datePlanDate">
+              <div className="emptyCase" />
+              <div className="dateCase">
+                <p>{date}</p>
+              </div>
+              <button className='buttonCase'>
+                  <img className="addButton" src={addButton} alt="삭제버튼" />
+                </button>
+            </div>
+            <div className="datePlanContent">
+             <PlanList className="planListItem" plans={plans} />
+            </div>
           </div>
         </div>
       </div>

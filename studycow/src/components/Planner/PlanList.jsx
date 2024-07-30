@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import './styles/PlanList.css';
+import deleteButton from './img/deleteButton.png';
+import editButton from './img/editButton.png';
 
 const PlanList = ({ plans }) => {
   const [updatedPlans, setUpdatedPlans] = useState(plans);
@@ -29,23 +32,29 @@ const PlanList = ({ plans }) => {
 
 
   return (
-    <div>
+    <div className='singlePlanBox'>
       {updatedPlans.map(plan => (
-        <div key={plan.planId} style={{ marginBottom: '10px' }}>
+        <div key={plan.planId}>
           {!plan.planStatus && (
-            <>
+            <div className='singlePlanContent'>
               <label>
                 <input
                   type="checkbox"
                   checked={plan.planStatus === 1}
                   onChange={() => handleCheckboxChange(plan.planId)}
                 />
-                {`${sub_code_dic[`${plan.subCode}`]}`} {/* 과목 표시 */}
+                  {`0${plan.planStudyTime}:00`} {/* 입력된 시간 표시 */}
               </label>
-              <span style={{ marginLeft: '10px' }}>
-                {`${plan.planStudyTime}시간`} {/* 입력된 시간 표시 */}
-              </span>
-            </>
+              <p>{`${sub_code_dic[`${plan.subCode}`]}`} {/* 과목 표시 */}</p>
+              <div className='buttonBox'>
+                <button className='buttonCase'>
+                  <img className="editButton" src={editButton} alt="수정버튼" />
+                </button>
+                <button className='buttonCase'>
+                  <img className="deleteButton" src={deleteButton} alt="삭제버튼" />
+                </button>
+              </div>
+            </div>
           )}
         </div>
       ))}
