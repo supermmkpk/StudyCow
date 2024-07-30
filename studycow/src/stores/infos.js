@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
 
-const API_URL = "https://localhost:8443/studycow/";
+const API_URL =  "http://13.125.238.202/api/";
 
 const useInfoStore = create(
   persist(
