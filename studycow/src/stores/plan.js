@@ -4,13 +4,21 @@ import { persist } from 'zustand/middleware';
 import axios from 'axios';
 import useInfoStore from './infos';
 
-const API_URL = 'http://localhost:8080/studycow/';
+const API_URL = 'https://localhost:8443/studycow/';
 
 const usePlanStore = create(
   persist(
     (set) => ({
       date: '2024-07-02',
       plans: [],
+      updatePlanStatus: (planId) => {
+        set((state) => ({
+          plans: state.plans.map(plan =>
+            plan.planId === planId
+              ? { ...plan, planStatus: plan.planStatus === 0 ? 1 : 0 }
+              : plan
+          )
+        }))},
       saveDate: (day) => set({ date: day }),
       getDatePlanRequest: async (date) => {
         const { token } = useInfoStore.getState();
@@ -36,7 +44,6 @@ const usePlanStore = create(
     }),
     {
       name: 'plan-storage',
-      getStorage: () => localStorage, // persist 스토리지 설정
     }
   )
 );

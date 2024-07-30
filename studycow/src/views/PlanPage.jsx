@@ -8,8 +8,7 @@ import addButton from'../components/Planner/img/createButton.png'
 
 const PlanPage = () => {
   const date = usePlanStore(state => state.date);
-  const plans = usePlanStore(state => state.plans);
-
+  
   return (
     <>
       <Navbar />
@@ -29,7 +28,7 @@ const PlanPage = () => {
                 </button>
             </div>
             <div className="datePlanContent">
-             <PlanList className="planListItem" plans={plans} />
+             <PlanList className="planListItem" />
             </div>
           </div>
         </div>
