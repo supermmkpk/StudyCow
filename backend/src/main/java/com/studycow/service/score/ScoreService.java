@@ -22,7 +22,7 @@ public interface ScoreService {
     List<ScoreDto> listScores(int userId, int subCode, int myId) throws Exception;
 
     /** 단일 성적 조회 */
-    ScoreDto scoreDetail(Long scoreId) throws Exception;
+    ScoreDto scoreDetail(Long scoreId, int userId, int myId) throws Exception;
 
     /** 유저 성적 입력 */
     void saveScore(RequestScoreDto requestScoreDto, int userId) throws Exception;

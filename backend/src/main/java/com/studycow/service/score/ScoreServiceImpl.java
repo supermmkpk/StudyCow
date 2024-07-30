@@ -55,8 +55,8 @@ public class ScoreServiceImpl implements ScoreService{
      * @throws Exception
      */
     @Override
-    public ScoreDto scoreDetail(Long scoreId) throws Exception {
-        ScoreDto scoreDto = scoreRepository.scoreDetail(scoreId);
+    public ScoreDto scoreDetail(Long scoreId, int userId, int myId) throws Exception {
+        ScoreDto scoreDto = scoreRepository.scoreDetail(scoreId, userId, myId);
 
         List<ScoreDetailDto> scoreDetailDtoList = scoreRepository.listScoreDetails(scoreId);
         if(scoreDetailDtoList != null && !scoreDetailDtoList.isEmpty())
