@@ -41,7 +41,7 @@ pipeline {
                 }
                 stage('Frontend Tests') {
                     steps {
-                        dir('frontend') {
+                        dir('studycow') {
                             sh 'npm test'
                         }
                     }
