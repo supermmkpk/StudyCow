@@ -33,7 +33,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build('your-app-image:latest', '-f Dockerfile .')
+                    def dockerBuild = sh(script: 'docker build -t your-app-image:latest -f Dockerfile .', returnStatus: true)
+                    if (dockerBuild != 0) {
+                        error 'Docker build failed'
+                    }
                 }
             }
         }
