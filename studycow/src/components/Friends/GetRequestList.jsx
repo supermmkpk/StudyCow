@@ -1,44 +1,14 @@
 import "./styles/GetRequestList.css";
-import Reacgt, { useEffect, useState } from "react";
-import axios from "axios";
-import useInfoStore from "../../stores/infos";
+import { useEffect } from "react";
+import useFriendsStore from "../../stores/friends";
 import GetRequestItem from "./GetRequestItem";
 
 const GetRequestList = () => {
-  const [getRequests, setGetRequests] = useState([]);
-  const { token } = useInfoStore();
+  const { getRequests, fetchGetRequests } = useFriendsStore();
 
   useEffect(() => {
-    const fetchGetRequests = async () => {
-      try {
-        if (!token) {
-          console.error("토큰이 없습니다.");
-          return;
-        }
-
-        const response = await axios.get(
-          "https://localhost:8443/studycow/friend/request/received",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const getRequestsData = response.data.map((getRequest) => ({
-          ...getRequest,
-          counterpartUserThumb:
-            getRequest.counterpartUserThumb ?? "/src/assets/defaultProfile.png",
-        }));
-
-        setGetRequests(getRequestsData);
-      } catch (error) {
-        console.error("API 요청 실패:", error);
-      }
-    };
-
     fetchGetRequests();
-  }, [token]);
+  }, [fetchGetRequests]);
 
   return (
     <div>
@@ -49,7 +19,6 @@ const GetRequestList = () => {
             <GetRequestItem
               key={getRequest.id}
               requestId={getRequest.id}
-              userId={getRequest.counterpartUserId}
               nickname={getRequest.counterpartUserNickname}
               thumbnail={getRequest.counterpartUserThumb}
             />

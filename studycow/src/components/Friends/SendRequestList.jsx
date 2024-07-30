@@ -1,45 +1,14 @@
 import "./styles/SendRequestList.css";
-import Reacgt, { useEffect, useState } from "react";
-import axios from "axios";
-import useInfoStore from "../../stores/infos";
+import { useEffect } from "react";
+import useFriendsStore from "../../stores/friends";
 import SendRequestItem from "./SendRequestItem";
 
 const SendRequestList = () => {
-  const [sendRequests, setSendRequests] = useState([]);
-  const { token } = useInfoStore();
+  const { sendRequests, fetchSendRequests } = useFriendsStore();
 
   useEffect(() => {
-    const fetchSendRequests = async () => {
-      try {
-        if (!token) {
-          console.error("토큰이 없습니다.");
-          return;
-        }
-
-        const response = await axios.get(
-          "https://localhost:8443/studycow/friend/request/sent",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const sendRequestsData = response.data.map((sendRequest) => ({
-          ...sendRequest,
-          counterpartUserThumb:
-            sendRequest.counterpartUserThumb ??
-            "/src/assets/defaultProfile.png",
-        }));
-
-        setSendRequests(sendRequestsData);
-      } catch (error) {
-        console.error("API 요청 실패:", error);
-      }
-    };
-
     fetchSendRequests();
-  }, [token]);
+  }, [fetchSendRequests]);
 
   return (
     <div>
@@ -50,7 +19,6 @@ const SendRequestList = () => {
             <SendRequestItem
               key={sendRequest.id}
               requestId={sendRequest.id}
-              userId={sendRequest.counterpartUserId}
               nickname={sendRequest.counterpartUserNickname}
               thumbnail={sendRequest.counterpartUserThumb}
             />
