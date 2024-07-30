@@ -1,14 +1,10 @@
 package com.studycow.web.session;
 
 
-import com.studycow.dto.SubjectCodeDto;
-import com.studycow.dto.score.ScoreDto;
-import com.studycow.dto.score.ScoreTargetDto;
 import com.studycow.dto.session.EnterRequestDto;
 import com.studycow.dto.session.SessionDto;
 import com.studycow.dto.session.SessionRequestDto;
 import com.studycow.dto.user.CustomUserDetails;
-import com.studycow.service.score.ScoreService;
 import com.studycow.service.session.SessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,10 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <pre>

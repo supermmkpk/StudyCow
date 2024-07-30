@@ -1,7 +1,7 @@
 package com.studycow.repository.score;
 
 
-import com.studycow.dto.SubjectCodeDto;
+import com.studycow.dto.common.SubjectCodeDto;
 import com.studycow.dto.score.*;
 import jakarta.persistence.PersistenceException;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 
 public interface ScoreRepository {
     /** 유저 과목별 성적 리스트 조회 */
-    List<ScoreDto> listScores(int userId, int subCode) throws PersistenceException;
+    List<ScoreDto> listScores(int userId, int subCode, int myId) throws PersistenceException;
 
     /** 단일 성적 상세 조회 */
     ScoreDto scoreDetail(Long scoreId) throws PersistenceException;
@@ -27,10 +27,10 @@ public interface ScoreRepository {
     List<ScoreDetailDto> listScoreDetails(Long scoreId) throws PersistenceException;
 
     /** 유저 성적 입력 */
-    Long saveScore(Map<String, Object> scoreMap) throws PersistenceException;
+    Long saveScore(RequestScoreDto requestScoreDto, int userId) throws PersistenceException;
 
     /** 성적 내 상세 오답 내역 입력 */
-    void saveScoreDetails(Long scoreId, int catCode, int wrongCnt) throws PersistenceException;
+    void saveScoreDetails(RequestDetailDto requestDetailDto, Long scoreId) throws PersistenceException;
 
     /** 단일 성적 삭제 */
     void deleteScore(Long scoreId) throws PersistenceException;

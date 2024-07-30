@@ -1,4 +1,4 @@
-package com.studycow.dto;
+package com.studycow.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

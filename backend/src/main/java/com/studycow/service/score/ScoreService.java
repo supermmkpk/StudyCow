@@ -1,6 +1,7 @@
 package com.studycow.service.score;
 
-import com.studycow.dto.SubjectCodeDto;
+import com.studycow.dto.common.SubjectCodeDto;
+import com.studycow.dto.score.RequestScoreDto;
 import com.studycow.dto.score.RequestTargetDto;
 import com.studycow.dto.score.ScoreDto;
 import com.studycow.dto.score.ScoreTargetDto;
@@ -18,13 +19,13 @@ import java.util.Map;
  */
 public interface ScoreService {
     /** 유저 과목별 성적 리스트 조회 */
-    List<ScoreDto> listScores(int userId, int subCode) throws Exception;
+    List<ScoreDto> listScores(int userId, int subCode, int myId) throws Exception;
 
     /** 단일 성적 조회 */
     ScoreDto scoreDetail(Long scoreId) throws Exception;
 
     /** 유저 성적 입력 */
-    void saveScore(Map<String, Object> scoreMap) throws Exception;
+    void saveScore(RequestScoreDto requestScoreDto, int userId) throws Exception;
 
     /** 단일 성적 수정 */
     void modifyScore(Map<String, Object> scoreMap) throws Exception;

@@ -1,19 +1,12 @@
 package com.studycow.repository.session;
 
 
-import com.studycow.dto.SubjectCodeDto;
-import com.studycow.dto.score.ScoreDetailDto;
-import com.studycow.dto.score.ScoreDto;
-import com.studycow.dto.score.ScoreTargetDto;
 import com.studycow.dto.session.EnterRequestDto;
 import com.studycow.dto.session.SessionDto;
 import com.studycow.dto.session.SessionRequestDto;
 import jakarta.persistence.PersistenceException;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <pre>

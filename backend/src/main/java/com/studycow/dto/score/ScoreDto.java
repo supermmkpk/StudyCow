@@ -22,4 +22,5 @@ public class ScoreDto {
     private LocalDate testDate;
     private LocalDateTime scoreUpdateDate;
     private List<ScoreDetailDto> scoreDetails;
+
 }

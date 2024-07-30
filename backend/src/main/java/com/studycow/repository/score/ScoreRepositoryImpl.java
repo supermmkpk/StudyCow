@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.studycow.domain.*;
-import com.studycow.dto.SubjectCodeDto;
+import com.studycow.dto.common.SubjectCodeDto;
 import com.studycow.dto.score.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -50,23 +50,47 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public List<ScoreDto> listScores(int userId, int subCode) throws PersistenceException {
-        StringBuilder jpql = new StringBuilder();
-        jpql.append("SELECT new com.studycow.dto.score.ScoreDto( \n");
-        jpql.append("us.id                  as scoreId, \n");
-        jpql.append("us.subjectCode.name    as subName, \n");
-        jpql.append("us.subjectCode.code    as subCode, \n");
-        jpql.append("us.testScore           as testScore, \n");
-        jpql.append("us.testGrade           as testGrade, \n");
-        jpql.append("us.testDate            as testDate, \n");
-        jpql.append("us.updateDate          as scoreUpdateDate) \n");
-        jpql.append("FROM UserSubjectScore us\n");
-        jpql.append("WHERE us.user.id = :userId \n");
-        jpql.append("AND us.subjectCode.code = :subCode \n");
+    public List<ScoreDto> listScores(int userId, int subCode, int myId) throws PersistenceException {
+        try{
+            User user = em.find(User.class, userId);
+            if(user.getId() != myId && user.getUserPublic() == 0){
+                throw new IllegalStateException("비공개 유저입니다.");
+            }
 
-        return em.createQuery(jpql.toString(), ScoreDto.class)
-                .setParameter("userId", userId).setParameter("subCode", subCode)
-                .getResultList();
+            List<UserSubjectScore> userSubjectScores = queryFactory
+                    .selectFrom(userSubjectScore)
+                    .where(userSubjectScore.user.id.eq(user.getId())
+                            .and(userSubjectScore.subjectCode.code.eq(subCode)))
+                    .orderBy(userSubjectScore.testDate.desc())
+                    .fetch();
+
+            System.out.println(userSubjectScores);
+
+            return queryFactory
+                    .select(Projections.constructor(ScoreDto.class,
+                            userSubjectScore.id,
+                            userSubjectScore.subjectCode.code,
+                            userSubjectScore.subjectCode.name,
+                            userSubjectScore.testScore,
+                            userSubjectScore.testGrade,
+                            userSubjectScore.testDate,
+                            userSubjectScore.updateDate,
+                            userSubjectScore.wrongProblems
+                            ))
+                    .from(userSubjectScore)
+                    .where(userSubjectScore.user.id.eq(user.getId())
+                            .and(userSubjectScore.subjectCode.code.eq(subCode)))
+                    .orderBy(userSubjectScore.testDate.desc())
+                    .fetch();
+
+
+
+
+        }catch(IllegalStateException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new PersistenceException("성적 조회 중 에러 발생", e);
+        }
     }
 
     /** 단일 성적 조회
@@ -107,40 +131,38 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      */
     @Override
     public List<ScoreDetailDto> listScoreDetails(Long scoreId) throws PersistenceException {
-        StringBuilder jpql = new StringBuilder();
-        jpql.append("SELECT new com.studycow.dto.score.ScoreDetailDto( \n");
-        jpql.append("wp.id                      as wrongDetailId, \n");
-        jpql.append("wp.userSubjectScore.id     as scoreId, \n");
-        jpql.append("wp.problemCategory.id      as catCode, \n");
-        jpql.append("wp.problemCategory.name    as catName, \n");
-        jpql.append("wp.wrongCount              as wrongCnt) \n");
-        jpql.append("FROM WrongProblem wp\n");
-        jpql.append("WHERE wp.userSubjectScore.id = :scoreId \n");
-
-        return em.createQuery(jpql.toString(), ScoreDetailDto.class)
-                .setParameter("scoreId", scoreId)
-                .getResultList();
+        return queryFactory
+                .select(Projections.constructor(ScoreDetailDto.class,
+                        wrongProblem.id,
+                        wrongProblem.userSubjectScore.id,
+                        wrongProblem.problemCategory.code,
+                        wrongProblem.problemCategory.name,
+                        wrongProblem.wrongCount))
+                .from(wrongProblem)
+                .where(wrongProblem.userSubjectScore.id.eq(scoreId))
+                .orderBy(wrongProblem.problemCategory.code.asc())
+                .fetch();
     }
 
     /** 성적 등록
      * <pre>
      *      페이지에서 입력한 성적을 등록한다
      * </pre>
-     * @param scoreMap : 등록할 성적 정보
+     * @param requestScoreDto : 등록할 성적 정보
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public Long saveScore(Map<String, Object> scoreMap) throws PersistenceException {
+    public Long saveScore(RequestScoreDto requestScoreDto, int userId) throws PersistenceException {
         try {
-            User user = em.find(User.class, (Integer)scoreMap.get("userId"));
-            SubjectCode subjectCode = em.find(SubjectCode.class, (Integer)scoreMap.get("subCode"));
-            LocalDate testDate = LocalDate.parse((String)scoreMap.get("testDate"));
-            int testScore = (Integer)scoreMap.get("testScore");
-            int testGrade = (Integer)scoreMap.get("testGrade");
+            User user = em.find(User.class, userId);
+            SubjectCode subjectCode = em.find(SubjectCode.class, requestScoreDto.getSubCode());
+            LocalDate testDate = requestScoreDto.getTestDate();
+            int testScore = requestScoreDto.getTestScore();
+            int testGrade = requestScoreDto.getTestGrade();
             LocalDateTime updateDate = LocalDateTime.now();
 
             UserSubjectScore userSubjectScore = new UserSubjectScore(
-                    null, user, subjectCode, testDate, testScore, testGrade, updateDate
+                    null, user, subjectCode, testDate, testScore, testGrade, updateDate, null
             );
 
             em.persist(userSubjectScore);
@@ -157,17 +179,16 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      *      페이지에서 입력한 성적을 등록한다
      * </pre>
      * @param scoreId : 성적 id
-     * @param catCode : 오답 문제 유형 코드
-     * @param wrongCnt : 오답 유형 개수
+     * @param requestDetailDto : 오답 문제 유형 정보
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public void saveScoreDetails(Long scoreId, int catCode, int wrongCnt) throws PersistenceException{
+    public void saveScoreDetails(RequestDetailDto requestDetailDto, Long scoreId) throws PersistenceException{
         try{
             UserSubjectScore uss = em.find(UserSubjectScore.class, scoreId);
-            ProblemCategory pc = em.find(ProblemCategory.class, catCode);
+            ProblemCategory pc = em.find(ProblemCategory.class, requestDetailDto.getCatCode());
 
-            WrongProblem wrongProblem = new WrongProblem(null, uss, pc, wrongCnt);
+            WrongProblem wrongProblem = new WrongProblem(null, uss, pc, requestDetailDto.getWrongCnt());
             em.persist(wrongProblem);
         }catch(Exception e){
             throw new PersistenceException("성적 상세 등록 중 에러 발생", e);
