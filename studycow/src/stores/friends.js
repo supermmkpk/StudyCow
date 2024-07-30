@@ -8,6 +8,8 @@ const useFriendsStore = create((set) => ({
   friends: [],
   getRequests: [],
   sendRequests: [],
+  searchedNickname: "",
+  searchedFriends: [],
   fetchFriends: async () => {
     const { token } = useInfoStore.getState();
 
@@ -152,6 +154,25 @@ const useFriendsStore = create((set) => ({
     } catch (error) {
       console.error("친구 요청 취소 실패:", error);
       alert("친구 요청 취소에 실패했소...");
+    }
+  },
+  setSearchedNickname: (searchedNickname) => set({ searchedNickname }),
+  fetchSearchedFriends: async (searchedNickname) => {
+    const { token } = useInfoStore.getState();
+
+    if (!token) {
+      console.error("토큰이 없습니다.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(API_URL + `/user/nickname`, {
+        params: { nickname: searchedNickname },
+      });
+      set({ searchedfriends: response.data });
+    } catch (error) {
+      console.error("Error fetching friends:", error);
+      set({ searchedFriends: [] });
     }
   },
 }));
