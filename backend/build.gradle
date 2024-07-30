@@ -113,4 +113,6 @@ tasks.withType(JavaCompile) {
 	options.annotationProcessorPath = configurations.annotationProcessor
 }
 
-
+bootJar {
+	archiveFileName = 'studycow-1.0-SNAPSHOT.jar' // JAR 파일 이름 설정
+}
