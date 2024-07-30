@@ -1,69 +1,25 @@
 pipeline {
     agent any
-
-    tools {
-        gradle 'Gradle'
-        nodejs 'Node'
-    }
-
+    
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-
-        stage('Build Backend') {
+        
+        stage('Build') {
             steps {
-                dir('backend') {
-                    sh 'gradle clean build'
-                }
+                sh 'docker build -t myapp:${GIT_COMMIT} .'
             }
         }
-
-        stage('Build Frontend') {
-            steps {
-                dir('studycow') {
-                    sh 'npm install'
-                    sh 'npm run build'
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    def dockerBuild = sh(script: 'docker build -t your-app-image:latest -f Dockerfile .', returnStatus: true)
-                    if (dockerBuild != 0) {
-                        error 'Docker build failed'
-                    }
-                }
-            }
-        }
-
+        
         stage('Deploy') {
             steps {
-                sshagent(['your-ssh-credentials']) {
-                    sh '''
-                        ssh user@your-server "docker stop my-running-app || true"
-                        ssh user@your-server "docker rm my-running-app || true"
-                        ssh user@your-server "docker rmi your-app-image:latest || true"
-                        docker save -o your-app-image.tar your-app-image:latest
-                        scp your-app-image.tar user@your-server:/tmp/
-                        ssh user@your-server "docker load -i /tmp/your-app-image.tar"
-                        ssh user@your-server "docker run -d --name my-running-app -p 8080:8080 your-app-image:latest"
-                    '''
-                }
+                sh 'docker stop myapp || true'
+                sh 'docker rm myapp || true'
+                sh 'docker run -d --name myapp -p 8082:8080 myapp:${GIT_COMMIT}'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'CI/CD pipeline executed successfully!'
-        }
-        failure {
-            echo 'CI/CD pipeline failed. Please check the logs for details.'
         }
     }
 }
