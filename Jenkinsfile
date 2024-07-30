@@ -47,7 +47,7 @@ pipeline {
             steps {
                 sshagent(['ec2-ssh-key-credential-id']) {
                     sh '''
-                         ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-instance "ls -al"
+                         ssh -o StrictHostKeyChecking=no ec2-user@i11c202.p.ssafy.io "ls -al"
                     '''
                 }
             }
