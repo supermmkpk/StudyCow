@@ -33,10 +33,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class PlannerServiceImpl implements PlannerService {
 
-    public final PlannerRepository plannerRepository;
-    public final ModelMapper modelMapper;
-    public final UserRepository userRepository;
-    public final SubjectCodeRepository subjectCodeRepository;
+    private final PlannerRepository plannerRepository;
+    private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
+    private final SubjectCodeRepository subjectCodeRepository;
 
     /**
      * 플래너 생성
