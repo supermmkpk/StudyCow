@@ -43,7 +43,7 @@ pipeline {
                     
                     sh 'docker stop backend || true'
                     sh 'docker rm backend || true'
-                    sh "docker run -d --name backend --network ${DOCKER_NETWORK} -p 8080:8080 backend:${BUILD_NUMBER}"
+                    sh "docker run -d --name backend --network ${DOCKER_NETWORK} -p 8080:8080 -e GPT_API_KEY=${GPT_API_KEY} backend:${BUILD_NUMBER}"
                 }
             }
         }
