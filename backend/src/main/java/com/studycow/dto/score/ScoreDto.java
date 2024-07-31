@@ -33,5 +33,17 @@ public class ScoreDto {
         this.scoreDetails = null;
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{").append("\n");
+        sb.append("testScore=").append(testScore).append("\n");
+        sb.append("testGrade=").append(testGrade).append("\n");
+        sb.append("testDate=").append(testDate).append("\n");
+        sb.append("scoreDetails=[").append("\n");
+        for(ScoreDetailDto scoreDetail : scoreDetails){
+            sb.append(scoreDetail.toString());
+        }
+        sb.append("\n").append("]}");
+        return sb.toString();
+    }
 }

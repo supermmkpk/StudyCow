@@ -30,12 +30,16 @@ public class ResponseScoreDto {
 
     @Override
     public String toString() {
-        return "ResponseScoreDto{" +
-                "subName='" + subName + '\'' +
-                ", targetScore=" + targetScore +
-                ", targetGrade=" + targetGrade +
-                ", maxScore=" + maxScore +
-                ", scores=" + scores +
-                "}";
+        final StringBuilder sb = new StringBuilder("ResponseScoreDto{").append("\n");
+        sb.append("subName='").append(subName).append('\'').append("\n");
+        sb.append("targetScore=").append(targetScore).append("\n");
+        sb.append("targetGrade=").append(targetGrade).append("\n");
+        sb.append("maxScore=").append(maxScore).append("\n");
+        sb.append("scores=[").append("\n");
+        for(ScoreDto score : scores){
+            sb.append(score.toString());
+        }
+        sb.append("\n").append("]}");
+        return sb.toString();
     }
 }
