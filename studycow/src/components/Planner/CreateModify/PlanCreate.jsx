@@ -68,8 +68,10 @@ const Modal = ({ closeModal }) => {
     token: state.token,
   }));
 
-  const { createPlannerUrl } = usePlanStore((state) => ({
+  const { createPlannerUrl, date, saveDate } = usePlanStore((state) => ({
     createPlannerUrl: state.createPlannerUrl,
+    date: state.date,
+    saveDate: state.saveDate,
   }));
 
   const [selectedSubject, setSelectedSubject] = useState("");
@@ -77,7 +79,7 @@ const Modal = ({ closeModal }) => {
   const [selectedSubSubject, setSelectedSubSubject] = useState("");
   const [selectedTime, setSelectedTime] = useState(1);
   const [content, setContent] = useState("");
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10)); // 오늘 날짜로 설정
+  const [selectedDate, setSelectedDate] = useState(date); // 기본 날짜를 상태에서 가져옴
 
   useEffect(() => {
     if (selectedSubject) {
@@ -99,7 +101,7 @@ const Modal = ({ closeModal }) => {
 
     const data = {
       subCode,
-      planDate: date,
+      planDate: selectedDate,
       planContent: content,
       planStudyTime: parseInt(selectedTime, 10),
       planStatus: 0, // 기본값으로 설정
@@ -131,8 +133,21 @@ const Modal = ({ closeModal }) => {
   };
 
   const handleAutoComplete = () => {
-    // 여기에 자동완성 기능을 추가하세요
-    console.log("자동완성 기능 호출됨");
+    // 임시 자동완성 데이터
+    const tempSubCode = 1;
+    const tempSubSubject = sub_subjects_dic[sub_code_dic[tempSubCode]][1];
+    const tempTime = 3;
+
+    setSelectedSubject(sub_code_dic[tempSubCode]);
+    setSelectedSubSubject(tempSubSubject);
+    setSelectedTime(tempTime);
+    setContent("자동완성된 내용");
+  };
+
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    setSelectedDate(newDate);
+    saveDate(newDate); // 스토어에 새로운 날짜 저장
   };
 
   return (
@@ -183,8 +198,8 @@ const Modal = ({ closeModal }) => {
               type="date"
               id="date"
               name="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
+              value={selectedDate}
+              onChange={handleDateChange}
             />
           </div>
           <div className="CreateModify-form-group">
