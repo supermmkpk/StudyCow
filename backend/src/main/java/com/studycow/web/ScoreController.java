@@ -53,7 +53,7 @@ public class ScoreController {
             }
             return ResponseEntity.ok(responseScoreDto);
         } catch(Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
