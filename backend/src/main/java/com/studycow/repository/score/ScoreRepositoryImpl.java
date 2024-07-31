@@ -433,4 +433,41 @@ public class ScoreRepositoryImpl implements ScoreRepository{
                 .orderBy(subjectCode.code.asc())
                 .fetch();
     }
+
+    /**
+     * 성적 조회 전 과목 목표 조회
+     * @param userId
+     * @param subCode
+     * @param myId
+     * @return
+     * @throws PersistenceException
+     */
+    @Override
+    public ResponseScoreDto subTarget(int userId, int subCode, int myId) throws PersistenceException {
+        try{
+            User user = em.find(User.class, userId);
+            SubjectCode subjectCode = em.find(SubjectCode.class, subCode);
+
+            if(user.getId() != myId && user.getUserPublic() == 0){
+                throw new IllegalStateException("비공개 유저입니다.");
+            }
+
+            return queryFactory
+                    .select(Projections.constructor(ResponseScoreDto.class,
+                            userScoreTarget.subjectCode.name,
+                            userScoreTarget.targetScore,
+                            userScoreTarget.targetGrade,
+                            userScoreTarget.subjectCode.maxScore
+                    ))
+                    .from(userScoreTarget)
+                    .where(userScoreTarget.subjectCode.code.eq(subjectCode.getCode())
+                            .and(userScoreTarget.user.id.eq(user.getId())))
+                    .fetchOne();
+
+        }catch(IllegalStateException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new PersistenceException("성적 조회 중 에러 발생", e);
+        }
+    }
 }
