@@ -30,11 +30,7 @@ import PlanPage from "../views/PlanPage.jsx";
 import MyPlanner from "../components/Planner/MyPlanner.jsx";
 // 플래너페이지 - 생성
 import PlanCreate from "../components/Planner/CreateModify/PlanCreate.jsx";
-// 플래너페이지 - 수정
 import PlanModify from "../components/Planner/CreateModify/PlanModify.jsx";
-
-
-
 
 const PageRoutes = () => (
   <Routes>

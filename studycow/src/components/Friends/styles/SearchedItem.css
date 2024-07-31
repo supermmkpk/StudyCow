@@ -1,0 +1,22 @@
+.searchedItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 15px;
+  border-bottom: 1px solid black;
+  align-items: center;
+}
+
+.searchedItemInfo {
+  margin: 0px;
+  text-align: center;
+}
+
+.addFriendBtn {
+  background-color: #4d8ee4;
+  color: #fff;
+  font-size: 15px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+}

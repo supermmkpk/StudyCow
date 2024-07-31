@@ -80,8 +80,8 @@ public class FriendControllerTest {
                 0,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                "testNickname",
-                LocalDate.now());
+                "testNickname"
+                );
 
         // CustomUserDetails 객체 생성
         userDetails1 = new CustomUserDetails(customUserInfoDto);
@@ -97,8 +97,7 @@ public class FriendControllerTest {
                 0,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                "testNickname2",
-                LocalDate.now());
+                "testNickname2");
 
         // CustomUserDetails 객체 생성
         userDetails2 = new CustomUserDetails(customUserInfoDto);

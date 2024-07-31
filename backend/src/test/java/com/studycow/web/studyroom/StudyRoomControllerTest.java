@@ -86,8 +86,7 @@ public class StudyRoomControllerTest {
                 0,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                "testNickname",
-                LocalDate.now());
+                "testNickname");
 
         // CustomUserDetails 객체 생성
         userDetails = new CustomUserDetails(customUserInfoDto);

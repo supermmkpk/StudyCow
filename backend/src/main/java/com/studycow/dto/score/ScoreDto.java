@@ -20,7 +20,30 @@ public class ScoreDto {
     private int testScore;
     private Integer testGrade;
     private LocalDate testDate;
-    private LocalDateTime scoreUpdateDate;
     private List<ScoreDetailDto> scoreDetails;
 
+    public ScoreDto(Long scoreId, int subCode, String subName,
+                    int testScore, Integer testGrade, LocalDate testDate) {
+        this.scoreId = scoreId;
+        this.subCode = subCode;
+        this.subName = subName;
+        this.testScore = testScore;
+        this.testGrade = testGrade;
+        this.testDate = testDate;
+        this.scoreDetails = null;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("{").append("\n");
+        sb.append("testScore=").append(testScore).append("\n");
+        sb.append("testGrade=").append(testGrade).append("\n");
+        sb.append("testDate=").append(testDate).append("\n");
+        sb.append("scoreDetails=[").append("\n");
+        for(ScoreDetailDto scoreDetail : scoreDetails){
+            sb.append(scoreDetail.toString());
+        }
+        sb.append("\n").append("]}");
+        return sb.toString();
+    }
 }

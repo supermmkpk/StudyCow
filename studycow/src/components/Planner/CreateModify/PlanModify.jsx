@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./styles/CreateModify.css";
 import useInfoStore from "../../../stores/infos";
+import usePlanStore from "../../../stores/plan"; // 새로운 스토어 import
 
 const sub_code_dic = {
   1: "국어",
@@ -67,6 +68,10 @@ const PlanModify = () => {
     token: state.token,
   }));
 
+  const { modifyPlannerUrl } = usePlanStore((state) => ({
+    modifyPlannerUrl: state.modifyPlannerUrl,
+  }));
+
   const { planId } = useParams();
 
   const [selectedSubject, setSelectedSubject] = useState("");
@@ -88,14 +93,11 @@ const PlanModify = () => {
     const fetchData = async () => {
       try {
         console.log(`Fetching data for planId: ${planId}`);
-        const response = await fetch(
-          `https://localhost:8443/studycow/planner/${planId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(modifyPlannerUrl(planId), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         console.log("Response:", response);
         const text = await response.text();
@@ -118,7 +120,7 @@ const PlanModify = () => {
     };
 
     fetchData();
-  }, [planId, token]);
+  }, [planId, token, modifyPlannerUrl]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -138,14 +140,12 @@ const PlanModify = () => {
       planStatus: 0,
     };
 
-    const url = `https://localhost:8443/studycow/planner/${planId}`;
-
     console.log("보내는 데이터:", data);
-    console.log("보내는 주소:", url);
+    console.log("보내는 주소:", modifyPlannerUrl(planId));
     console.log("토큰:", token);
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(modifyPlannerUrl(planId), {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

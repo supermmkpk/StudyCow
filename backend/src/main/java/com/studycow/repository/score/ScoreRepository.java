@@ -21,7 +21,7 @@ public interface ScoreRepository {
     List<ScoreDto> listScores(int userId, int subCode, int myId) throws PersistenceException;
 
     /** 단일 성적 상세 조회 */
-    ScoreDto scoreDetail(Long scoreId) throws PersistenceException;
+    ScoreDto scoreDetail(Long scoreId, int userId, int myId) throws PersistenceException;
 
     /** 등록 성적 별 상세 성적 조회 */
     List<ScoreDetailDto> listScoreDetails(Long scoreId) throws PersistenceException;
@@ -52,4 +52,7 @@ public interface ScoreRepository {
 
     /** 목표 미설정 과목 조회 */
     List<SubjectCodeDto> subjectList(int userId) throws PersistenceException;
+
+    /** 성적 조회 전 과목 목표 조회 */
+    ResponseScoreDto subTarget(int userId, int subCode, int myId) throws PersistenceException;
 }

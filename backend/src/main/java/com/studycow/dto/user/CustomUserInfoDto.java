@@ -32,6 +32,5 @@ public class CustomUserInfoDto {
     private LocalDateTime userJoinDate;
     private LocalDateTime userUpdateDate;
     private String userNickName;
-    private LocalDate userBirthday;
 
 }

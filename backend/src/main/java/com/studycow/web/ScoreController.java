@@ -2,12 +2,10 @@ package com.studycow.web;
 
 
 import com.studycow.dto.common.SubjectCodeDto;
-import com.studycow.dto.score.RequestScoreDto;
-import com.studycow.dto.score.RequestTargetDto;
-import com.studycow.dto.score.ScoreDto;
-import com.studycow.dto.score.ScoreTargetDto;
+import com.studycow.dto.score.*;
 import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.service.score.ScoreService;
+import com.studycow.web.openai.ChatGPTController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -36,6 +34,7 @@ import java.util.Map;
 public class ScoreController {
 
     private final ScoreService scoreService;
+    private final ChatGPTController gptController;
 
     @Operation(summary = "과목별 성적 조회", description = "등록한 과목별 성적을 조회합니다.")
     @GetMapping("/{userId}/list/{subCode}")
@@ -46,23 +45,32 @@ public class ScoreController {
     ) {
         try {
             int myId = userDetails.getUser().getUserId();
-            List<ScoreDto> scoreList = scoreService.listScores(userId, subCode, myId);
-            return ResponseEntity.ok(scoreList);
+            ResponseScoreDto responseScoreDto = scoreService.listScores(userId, subCode, myId);
+            if(myId == userId){
+                responseScoreDto.setAdvice(gptController.scoreAdvice(responseScoreDto));
+            }else{
+                responseScoreDto.setAdvice("공부 추천은 내 주인에게만 해줄 수 있소.");
+            }
+            return ResponseEntity.ok(responseScoreDto);
         } catch(Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @Operation(summary = "성적 단일 조회", description = "선택한 성적의 상세 정보를 조회합니다.")
-    @GetMapping("/detail")
-    public ResponseEntity<?> scoreDetail(@RequestParam("scoreId") Long scoreId) {
+    @GetMapping("/{userId}/detail/{scoreId}")
+    public ResponseEntity<?> scoreDetail(
+            @PathVariable int userId,
+            @PathVariable Long scoreId,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            ScoreDto scoreDto = scoreService.scoreDetail(scoreId);
+            int myId = userDetails.getUser().getUserId();
+            ScoreDto scoreDto = scoreService.scoreDetail(scoreId, userId, myId);
             return ResponseEntity.ok(scoreDto);
         } catch(Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("성적 조회 실패", HttpStatus.BAD_REQUEST);
+            //e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -78,8 +86,8 @@ public class ScoreController {
             return new ResponseEntity<>("성적 등록 성공", HttpStatus.OK);
 
         } catch(Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("성적 등록 실패", HttpStatus.BAD_REQUEST);
+            //e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

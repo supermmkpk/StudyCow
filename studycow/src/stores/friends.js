@@ -2,12 +2,14 @@ import { create } from "zustand";
 import axios from "axios";
 import useInfoStore from "./infos";
 
-const API_URL = `https://localhost:8443/studycow/`;
+const API_URL = `http://localhost:8080/studycow/`;
 
-const useFriendsStore = create((set) => ({
+const useFriendsStore = create((set, get) => ({
   friends: [],
   getRequests: [],
   sendRequests: [],
+  searchedNickname: "",
+  searchedFriends: [],
   fetchFriends: async () => {
     const { token } = useInfoStore.getState();
 
@@ -83,7 +85,7 @@ const useFriendsStore = create((set) => ({
       console.error("API 요청 실패:", error);
     }
   },
-  acceptGetRequest: async (requestId) => {
+  acceptGetRequest: async (friendRequestId) => {
     const { token } = useInfoStore.getState();
 
     if (!token) {
@@ -93,14 +95,23 @@ const useFriendsStore = create((set) => ({
 
     try {
       // POST 요청을 보내는 axios 호출
-      await axios.post(API_URL + `/friend/accept/${requestId}`);
+      await axios.post(
+        API_URL + `friend/accept/${friendRequestId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       set((state) => ({
         getRequests: state.getRequests.filter(
-          (getRequest) => getRequest.id !== requestId
+          (getRequest) => getRequest.id !== friendRequestId
         ),
       }));
       // 요청 성공 시 추가 작업 (예: 사용자에게 알림, 상태 업데이트 등)
       alert("친구 요청을 수락했소!");
+      await useFriendsStore.getState().fetchFriends();
     } catch (error) {
       // 오류 발생 시 에러 메시지 표시
       console.error("친구 요청 수락 실패:", error);
@@ -142,7 +153,11 @@ const useFriendsStore = create((set) => ({
     }
 
     try {
-      await axios.delete(API_URL + `/friend/request/cancel/${requestId}`);
+      await axios.delete(API_URL + `friend/request/cancel/${requestId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       set((state) => ({
         sendRequests: state.sendRequests.filter(
           (sendRequest) => sendRequest.id !== requestId
@@ -152,6 +167,71 @@ const useFriendsStore = create((set) => ({
     } catch (error) {
       console.error("친구 요청 취소 실패:", error);
       alert("친구 요청 취소에 실패했소...");
+    }
+  },
+  setSearchedNickname: (searchedNickname) => set({ searchedNickname }),
+  fetchSearchedFriends: async (searchedNickname) => {
+    const { token } = useInfoStore.getState();
+
+    if (!token) {
+      console.error("토큰이 없습니다.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(API_URL + `user/nickname`, {
+        params: { nickname: searchedNickname },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      set({ searchedFriends: response.data });
+    } catch (error) {
+      console.error("Error fetching friends:", error);
+      set({ searchedFriends: [] });
+    }
+  },
+  sendFriendRequest: async (toUserId) => {
+    const { token } = useInfoStore.getState();
+    const { friends, sendRequests } = get();
+
+    if (!token) {
+      console.error("토큰이 없습니다.");
+      return;
+    }
+
+    // 이미 추가된 친구인지 확인
+    if (friends.some((friend) => friend.friendUserId === toUserId)) {
+      alert("이미 추가된 친구입니다.");
+      return;
+    }
+
+    // 이미 친구 요청을 보냈는지 확인
+    if (
+      sendRequests.some(
+        (sendRequest) => sendRequest.counterpartUserId === toUserId
+      )
+    ) {
+      alert("이미 친구 요청을 보냈습니다.");
+      return;
+    }
+
+    try {
+      await axios.post(
+        API_URL + `friend/request`,
+        { toUserId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // 보낸 친구 요청 목록 갱신
+      await useFriendsStore.getState().fetchSendRequests();
+      alert("친구 요청을 보냈습니다!");
+    } catch (error) {
+      console.error("친구 요청 실패:", error);
+      alert("친구 요청에 실패했습니다.");
     }
   },
 }));

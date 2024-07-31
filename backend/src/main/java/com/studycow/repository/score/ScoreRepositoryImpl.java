@@ -1,6 +1,8 @@
 package com.studycow.repository.score;
 
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.studycow.domain.*;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -53,18 +56,10 @@ public class ScoreRepositoryImpl implements ScoreRepository{
     public List<ScoreDto> listScores(int userId, int subCode, int myId) throws PersistenceException {
         try{
             User user = em.find(User.class, userId);
+
             if(user.getId() != myId && user.getUserPublic() == 0){
                 throw new IllegalStateException("비공개 유저입니다.");
             }
-
-            List<UserSubjectScore> userSubjectScores = queryFactory
-                    .selectFrom(userSubjectScore)
-                    .where(userSubjectScore.user.id.eq(user.getId())
-                            .and(userSubjectScore.subjectCode.code.eq(subCode)))
-                    .orderBy(userSubjectScore.testDate.desc())
-                    .fetch();
-
-            System.out.println(userSubjectScores);
 
             return queryFactory
                     .select(Projections.constructor(ScoreDto.class,
@@ -73,18 +68,13 @@ public class ScoreRepositoryImpl implements ScoreRepository{
                             userSubjectScore.subjectCode.name,
                             userSubjectScore.testScore,
                             userSubjectScore.testGrade,
-                            userSubjectScore.testDate,
-                            userSubjectScore.updateDate,
-                            userSubjectScore.wrongProblems
+                            userSubjectScore.testDate
                             ))
                     .from(userSubjectScore)
                     .where(userSubjectScore.user.id.eq(user.getId())
                             .and(userSubjectScore.subjectCode.code.eq(subCode)))
                     .orderBy(userSubjectScore.testDate.desc())
                     .fetch();
-
-
-
 
         }catch(IllegalStateException e) {
             throw e;
@@ -104,21 +94,35 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      */
 
     @Override
-    public ScoreDto scoreDetail(Long scoreId) throws PersistenceException {
-        UserSubjectScore us = em.find(UserSubjectScore.class, scoreId);
+    public ScoreDto scoreDetail(Long scoreId, int userId, int myId) throws PersistenceException {
+        try {
+            User user = em.find(User.class, userId);
+            if(user.getId() != myId && user.getUserPublic() == 0){
+                throw new IllegalStateException("비공개 유저입니다.");
+            }
 
-        return new ScoreDto(
-                us.getId(),
-                us.getSubjectCode().getCode(),
-                us.getSubjectCode().getName(),
-                us.getTestScore(),
-                us.getTestGrade(),
-                us.getTestDate(),
-                us.getUpdateDate(),
-                null
-        );
-
-        //return scoreDto;
+            UserSubjectScore us = em.find(UserSubjectScore.class, scoreId);
+            if(us != null){
+                return queryFactory
+                        .select(Projections.constructor(ScoreDto.class,
+                                userSubjectScore.id,
+                                userSubjectScore.subjectCode.code,
+                                userSubjectScore.subjectCode.name,
+                                userSubjectScore.testScore,
+                                userSubjectScore.testGrade,
+                                userSubjectScore.testDate
+                        ))
+                        .from(userSubjectScore)
+                        .where(userSubjectScore.id.eq(us.getId()))
+                        .fetchOne();
+            }else{
+                throw new EntityNotFoundException("해당 성적을 찾을 수 없습니다.");
+            }
+        } catch(EntityNotFoundException | IllegalStateException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new PersistenceException("성적 조회 중 에러 발생", e);
+        }
     }
 
     /** 등록한 성적 상세 조회
@@ -428,5 +432,42 @@ public class ScoreRepositoryImpl implements ScoreRepository{
                         .and(subjectCode.status.eq(1)))
                 .orderBy(subjectCode.code.asc())
                 .fetch();
+    }
+
+    /**
+     * 성적 조회 전 과목 목표 조회
+     * @param userId
+     * @param subCode
+     * @param myId
+     * @return
+     * @throws PersistenceException
+     */
+    @Override
+    public ResponseScoreDto subTarget(int userId, int subCode, int myId) throws PersistenceException {
+        try{
+            User user = em.find(User.class, userId);
+            SubjectCode subjectCode = em.find(SubjectCode.class, subCode);
+
+            if(user.getId() != myId && user.getUserPublic() == 0){
+                throw new IllegalStateException("비공개 유저입니다.");
+            }
+
+            return queryFactory
+                    .select(Projections.constructor(ResponseScoreDto.class,
+                            userScoreTarget.subjectCode.name,
+                            userScoreTarget.targetScore,
+                            userScoreTarget.targetGrade,
+                            userScoreTarget.subjectCode.maxScore
+                    ))
+                    .from(userScoreTarget)
+                    .where(userScoreTarget.subjectCode.code.eq(subjectCode.getCode())
+                            .and(userScoreTarget.user.id.eq(user.getId())))
+                    .fetchOne();
+
+        }catch(IllegalStateException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new PersistenceException("성적 조회 중 에러 발생", e);
+        }
     }
 }
