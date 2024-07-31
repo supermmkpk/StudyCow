@@ -41,8 +41,8 @@ const PageRoutes = () => (
 
     {/* 플랜 */}
     <Route path="/plan" element={<PlanPage />}></Route>
-
     <Route path="/Create" element={<PlanCreate />}></Route>
+    <Route path="/modify/:planId" element={<PlanModify />} />
 
     {/* 성적분석 */}
     <Route path="/analyze" element={<a>analyze</a>}></Route>

@@ -74,10 +74,10 @@ const ChangeMyInfo = () => {
   };
 
   return (
-    <div className="info-form">
+    <div className="ChangeInfo-info-form">
       <h2>회원정보 변경</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="ChangeInfo-form-group">
           <label htmlFor="email">이메일:</label>
           <input
             type="email"
@@ -87,7 +87,7 @@ const ChangeMyInfo = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className="ChangeInfo-form-group">
           <label htmlFor="nickname">닉네임:</label>
           <input
             type="text"
@@ -97,7 +97,7 @@ const ChangeMyInfo = () => {
             onChange={(e) => setNickname(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className="ChangeInfo-form-group">
           <label htmlFor="thumb">프로필 이미지:</label>
           <input
             type="file"
@@ -113,8 +113,8 @@ const ChangeMyInfo = () => {
           value={publicStatus}
           onChange={(e) => setPublicStatus(Number(e.target.value))}
         />
-        <div className="button-group">
-          <button type="submit" className="submit-button">
+        <div className="ChangeInfo-button-group">
+          <button type="submit" className="ChangeInfo-submit-button">
             변경
           </button>
         </div>

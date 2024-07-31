@@ -1,13 +1,14 @@
-body {
+/* 기존 ChangeInfo 관련 스타일 */
+
+.ChangeInfo-full-page-container {
   margin: 0;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f4f4f4;
 }
 
-.change-info-container {
+.ChangeInfo-container {
   position: relative;
   width: 100%;
   max-width: 600px;
@@ -18,7 +19,7 @@ body {
   justify-content: center;
 }
 
-.form-container {
+.ChangeInfo-form-container {
   width: 100%;
   max-width: 400px;
   display: flex;
@@ -27,7 +28,7 @@ body {
   justify-content: center;
 }
 
-.info-form {
+.ChangeInfo-info-form {
   background-color: #f0f4f8;
   padding: 30px;
   border-radius: 10px;
@@ -39,14 +40,14 @@ body {
   align-items: center;
 }
 
-form {
+.ChangeInfo-container form {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.info-form h2 {
+.ChangeInfo-info-form h2 {
   margin: 0;
   margin-bottom: 20px;
   text-align: center;
@@ -55,7 +56,7 @@ form {
   width: 100%;
 }
 
-.form-group {
+.ChangeInfo-form-group {
   width: 100%;
   margin-top: 15px;
   display: flex;
@@ -63,13 +64,13 @@ form {
   align-items: center;
 }
 
-.form-group label {
+.ChangeInfo-form-group label {
   width: 30%;
   font-weight: bold;
   color: #333;
 }
 
-.form-group input {
+.ChangeInfo-form-group input {
   width: 70%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -77,16 +78,16 @@ form {
   box-sizing: border-box;
 }
 
-.form-group input[type="file"] {
+.ChangeInfo-form-group input[type="file"] {
   padding: 3px;
 }
 
-.form-group input:focus {
+.ChangeInfo-form-group input:focus {
   border-color: #4a90e2;
   outline: none;
 }
 
-.button-group {
+.ChangeInfo-button-group {
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -94,7 +95,7 @@ form {
   width: 100%;
 }
 
-.submit-button {
+.ChangeInfo-submit-button {
   background-color: #4a90e2;
   color: white;
   border: none;
@@ -103,16 +104,16 @@ form {
   margin-bottom: 15px;
   cursor: pointer;
   font-size: 1rem;
-  width: auto; /* 부모 컨테이너의 너비를 따르지 않도록 설정 */
-  max-width: 150px; /* 최대 너비를 설정하여 버튼이 너무 길어지지 않도록 함 */
+  width: auto;
+  max-width: 150px;
   text-align: center;
 }
 
-.submit-button:hover {
+.ChangeInfo-submit-button:hover {
   background-color: #357ab7;
 }
 
-.cancel-button {
+.ChangeInfo-cancel-button {
   background-color: #f86c6b;
   color: white;
   border: none;
@@ -123,12 +124,36 @@ form {
   text-align: center;
 }
 
-.cancel-button:hover {
+.ChangeInfo-cancel-button:hover {
   background-color: #d9534f;
 }
 
-.center-button {
+.ChangeInfo-center-button {
   display: block;
   margin: 20px auto 0;
   width: 50%;
+}
+
+/* ChangeButton 관련 스타일 */
+
+.ChangeInfo-overlay-container2 {
+  position: absolute;
+  top: 10px; /* Adjust this value to control the vertical position */
+  left: 28%; /* Adjust this value to align it with the form's left edge */
+  transform: translateX(-50%);
+  z-index: 1; /* Ensure the button is above the form */
+}
+
+.ChangeInfo-overlay-button2 {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.ChangeInfo-overlay-button2:hover {
+  background-color: #357ab7;
 }
