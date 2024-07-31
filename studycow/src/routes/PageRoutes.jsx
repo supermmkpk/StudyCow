@@ -18,6 +18,7 @@ import MyPageGrade from "../components/MyPage/MyPageGrade.jsx";
 // 플래너페이지 - 개인
 import PlanPage from "../views/PlanPage.jsx";
 import PlanCreate from "../components/Planner/CreateModify/PlanCreate.jsx";
+import PlanModify from "../components/Planner/CreateModify/PlanModify.jsx";
 
 const PageRoutes = () => (
   <Routes>
@@ -42,7 +43,7 @@ const PageRoutes = () => (
     {/* 플랜 */}
     <Route path="/plan" element={<PlanPage />}></Route>
     <Route path="/Create" element={<PlanCreate />}></Route>
-    {/* <Route path="/modify/:planId" element={<PlanModify />} /> */}
+    <Route path="/modify/:planId" element={<PlanModify />} />
 
     {/* 성적분석 */}
     <Route path="/analyze" element={<a>analyze</a>}></Route>
