@@ -2,7 +2,7 @@ import { create } from "zustand";
 import axios from "axios";
 import useInfoStore from "./infos";
 
-const API_URL = `https://localhost:8443/studycow/`;
+const API_URL = `http://localhost:8080/studycow/`;
 
 const useFriendsStore = create((set) => ({
   friends: [],
@@ -85,7 +85,7 @@ const useFriendsStore = create((set) => ({
       console.error("API 요청 실패:", error);
     }
   },
-  acceptGetRequest: async (requestId) => {
+  acceptGetRequest: async (friendRequestId) => {
     const { token } = useInfoStore.getState();
 
     if (!token) {
@@ -95,14 +95,23 @@ const useFriendsStore = create((set) => ({
 
     try {
       // POST 요청을 보내는 axios 호출
-      await axios.post(API_URL + `/friend/accept/${requestId}`);
+      await axios.post(
+        API_URL + `friend/accept/${friendRequestId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       set((state) => ({
         getRequests: state.getRequests.filter(
-          (getRequest) => getRequest.id !== requestId
+          (getRequest) => getRequest.id !== friendRequestId
         ),
       }));
       // 요청 성공 시 추가 작업 (예: 사용자에게 알림, 상태 업데이트 등)
       alert("친구 요청을 수락했소!");
+      await useFriendsStore.getState().fetchFriends();
     } catch (error) {
       // 오류 발생 시 에러 메시지 표시
       console.error("친구 요청 수락 실패:", error);
@@ -144,7 +153,11 @@ const useFriendsStore = create((set) => ({
     }
 
     try {
-      await axios.delete(API_URL + `/friend/request/cancel/${requestId}`);
+      await axios.delete(API_URL + `friend/request/cancel/${requestId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       set((state) => ({
         sendRequests: state.sendRequests.filter(
           (sendRequest) => sendRequest.id !== requestId
@@ -166,7 +179,7 @@ const useFriendsStore = create((set) => ({
     }
 
     try {
-      const response = await axios.get(API_URL + `/user/nickname`, {
+      const response = await axios.get(API_URL + `user/nickname`, {
         params: { nickname: searchedNickname },
       });
       set({ searchedfriends: response.data });
