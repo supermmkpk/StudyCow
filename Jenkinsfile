@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_NETWORK = "studycow_network"
         GPT_API_KEY = credentials('gpt-api-key-id')
-        VITE_API_BASE_URL = 'https://i11c202.p.ssafy.io/'
+        VITE_API_BASE_URL = 'https://i11c202.p.ssafy.io/studycow'
     }
 
     stages {
