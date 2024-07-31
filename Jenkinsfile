@@ -28,14 +28,15 @@ pipeline {
         dir('studycow') {
             sh 'npm install'
             sh 'npm run build'
-            sh 'docker build -t frontend:${BUILD_NUMBER} .'
+            sh 'ls -la build'  // 빌드 결과물 확인
+            sh 'cat build/index.html || echo "index.html not found"'
+            sh 'docker build --no-cache -t frontend:${BUILD_NUMBER} .'
             
             sh 'docker stop frontend || true'
             sh 'docker rm frontend || true'
             sh 'docker run -d --name frontend --network studycow_network -p 3000:80 frontend:${BUILD_NUMBER}'
             sh 'docker cp frontend:/usr/share/nginx/html ./nginx-content'
-            sh 'ls -la build'  // 빌드 결과물 확인
-            sh 'cat build/index.html || echo "index.html not found"'
+
         }
     }
 }
