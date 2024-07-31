@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_NETWORK = "studycow_network"
         GPT_API_KEY = credentials('gpt-api-key-id')
+        VITE_API_BASE_URL = 'https://i11c202.p.ssafy.io/'
     }
 
     stages {
@@ -30,7 +31,8 @@ pipeline {
             sh 'npm run build'
             sh 'ls -la build'  // 빌드 결과물 확인
             sh 'cat build/index.html || echo "index.html not found"'
-            sh 'docker build --no-cache -t frontend:${BUILD_NUMBER} .'
+            sh 'echo "VITE_API_BASE_URL=${VITE_API_BASE_URL}" > .env'  
+            sh 'docker build -t frontend:${BUILD_NUMBER} --build-arg VITE_API_BASE_URL=${VITE_API_BASE_URL} .'
             
             sh 'docker stop frontend || true'
             sh 'docker rm frontend || true'
