@@ -66,7 +66,7 @@ public class OpenViduController {
      * @param params    The Connection properties
      * @return The Token associated to the Connection
      */
-    @Operation(summary = "createConnection", description = "커스텀 세션 ID로 세션을 조회하고 연결합니다. 커넥션 토큰을 반환합니다.")
+    @Operation(summary = "연결 생성", description = "커스텀 세션 ID로 세션을 조회하고 연결합니다. 커넥션 토큰을 반환합니다.")
     @PostMapping("/api/sessions/{sessionId}/connections")
     public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
                                                    @RequestBody(required = false) Map<String, Object> params)
