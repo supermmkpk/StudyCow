@@ -33,20 +33,23 @@ public class ScoreServiceImpl implements ScoreService{
      * @throws Exception
      */
     @Override
-    public List<ScoreDto> listScores(int userId, int subCode, int myId) throws Exception {
+    public ResponseScoreDto listScores(int userId, int subCode, int myId) throws Exception {
+        ResponseScoreDto responseScoreDto = scoreRepository.subTarget(userId, subCode, myId);
+
         // 과목별 성적 리스트
-        List<ScoreDto> scoreDtoList = scoreRepository.listScores(userId, subCode, myId);
+        //List<ScoreDto> scoreDtoList = scoreRepository.listScores(userId, subCode, myId);
+        responseScoreDto.setScores(scoreRepository.listScores(userId, subCode, myId));
 
         // 오답 유형 리스트 조회
-        for(ScoreDto scores : scoreDtoList){
+        for(ScoreDto scores : responseScoreDto.getScores()){
             Long scoreId = scores.getScoreId();
 
             List<ScoreDetailDto> scoreDetailDtoList = scoreRepository.listScoreDetails(scoreId);
             if(scoreDetailDtoList != null && !scoreDetailDtoList.isEmpty())
                 scores.setScoreDetails(scoreDetailDtoList);
         }
-
-        return scoreDtoList;
+        // return scoreDtoList;
+        return responseScoreDto;
     }
 
     /**

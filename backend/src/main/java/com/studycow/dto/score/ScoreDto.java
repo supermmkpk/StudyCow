@@ -32,4 +32,6 @@ public class ScoreDto {
         this.testDate = testDate;
         this.scoreDetails = null;
     }
+
+
 }

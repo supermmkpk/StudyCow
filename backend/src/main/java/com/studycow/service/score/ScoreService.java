@@ -1,10 +1,7 @@
 package com.studycow.service.score;
 
 import com.studycow.dto.common.SubjectCodeDto;
-import com.studycow.dto.score.RequestScoreDto;
-import com.studycow.dto.score.RequestTargetDto;
-import com.studycow.dto.score.ScoreDto;
-import com.studycow.dto.score.ScoreTargetDto;
+import com.studycow.dto.score.*;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
@@ -19,7 +16,7 @@ import java.util.Map;
  */
 public interface ScoreService {
     /** 유저 과목별 성적 리스트 조회 */
-    List<ScoreDto> listScores(int userId, int subCode, int myId) throws Exception;
+    ResponseScoreDto listScores(int userId, int subCode, int myId) throws Exception;
 
     /** 단일 성적 조회 */
     ScoreDto scoreDetail(Long scoreId, int userId, int myId) throws Exception;

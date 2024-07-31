@@ -52,4 +52,7 @@ public interface ScoreRepository {
 
     /** 목표 미설정 과목 조회 */
     List<SubjectCodeDto> subjectList(int userId) throws PersistenceException;
+
+    /** 성적 조회 전 과목 목표 조회 */
+    ResponseScoreDto subTarget(int userId, int subCode, int myId) throws PersistenceException;
 }
