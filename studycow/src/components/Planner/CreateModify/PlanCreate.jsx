@@ -105,10 +105,6 @@ const Modal = ({ closeModal }) => {
       planStatus: 0, // 기본값으로 설정
     };
 
-    console.log("보내는 데이터:", data);
-    console.log("보내는 주소:", createPlannerUrl);
-    console.log("토큰:", token);
-
     try {
       const response = await fetch(createPlannerUrl, {
         method: "POST",
