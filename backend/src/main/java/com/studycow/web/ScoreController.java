@@ -47,8 +47,9 @@ public class ScoreController {
             int myId = userDetails.getUser().getUserId();
             ResponseScoreDto responseScoreDto = scoreService.listScores(userId, subCode, myId);
             if(myId == userId){
-                responseScoreDto.setAdvice("gpt 성적 분석 예정");
-                //responseScoreDto.setAdvice(gptController.scoreAdvice(responseScoreDto));
+                responseScoreDto.setAdvice(gptController.scoreAdvice(responseScoreDto));
+            }else{
+                responseScoreDto.setAdvice("공부 추천은 내 주인에게만 해줄 수 있소.");
             }
             return ResponseEntity.ok(responseScoreDto);
         } catch(Exception e) {

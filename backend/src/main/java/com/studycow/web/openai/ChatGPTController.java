@@ -46,7 +46,7 @@ public class ChatGPTController {
     }
 
     public String scoreAdvice(ResponseScoreDto responseScoreDto){
-        ScoreChatRequest request = new ScoreChatRequest(model, responseScoreDto);
+        ScoreChatRequest request = new ScoreChatRequest(model, responseScoreDto.toString());
         ChatGPTResponse chatGPTResponse =  template.postForObject(apiURL, request, ChatGPTResponse.class);
         return chatGPTResponse.getChoices().get(0).getMessage().getContent();
     }
