@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles/CreateModify.css";
-import useInfoStore from "../../../stores/infos"; // store 경로에 맞게 수정하세요
+import useInfoStore from "../../../stores/infos";
+import usePlanStore from "../../../stores/plan"; // 새로운 스토어 import
 
 const sub_code_dic = {
   1: "국어",
@@ -67,6 +68,10 @@ const Modal = ({ closeModal }) => {
     token: state.token,
   }));
 
+  const { createPlannerUrl } = usePlanStore((state) => ({
+    createPlannerUrl: state.createPlannerUrl,
+  }));
+
   const [selectedSubject, setSelectedSubject] = useState("");
   const [subSubjects, setSubSubjects] = useState([]);
   const [selectedSubSubject, setSelectedSubSubject] = useState("");
@@ -100,14 +105,12 @@ const Modal = ({ closeModal }) => {
       planStatus: 0, // 기본값으로 설정
     };
 
-    const url = "http://localhost:8443/studycow/planner/create";
-
     console.log("보내는 데이터:", data);
-    console.log("보내는 주소:", url);
+    console.log("보내는 주소:", createPlannerUrl);
     console.log("토큰:", token);
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(createPlannerUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
