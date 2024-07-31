@@ -181,8 +181,11 @@ const useFriendsStore = create((set) => ({
     try {
       const response = await axios.get(API_URL + `user/nickname`, {
         params: { nickname: searchedNickname },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-      set({ searchedfriends: response.data });
+      set({ searchedFriends: response.data });
     } catch (error) {
       console.error("Error fetching friends:", error);
       set({ searchedFriends: [] });
