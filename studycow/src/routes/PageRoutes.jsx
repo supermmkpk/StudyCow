@@ -5,8 +5,15 @@ import MainPage from "../views/MainPage.jsx";
 // 비로그인
 import Main_Unlogin from "../components/MainPage/Main_Unlogin.jsx";
 
+
+
+
+
 // 로그인/회원가입페이지
 import SignPage from "../views/SignPage.jsx";
+
+
+
 
 // 마이페이지 - 메인
 import MyPage from "../views/MyPage.jsx";
@@ -15,16 +22,25 @@ import MyPageEdit from "../components/ChangeInfo/ChangeInfo.jsx";
 import FriendComponent from "../components/Friends/FriendComponent";
 import MyPageGrade from "../components/MyPage/MyPageGrade.jsx";
 
-// 플래너페이지 - 개인
+
+
+// 플래너페이지
 import PlanPage from "../views/PlanPage.jsx";
+// 플래너페이지 - 마이페이지
+import MyPlanner from "../components/Planner/MyPlanner.jsx";
+// 플래너페이지 - 생성
 import PlanCreate from "../components/Planner/CreateModify/PlanCreate.jsx";
+// 플래너페이지 - 수정
 import PlanModify from "../components/Planner/CreateModify/PlanModify.jsx";
+
+
+
 
 const PageRoutes = () => (
   <Routes>
     {/* 마이페이지 */}
     <Route path="/myaccount" element={<MyPage />}>
-      <Route path="Edit" element={<MyPageEdit />} />
+      <Route path="" element={<MyPageEdit />} />
       <Route path="friends" element={<FriendComponent />} />
       <Route path="grade" element={<MyPageGrade />} />
     </Route>
@@ -41,8 +57,10 @@ const PageRoutes = () => (
     <Route path="/study" element={<a>study</a>}></Route>
 
     {/* 플랜 */}
-    <Route path="/plan" element={<PlanPage />}></Route>
-    <Route path="/create" element={<PlanCreate />}></Route>
+    <Route path="/plan" element={<PlanPage />}>
+      <Route path="" element={<MyPlanner />} />
+      <Route path="create" element={<PlanCreate />} />
+    </Route>
     <Route path="/modify/:planId" element={<PlanModify />} />
 
     {/* 성적분석 */}
