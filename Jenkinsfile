@@ -24,17 +24,18 @@ pipeline {
         }
         
         stage('Frontend - Build and Deploy') {
-            steps {
-                dir('studycow') {
-                    sh 'npm install'
-                    sh 'npm run build'
-                    sh 'docker build -t frontend:${BUILD_NUMBER} .'
-                    sh 'docker stop frontend || true'
-                    sh 'docker rm frontend || true'
-                    sh 'docker run -d --name frontend --network studycow_network -p 5173:80 frontend:${BUILD_NUMBER}'
-                }
-            }
+    steps {
+        dir('studycow') {
+            sh 'npm install'
+            sh 'npm run build'
+            sh 'docker build -t frontend:${BUILD_NUMBER} .'
+            sh 'docker stop frontend || true'
+            sh 'docker rm frontend || true'
+            sh 'docker run -d --name frontend --network studycow_network -p 5173:80 frontend:${BUILD_NUMBER}'
+            sh 'docker cp frontend:/usr/share/nginx/html ./nginx-content'
         }
+    }
+}
         
         stage('Backend - Deploy') {
             steps {
