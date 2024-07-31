@@ -4,7 +4,7 @@ import useInfoStore from "./infos";
 
 const API_URL = `http://localhost:8080/studycow/`;
 
-const useFriendsStore = create((set) => ({
+const useFriendsStore = create((set, get) => ({
   friends: [],
   getRequests: [],
   sendRequests: [],
@@ -189,6 +189,49 @@ const useFriendsStore = create((set) => ({
     } catch (error) {
       console.error("Error fetching friends:", error);
       set({ searchedFriends: [] });
+    }
+  },
+  sendFriendRequest: async (toUserId) => {
+    const { token } = useInfoStore.getState();
+    const { friends, sendRequests } = get();
+
+    if (!token) {
+      console.error("토큰이 없습니다.");
+      return;
+    }
+
+    // 이미 추가된 친구인지 확인
+    if (friends.some((friend) => friend.friendUserId === toUserId)) {
+      alert("이미 추가된 친구입니다.");
+      return;
+    }
+
+    // 이미 친구 요청을 보냈는지 확인
+    if (
+      sendRequests.some(
+        (sendRequest) => sendRequest.counterpartUserId === toUserId
+      )
+    ) {
+      alert("이미 친구 요청을 보냈습니다.");
+      return;
+    }
+
+    try {
+      await axios.post(
+        API_URL + `friend/request`,
+        { toUserId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // 보낸 친구 요청 목록 갱신
+      await useFriendsStore.getState().fetchSendRequests();
+      alert("친구 요청을 보냈습니다!");
+    } catch (error) {
+      console.error("친구 요청 실패:", error);
+      alert("친구 요청에 실패했습니다.");
     }
   },
 }));
