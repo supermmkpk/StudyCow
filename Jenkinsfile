@@ -24,17 +24,18 @@ pipeline {
         }
         
         stage('Frontend - Build and Deploy') {
-            steps {
-                dir('studycow') {
-                    sh 'npm install'
-                    sh 'npm run build'
-                    sh 'docker build -t frontend:${BUILD_NUMBER} .'
-                    sh 'docker stop frontend || true'
-                    sh 'docker rm frontend || true'
-                    sh 'docker run -d --name frontend --network ${DOCKER_NETWORK} -p 88:88 frontend:${BUILD_NUMBER}'
-                }
-            }
+    steps {
+        dir('studycow') {
+            sh 'npm install'
+            sh 'npm run build'
+            sh 'docker build -t frontend:${BUILD_NUMBER} .'
+            sh 'docker stop frontend || true'
+            sh 'docker rm frontend || true'
+            sh 'docker run -d --name frontend --network studycow_network -p 88:88 frontend:${BUILD_NUMBER}'
+            sh 'docker cp frontend:/usr/share/nginx/html ./nginx-content'
         }
+    }
+}
         
         stage('Backend - Deploy') {
             steps {
@@ -52,8 +53,9 @@ pipeline {
             steps {
                 script {
                     sh 'sleep 3'
-                    sh 'curl http://localhost:8080 || echo "Backend local test failed"'
-                    sh 'curl http://localhost:88 || echo "Frontend health check failed"'
+                    sh 'curl http://13.125.238.202:8080 || echo "Backend health check failed"'
+                    sh 'curl http://localhost:8080 || echo "Backend local test"'
+                    sh 'curl http://13.125.238.202 || echo "Frontend health check failed"'
                 }
             }
         }
