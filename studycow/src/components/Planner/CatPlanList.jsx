@@ -7,7 +7,7 @@ import './styles/CatPlanList.css'
 
 const CatPlanList = () => {
   const navigate = useNavigate();
-  const { subPlans, updateSubPlanStatus } = usePlanStore();
+  const { subPlans, updateSubPlanStatus, subCode } = usePlanStore();
 
   const sub_code_dic = {
     1: "국어",
@@ -30,7 +30,7 @@ const CatPlanList = () => {
 
   return (
     <div className="singleSubPlanBox">
-      {subPlans.length === 0 ? (
+      {subPlans.length === 0 && subCode > 0 ? (
         <p>해당 과목에 등록된 플랜이 없습니다.</p>
       ) : 
       (subPlans.map((plan) => (
