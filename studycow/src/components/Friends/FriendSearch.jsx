@@ -14,8 +14,15 @@ const FriendSearch = () => {
     setSearchedNickname(event.target.value);
   };
 
-  const handleSearchClick = () => {
-    fetchSearchedFriends(searchedNickname);
+  const handleSearchClick = async () => {
+    await fetchSearchedFriends(searchedNickname);
+    setSearchedNickname("");
+  };
+
+  const handleKeyDown = async (event) => {
+    if (event.key === "Enter") {
+      await handleSearchClick();
+    }
   };
 
   return (
@@ -29,6 +36,7 @@ const FriendSearch = () => {
             placeholder="검색하고자 하는 친구의 이름을 입력하세요."
             value={searchedNickname}
             onChange={handleSearchInputChange}
+            onKeyDown={handleKeyDown}
           />
           <button className="searchBtn" onClick={handleSearchClick}>
             찾아보기
