@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/studycow/api': {
-        target: 'https://i11c202.p.ssafy.io',
+        target: 'https://i11c202.p.ssafy.io/studycow',
         changeOrigin: true,
       }
     }
