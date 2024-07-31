@@ -5,15 +5,8 @@ import MainPage from "../views/MainPage.jsx";
 // 비로그인
 import Main_Unlogin from "../components/MainPage/Main_Unlogin.jsx";
 
-
-
-
-
 // 로그인/회원가입페이지
 import SignPage from "../views/SignPage.jsx";
-
-
-
 
 // 마이페이지 - 메인
 import MyPage from "../views/MyPage.jsx";
@@ -21,8 +14,6 @@ import MyPage from "../views/MyPage.jsx";
 import MyPageEdit from "../components/ChangeInfo/ChangeInfo.jsx";
 import FriendComponent from "../components/Friends/FriendComponent";
 import MyPageGrade from "../components/MyPage/MyPageGrade.jsx";
-
-
 
 // 플래너페이지
 import PlanPage from "../views/PlanPage.jsx";
