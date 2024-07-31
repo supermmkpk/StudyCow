@@ -34,7 +34,7 @@ function Sidebar() {
           </div>
         </div>
         <div className="SidebarContent">
-          <Link to="Edit">회원정보 수정</Link>
+          <Link to="">회원정보 수정</Link>
           <Link to="friends">친구 관리</Link>
           <Link to="grade">회원등급 정보</Link>
           <hr />
