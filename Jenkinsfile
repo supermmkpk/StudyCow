@@ -3,6 +3,7 @@ pipeline {
     
     environment {
         DOCKER_NETWORK = "studycow_network"
+        GPT_API_KEY = credentials('gpt-api-key-id')
     }
 
     stages {
