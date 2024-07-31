@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import useInfoStore from "../../stores/infos"; // store 경로에 맞게 수정하세요
+import useInfoStore from "../../stores/infos";
 import "./Styles/ChangeInfo.css";
 
-const API_URL = "http://localhost:8080/studycow/user/me";
-
 const ChangeMyInfo = () => {
-  const { token, userInfo, setUserInfo } = useInfoStore((state) => ({
+  const { token, userInfo, setUserInfo, apiUrl } = useInfoStore((state) => ({
     token: state.token,
     userInfo: state.userInfo,
     setUserInfo: state.setUserInfo,
+    apiUrl: state.apiUrl,
   }));
 
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
-  const [thumb, setThumb] = useState(null); // 파일 객체로 변경
+  const [thumb, setThumb] = useState(null);
   const [publicStatus, setPublicStatus] = useState(0);
 
   useEffect(() => {
@@ -43,7 +42,7 @@ const ChangeMyInfo = () => {
       console.log("보내는 데이터:", formData);
       console.log("토큰:", token);
 
-      const response = await axios.patch(API_URL, formData, {
+      const response = await axios.patch(apiUrl, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -74,10 +73,10 @@ const ChangeMyInfo = () => {
   };
 
   return (
-    <div className="info-form">
+    <div className="ChangeInfo-info-form">
       <h2>회원정보 변경</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="ChangeInfo-form-group">
           <label htmlFor="email">이메일:</label>
           <input
             type="email"
@@ -87,7 +86,7 @@ const ChangeMyInfo = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className="ChangeInfo-form-group">
           <label htmlFor="nickname">닉네임:</label>
           <input
             type="text"
@@ -97,7 +96,7 @@ const ChangeMyInfo = () => {
             onChange={(e) => setNickname(e.target.value)}
           />
         </div>
-        <div className="form-group">
+        <div className="ChangeInfo-form-group">
           <label htmlFor="thumb">프로필 이미지:</label>
           <input
             type="file"
@@ -113,8 +112,8 @@ const ChangeMyInfo = () => {
           value={publicStatus}
           onChange={(e) => setPublicStatus(Number(e.target.value))}
         />
-        <div className="button-group">
-          <button type="submit" className="submit-button">
+        <div className="ChangeInfo-button-group">
+          <button type="submit" className="ChangeInfo-submit-button">
             변경
           </button>
         </div>

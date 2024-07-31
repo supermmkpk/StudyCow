@@ -16,16 +16,22 @@ const ChangeInfo = () => {
   };
 
   return (
-    <div className="change-info-container">
-      {!isPasswordChange && (
-        <ChangeButton setRightPanelActive={handleButtonClick} />
-      )}
-      <div className={`form-container ${isPasswordChange ? "next-form" : ""}`}>
-        {isPasswordChange ? (
-          <ChangePassword setIsPasswordChange={handleCancelClick} />
-        ) : (
-          <ChangeMyInfo />
+    <div className="ChangeInfo-full-page-container">
+      <div className="ChangeInfo-container">
+        {!isPasswordChange && (
+          <ChangeButton onButtonClick={handleButtonClick} />
         )}
+        <div
+          className={`ChangeInfo-form-container ${
+            isPasswordChange ? "next-form" : ""
+          }`}
+        >
+          {isPasswordChange ? (
+            <ChangePassword onCancelClick={handleCancelClick} />
+          ) : (
+            <ChangeMyInfo />
+          )}
+        </div>
       </div>
     </div>
   );

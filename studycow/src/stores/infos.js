@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
 
-const API_URL = "https://localhost:8443/studycow/";
+const API_URL = "http://localhost:8080/studycow/";
 
 const useInfoStore = create(
   persist(
@@ -111,6 +111,10 @@ const useInfoStore = create(
           const newState = !state.isOpen;
           return { isOpen: newState };
         }),
+
+      // Change Info Store 관련 상태와 액션 추가
+      apiUrl: "http://localhost:8080/studycow/user/me",
+      setApiUrl: (url) => set({ apiUrl: url }),
     }),
     {
       name: "info-storage",

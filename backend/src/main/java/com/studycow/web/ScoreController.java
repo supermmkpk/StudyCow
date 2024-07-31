@@ -2,12 +2,10 @@ package com.studycow.web;
 
 
 import com.studycow.dto.common.SubjectCodeDto;
-import com.studycow.dto.score.RequestScoreDto;
-import com.studycow.dto.score.RequestTargetDto;
-import com.studycow.dto.score.ScoreDto;
-import com.studycow.dto.score.ScoreTargetDto;
+import com.studycow.dto.score.*;
 import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.service.score.ScoreService;
+import com.studycow.web.openai.ChatGPTController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -36,6 +34,7 @@ import java.util.Map;
 public class ScoreController {
 
     private final ScoreService scoreService;
+    private final ChatGPTController gptController;
 
     @Operation(summary = "과목별 성적 조회", description = "등록한 과목별 성적을 조회합니다.")
     @GetMapping("/{userId}/list/{subCode}")
@@ -46,8 +45,12 @@ public class ScoreController {
     ) {
         try {
             int myId = userDetails.getUser().getUserId();
-            List<ScoreDto> scoreList = scoreService.listScores(userId, subCode, myId);
-            return ResponseEntity.ok(scoreList);
+            ResponseScoreDto responseScoreDto = scoreService.listScores(userId, subCode, myId);
+            if(myId == userId){
+                responseScoreDto.setAdvice("gpt 성적 분석 예정");
+                //responseScoreDto.setAdvice(gptController.scoreAdvice(responseScoreDto));
+            }
+            return ResponseEntity.ok(responseScoreDto);
         } catch(Exception e) {
             //e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
