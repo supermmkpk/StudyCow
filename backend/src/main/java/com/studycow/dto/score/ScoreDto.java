@@ -40,8 +40,10 @@ public class ScoreDto {
         sb.append("testGrade=").append(testGrade).append("\n");
         sb.append("testDate=").append(testDate).append("\n");
         sb.append("scoreDetails=[").append("\n");
-        for(ScoreDetailDto scoreDetail : scoreDetails){
-            sb.append(scoreDetail.toString());
+        if(scoreDetails != null && !scoreDetails.isEmpty()) {
+            for (ScoreDetailDto scoreDetail : scoreDetails) {
+                sb.append(scoreDetail.toString());
+            }
         }
         sb.append("\n").append("]}");
         return sb.toString();
