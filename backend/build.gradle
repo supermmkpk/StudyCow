@@ -82,10 +82,12 @@ dependencies {
 	// 테스트 시, H2 DB 사용
 	testImplementation 'com.h2database:h2:2.2.224'
 
+	// OpenVidu Java Client
 	implementation 'io.openvidu:openvidu-java-client:2.30.0'
 
-
-
+	//GCS
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter', version: '1.2.5.RELEASE'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-storage', version: '1.2.5.RELEASE'
 
 }
 
