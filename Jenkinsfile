@@ -31,7 +31,7 @@ pipeline {
             sh 'docker build -t frontend:${BUILD_NUMBER} .'
             sh 'docker stop frontend || true'
             sh 'docker rm frontend || true'
-            sh 'docker run -d --name frontend --network studycow_network -p 88:88 frontend:${BUILD_NUMBER}'
+            sh 'docker run -d --name frontend --network studycow_network -p 80:80 frontend:${BUILD_NUMBER}'
             sh 'docker cp frontend:/usr/share/nginx/html ./nginx-content'
         }
     }
