@@ -29,7 +29,7 @@ import io.openvidu.java.client.SessionProperties;
  */
 @Tag(name = "OpenVidu")
 @CrossOrigin(origins = "*")
-//@RequestMapping("/OpenVidu")
+@RequestMapping("/openvidu/session")
 @RestController
 public class OpenViduController {
 
@@ -46,38 +46,57 @@ public class OpenViduController {
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-
     /**
-     * @param params The Session properties
-     * @return The Session ID
+     * 방 입장
+     *
+     * @param studyRoomId 방 ID이자 세션 ID
+     * @param params      Connection properties
+     * @return 커넥션 토큰
      */
-    @Operation(summary = "세션 생성", description = "커스텀 세션 ID로 세션을 생성합니다. <br> customSessionId: \"string\" 전달")
-    @PostMapping("/api/sessions")
-    public ResponseEntity<String> initializeSession(@RequestBody Map<String, Object> params)
-            throws OpenViduJavaClientException, OpenViduHttpException {
-        SessionProperties properties = SessionProperties.fromJson(params).build();
-        Session session = openvidu.createSession(properties);
-        System.out.println(session);
-        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+    @Operation(summary = "방 입장(연결)", description = "방(세션) ID로 세션을 조회하고 없을 시, 세션을 생성합니다.<br>세션이 있는 경우 연결하고 커넥션 토큰을 반환합니다.")
+    @PostMapping("/connect/{studyRoomId}")
+    public ResponseEntity<String> createConnection(@PathVariable("studyRoomId") Long studyRoomId, @RequestBody(required = false) Map<String, Object> params) {
+        try {
+            // 세션이 존재하는지 확인
+            Session session = openvidu.getActiveSession(studyRoomId.toString());
+
+            // 없을 경우 생성함
+            if (session == null) {
+                session = initializeSession(studyRoomId.toString());
+            }
+
+            // 세션과 연결
+            ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+            Connection connection = session.createConnection(properties);
+
+            //토큰 반환
+            return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("방 입장 실패 " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
-     * @param sessionId The Session in which to create the Connection
-     * @param params    The Connection properties
-     * @return The Token associated to the Connection
+     * 방 세션 생성(초기화)
+     *
+     * @param
+     * @return The Session ID
      */
-    @Operation(summary = "연결 생성", description = "커스텀 세션 ID로 세션을 조회하고 연결합니다. 커넥션 토큰을 반환합니다.")
-    @PostMapping("/api/sessions/{sessionId}/connections")
-    public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
-                                                   @RequestBody(required = false) Map<String, Object> params)
-            throws OpenViduJavaClientException, OpenViduHttpException {
-        Session session = openvidu.getActiveSession(sessionId);
-        if (session == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    private Session initializeSession(String studyRoomId) throws OpenViduJavaClientException, OpenViduHttpException {
+        //SessionProperties 빌드
+        SessionProperties properties = new SessionProperties.Builder()
+                .customSessionId(studyRoomId)
+                .build();
+
+        // 세션 생성
+        Session session = openvidu.createSession(properties);
+
+        // 생성한 세션 번호와 방 번호가 다른 경우
+        if (!session.getSessionId().equals(studyRoomId)) {
+            throw new RuntimeException("방 ID번호와 세션 ID번호가 다름");
         }
-        ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
-        Connection connection = session.createConnection(properties);
-        return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
+
+        return session;
     }
 
 }
