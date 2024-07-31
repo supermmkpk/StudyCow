@@ -28,6 +28,11 @@
   margin: 0%;
 }
 
+.loginItem {
+  text-decoration-line: none;
+  color: black;
+}
+
 .loginItem p {
   font-size: 20px;
   margin: 0%;

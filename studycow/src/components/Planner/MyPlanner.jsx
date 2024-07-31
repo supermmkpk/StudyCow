@@ -30,6 +30,8 @@ const MyPlanner = () => {
   useEffect(() => {
     const foundCode = Object.keys(sub_code_dic).find(key => sub_code_dic[key] === selectedSubject);
     filterPlansBySubCode(foundCode)
+    const catPlanContent = document.querySelector('.catPlanContent');
+    catPlanContent.scrollTop = 0;
   }, [selectedSubject, filterPlansBySubCode]);
 
   return (
@@ -74,10 +76,10 @@ const MyPlanner = () => {
             </select>
           </div>
         </div>
-        <div className="catPlanbox">
-          <div className="catPlanTitle">
+        <div className="catPlanTitle">
             <p>{subCode ? sub_code_dic[subCode] : "과목을 선택하세요"}</p>
           </div>
+        <div className="catPlanbox">
           <div className="catPlanContent">
             <CatPlanList />
           </div>

@@ -120,7 +120,29 @@ position: relative;
 }
 
 
-   
+
+.catPlanHeader {
+  padding: 5px;
+  margin-top: 10px;
+  max-height: 40px;
+  width: 1200px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.catSelectbar {
+  align-items: center;
+}
+
+
+.catSelectbar select {
+  width: 150px;
+  margin-right: 5px;
+}
+
 .catPlanContainer {
   display: flex;
   align-items: center;
@@ -130,54 +152,48 @@ position: relative;
   gap: 30px;
   width: 100%;
   box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 12px;
   min-height: 300px;
-  max-height: 330px;
+  max-height: 500px;
+  padding-top: 10px;
+  padding: 30px;
   background-color: rgba(0, 0, 0, 0); /* 완전 투명 배경 */
 }
 
-.catPlanHeader {
-  padding: 5px;
-  max-height: 40px;
-  width: 1200px;
+.catPlanbox {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  z-index: 1;
   align-items: center;
+  justify-content: center;
+  width: 1200px;
+  height: auto;
+  max-height: 250px;
+  background-color: rgba(0, 0, 0, 0);
+  overflow-y: auto; /* 이미 있음: 세로 스크롤 허용 */
+  position: relative;
+  padding: 20px;
+  padding-top: 30px; /* 상단 패딩 추가 */
   box-sizing: border-box;
 }
 
-.catSelectbar {
-  align-items: center;
+.catPlanbox > :first-child {
+  padding-top: 40px;
 }
 
-.catSelectbar select {
-  width: 150px;
-  margin-right: 5px;
-}
-
-.catPlanbox {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-width: 1200px;
-max-height: 250px;
-border: 1px solid #ccc;
-border-radius: 8px;
-background-color: white;
-padding: 20px;
-box-sizing: border-box;
-}
-
-.catPlanTitle p{
-font-size: 35px;
-margin-bottom: 10px;
-text-align: center;
-width: 100%;
+.catPlanTitle p {
+  font-size: 40px;
+  margin: 0px;
+  margin-bottom: 10px;
+  padding: 0px;
+  text-align: center;
+  width: 100%;
 }
 
 .catPlanContent {
-width: 100%;
-display: flex;
-justify-content: center;
-align-items: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
