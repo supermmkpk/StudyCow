@@ -1,5 +1,6 @@
 package com.studycow.web.session;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,7 +30,7 @@ import io.openvidu.java.client.SessionProperties;
  */
 @Tag(name = "OpenVidu")
 @CrossOrigin(origins = "*")
-@RequestMapping("/openvidu/session")
+@RequestMapping("/openvidu")
 @RestController
 public class OpenViduController {
 
@@ -66,13 +67,55 @@ public class OpenViduController {
             }
 
             // 세션과 연결
-            ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+            //Connection connection = session.createConnection(new ConnectionProperties());
+            ConnectionProperties properties = new ConnectionProperties.Builder().build();
             Connection connection = session.createConnection(properties);
 
             //토큰 반환
             return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("방 입장 실패 " + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("방 입장 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(
+            summary = "연결 종료",
+            description = "방(세션) ID의 token에 해당하는 연결을 종료합니다.<br>마지막 연결일 경우, 세션을 닫습니다.<br>{'token': 'string'} 전달")
+    @PostMapping("/disconnect/{studyRoomId}")
+    public ResponseEntity<?> disconnect(
+            @PathVariable("studyRoomId") Long studyRoomId,
+            @RequestBody Map<String, String> requestBody
+    ) {
+        try {
+            String token = requestBody.get("token");
+            Session session = openvidu.getActiveSession(studyRoomId.toString());
+
+            // Openvidu 에서 사용자 연결 끊기
+            List<Connection> connections = session.getConnections();
+
+            // Session.getActiveConnections()에서 반환된 목록에서 원하는 Connection 개체를 찾고 연결 끊기
+            boolean tokenMatch = false;
+            for (Connection connection : connections) {
+                if (connection.getToken().equals(token)) {
+                    System.out.println(connection.getToken() + " = " + token);
+                    session.forceDisconnect(connection);
+                    tokenMatch = true;
+                    break;
+                }
+            }
+            // 토큰 일치하지 않아 연결 종료 실패
+            if (!tokenMatch) {
+                return new ResponseEntity<>("연결 종료 실패 : 일치하는 토큰이 없습니다.", HttpStatus.BAD_REQUEST);
+            }
+
+            // 연결된 사용자가 없을 경우 세션을 닫습니다.
+            if (session.getConnections().isEmpty()) {
+                session.close();
+            }
+
+            return new ResponseEntity<>("연결 종료 성공", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("연결 종료 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
