@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import useInfoStore from "../../stores/infos"; // store 경로에 맞게 수정하세요
+import useInfoStore from "../../stores/infos";
 import "./Styles/ChangeInfo.css";
 
-const API_URL = "http://localhost:8080/studycow/user/me";
-
 const ChangeMyInfo = () => {
-  const { token, userInfo, setUserInfo } = useInfoStore((state) => ({
+  const { token, userInfo, setUserInfo, apiUrl } = useInfoStore((state) => ({
     token: state.token,
     userInfo: state.userInfo,
     setUserInfo: state.setUserInfo,
+    apiUrl: state.apiUrl,
   }));
 
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
-  const [thumb, setThumb] = useState(null); // 파일 객체로 변경
+  const [thumb, setThumb] = useState(null);
   const [publicStatus, setPublicStatus] = useState(0);
 
   useEffect(() => {
@@ -43,7 +42,7 @@ const ChangeMyInfo = () => {
       console.log("보내는 데이터:", formData);
       console.log("토큰:", token);
 
-      const response = await axios.patch(API_URL, formData, {
+      const response = await axios.patch(apiUrl, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
