@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./styles/PlanList.css";
 import deleteButton from "./img/deleteButton.png";
 import editButton from "./img/editButton.png";
-import usePlanStore from "../../stores/plan";
+import usePlanStore from "../../stores/plan.js";
+import './styles/CatPlanList.css'
 
-const PlanList = () => {
+const CatPlanList = () => {
   const navigate = useNavigate();
-  const { plans, updatePlanStatus } = usePlanStore();
+  const { subPlans, updateSubPlanStatus } = usePlanStore();
 
   const sub_code_dic = {
     1: "국어",
@@ -21,7 +21,7 @@ const PlanList = () => {
   };
 
   const handleCheckboxChange = (planId) => {
-    updatePlanStatus(planId); // 스토어에 상태 업데이트 요청
+    updateSubPlanStatus(planId); // 스토어에 상태 업데이트 요청
   };
 
   const handleEditClick = (planId) => {
@@ -29,14 +29,14 @@ const PlanList = () => {
   };
 
   return (
-    <div className="singlePlanBox">
-      {plans.length === 0 ? (
-        <p>플랜을 등록하세요.</p>
+    <div className="singleSubPlanBox">
+      {subPlans.length === 0 ? (
+        <p>해당 과목에 등록된 플랜이 없습니다.</p>
       ) : 
-      (plans.map((plan) => (
+      (subPlans.map((plan) => (
         <div key={plan.planId}>
           {!plan.planStatus && (
-            <div className="singlePlanContent">
+            <div className="singleSubPlanContent">
               <label>
                 <input
                   type="checkbox"
@@ -71,4 +71,4 @@ const PlanList = () => {
   );
 };
 
-export default PlanList;
+export default CatPlanList;
