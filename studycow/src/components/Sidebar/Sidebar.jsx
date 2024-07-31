@@ -23,14 +23,15 @@ function Sidebar() {
         </div>
         <div className="SidebarUserInfo">
           <img
-            width="114px"
-            className="profileImg"
-            src={profileImg}
+            width="120px"
+            height="120px"
+            className="profileSideImg"
+            src={userInfo.userThumb}
             alt="프로필이미지"
           />
           <div className="SidbarUserInfoContent">
-            <p>{userInfo.name}</p>
-            <a>{userInfo.email}</a>
+            <p>{userInfo.userNickName}</p>
+            <a>{userInfo.userEmail}</a>
           </div>
         </div>
         <div className="SidebarContent">

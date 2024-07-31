@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 import axios from "axios";
 import useInfoStore from "./infos";
 
-const API_URL = "https://localhost:8443/studycow/";
+const API_URL = "http://localhost:8080/studycow/";
 
 const usePlanStore = create(
   persist(

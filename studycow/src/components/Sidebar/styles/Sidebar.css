@@ -13,6 +13,7 @@
 }
 
 .SidebarContent {
+    padding-top: 20px;
     display: flex;
     justify-content: start;
     align-items: start;
@@ -50,26 +51,28 @@
     justify-content: start;
     align-items: center;
     flex-direction: column;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
 }
 .SidbarUserInfoContent p {
     font-size: 24px;
-    margin-bottom: 5px;
+    margin-bottom: 1px;
 }
 .SidbarUserInfoContent a {
-    color: #595959;
+    color: #595959 !important;
     font-size: 15px;
 }
 
 
-.profileImg {
+.profileSideImg {
     object-fit: auto;
     object-position: center;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    border-color: rgba(0, 0, 0, 1);
+    border-color: rgba(0, 0, 0, 0.1);
     border-style: solid;
     border-width: 1px;
     border-radius: 50%;
+    margin-bottom: 20px;
+    background-color: #f8f8f8;
   }
 
 .SidebarFooter {
