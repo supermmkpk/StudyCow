@@ -1,0 +1,41 @@
+.studyRoomContainer {
+  width: 256px;
+  height: 150px;
+  border-radius: 10px;
+  background: #83a1ca;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.studyRoomTitle {
+  color: #fff;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0px;
+}
+
+.studyRoomCount {
+  color: #fff;
+  text-align: right;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0px;
+}
+
+.studyRoomEnterBtn {
+  width: 180px;
+  height: 50px;
+  align-self: center;
+  font-size: 30px;
+  color: #ffffff;
+  font-family: "CustomFontGothic", sans-serif;
+  cursor: pointer;
+  border-radius: 25px;
+  background: #494949;
+}
