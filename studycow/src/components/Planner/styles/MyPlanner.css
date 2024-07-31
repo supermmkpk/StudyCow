@@ -1,120 +1,183 @@
 /* 날짜와 계획 컨테이너 */
 .datePlanContainer {
-    position: relative;
-    height: 100%;
-    display: flex;
-    gap: 30px;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-top: 30px;
+  justify-content: center;
+  gap: 30px;
 }
 
 /* 캘린더 컨테이너 */
 .dateCalendar {
-    width: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    flex: 1;
-    border: none;
-    border-radius: 12px;
-    margin: 30px;
-    padding: 30px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+max-width: 600px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+flex: 1;
+margin: 0px;
+padding: 30px;
+background-color: rgba(0, 0, 0, 0); /* 완전 투명 배경 */
+max-height: 500px;
+border: none; /* 경계선 제거 */
+box-shadow: none; /* 그림자 제거 */
 }
 
-/* .dateCalendar:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-} */
 
 /* 계획 목록 컨테이너 */
 .datePlanbox {
-    width: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-direction: column;
-    flex: 1;
-    border: none;
-    border-radius: 12px;
-    margin: 30px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    overflow-y: auto;
-    transition: all 0.3s ease;
-    background-color: #ffeb3b; /* 포스트잇 노란색 */
-    position: relative; /* 태그 요소 배치 */
+max-width: 600px;
+display: flex;
+align-items: center; /* 변경: center에서 flex-start로 */
+justify-content: flex-start;
+flex-direction: column;
+flex: 1;
+border: none;
+border-radius: 12px;
+margin: 35px;
+padding: 30px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+overflow-y: auto; /* 이미 있음: 세로 스크롤 허용 */
+min-height: 395px;
+max-height: 420px; /* 추가: 최대 높이 설정 */
+transition: all 0.3s ease;
+background-color: #ffeb3b;
+position: relative;
 }
 
 .datePlanbox:before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 20px;
-    width: 50px;
-    height: 10px;
-    background-color: #f1c40f; /* 위쪽 붙이는 부분 색상 */
-    border-radius: 0 0 10px 10px; /* 붙이는 부분 둥글게 */
-  }
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  width: 50px;
+  height: 10px;
+  background-color: #f1c40f; /* 위쪽 붙이는 부분 색상 */
+  border-radius: 0 0 10px 10px; /* 붙이는 부분 둥글게 */
+}
 
 /* 개별 계획 항목 스타일 */
 .planListItem {
-    flex-direction: ro;
-    padding: 12px 0;
-    border-bottom: 1px solid #e0e0e0;
-    transition: background-color 0.2s ease;
+  flex-direction: ro;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s ease;
 }
 
 .planListItem:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .planListItem:hover {
-    background-color: #f7f9fc;
+  background-color: #f7f9fc;
 }
 
 .planListItem label {
-    flex: 1;
-    font-size: 16px;
-    color: #333;
-    cursor: pointer;
+  flex: 1;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
 }
 
 .planListItem span {
-    margin-left: 15px;
-    color: #6b7280;
-    font-size: 14px;
+  margin-left: 15px;
+  color: #6b7280;
+  font-size: 14px;
 }
 
- 
-  .datePlanDate{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 490px;
-  }
-  .datePlanDate p{
-    font-size: 35px;
-  }
-  
-  .emptyCase {
-    height: 33px;
-    width: 33px;
-    padding-bottom: 1px;
-  }
 
-  .addButton {
-    height: 33px;
-    width: 33px;
-    padding-bottom: 1px;
-  }
-  
-  .planListItem {
-    list-style: none; /* 기본 리스트 스타일 제거 */
-    padding: 0;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+.datePlanDate{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 490px;
+}
+.datePlanDate p{
+  font-size: 35px;
+}
 
-  }
+.emptyCase {
+  height: 33px;
+  width: 33px;
+  padding-bottom: 1px;
+}
+
+.addButton {
+  height: 33px;
+  width: 33px;
+  padding-bottom: 1px;
+}
+
+.planListItem {
+  list-style: none; /* 기본 리스트 스타일 제거 */
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+
+
+   
+.catPlanContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  position: relative;
+  gap: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 300px;
+  max-height: 330px;
+  background-color: rgba(0, 0, 0, 0); /* 완전 투명 배경 */
+}
+
+.catPlanHeader {
+  padding: 5px;
+  max-height: 40px;
+  width: 1200px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.catSelectbar {
+  align-items: center;
+}
+
+.catSelectbar select {
+  width: 150px;
+  margin-right: 5px;
+}
+
+.catPlanbox {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+width: 1200px;
+max-height: 250px;
+border: 1px solid #ccc;
+border-radius: 8px;
+background-color: white;
+padding: 20px;
+box-sizing: border-box;
+}
+
+.catPlanTitle p{
+font-size: 35px;
+margin-bottom: 10px;
+text-align: center;
+width: 100%;
+}
+
+.catPlanContent {
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+}

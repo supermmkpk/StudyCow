@@ -10,6 +10,29 @@ const usePlanStore = create(
     (set) => ({
       date: "2024-07-02",
       plans: [],
+      subPlans: [],
+      // 특정 과목에 대한 계획 상태 업데이트
+      subCode: 0,
+      setSubPlans: (subPlans) => set({ subPlans: subPlans }),
+
+      // 특정 과목 선택 시 계획 필터링
+      filterPlansBySubCode: (subCode) => set((state) => ({
+        subPlans: state.plans.filter(plan => plan.subCode === parseInt(subCode, 10)),
+        subCode: parseInt(subCode, 10)
+      })),
+
+      // 특정 과목 업데이트 상태 확인
+      updateSubPlanStatus: (planId) => {
+        set((state) => ({
+          subPlans: state.subPlans.map((plan) =>
+            plan.planId === planId
+              ? { ...plan, planStatus: plan.planStatus === 0 ? 1 : 0 }
+              : plan
+          ),
+        }));
+      },
+
+
       createPlannerUrl: API_URL + "planner/create",
       modifyPlannerUrl: (planId) => API_URL + `planner/${planId}`,
       updatePlanStatus: (planId) => {
