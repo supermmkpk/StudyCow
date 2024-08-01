@@ -3,7 +3,7 @@ import axios from "axios";
 import useInfoStore from "./infos";
 import defaultProfile from "../assets/defaultProfile.png";
 
-const API_URL = `http://localhost:8080/studycow/`;
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/studycow/";
 
 const useFriendsStore = create((set, get) => ({
   friends: [],
@@ -28,7 +28,7 @@ const useFriendsStore = create((set, get) => ({
 
       const friendsData = response.data.map((friend) => ({
         ...friend,
-        friendThumb: friend.friendThumb ?? { defaultProfile },
+        friendThumb: friend.friendThumb ?? defaultProfile,
       }));
 
       set({ friends: friendsData });
@@ -77,9 +77,7 @@ const useFriendsStore = create((set, get) => ({
 
       const getRequestsData = response.data.map((getRequest) => ({
         ...getRequest,
-        counterpartUserThumb: getRequest.counterpartUserThumb ?? {
-          defaultProfile,
-        },
+        counterpartUserThumb: getRequest.counterpartUserThumb ?? defaultProfile,
       }));
 
       set({ getRequests: getRequestsData });
@@ -137,9 +135,8 @@ const useFriendsStore = create((set, get) => ({
 
       const sendRequestsData = response.data.map((sendRequest) => ({
         ...sendRequest,
-        counterpartUserThumb: sendRequest.counterpartUserThumb ?? {
-          defaultProfile,
-        },
+        counterpartUserThumb:
+          sendRequest.counterpartUserThumb ?? defaultProfile,
       }));
 
       set({ sendRequests: sendRequestsData });

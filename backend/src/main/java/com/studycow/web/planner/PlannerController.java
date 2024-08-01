@@ -125,4 +125,22 @@ public class PlannerController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Operation(summary = "플랜 자동생성", description = "플랜을 자동으로 생성합니다")
+    @GetMapping("{planId}")
+    public ResponseEntity<?> autoPlan(@AuthenticationPrincipal CustomUserDetails user,
+                                     @PathVariable int planId) {
+
+        try{
+            int userId = user.getUser().getUserId();
+
+            PlannerGetDto plan = plannerService.getPlanByIdForUser(userId,planId);
+
+            return new ResponseEntity<>(plan, HttpStatus.OK);
+
+            
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
