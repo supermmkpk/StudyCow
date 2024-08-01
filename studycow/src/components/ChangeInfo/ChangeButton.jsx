@@ -8,14 +8,14 @@ const ChangeButton = ({ setRightPanelActive, isAnimating }) => {
         isAnimating ? "ChangeInfo-animating" : ""
       }`}
     >
-      <button
+      {/* <button
         className={`ChangeInfo-overlay-button2 ${
           isAnimating ? "ChangeInfo-animate" : ""
         }`}
         onClick={setRightPanelActive}
       >
         비밀번호 변경
-      </button>
+      </button> */}
     </div>
   );
 };
