@@ -66,7 +66,7 @@ const useInfoStore = create(
                 userEmail: response.data.userEmail ?? null,
                 userNickName: response.data.userNickName ?? null,
                 userThumb:
-                  response.data?.userThumb ?? {defaultProfile},
+                  response.data?.userThumb ?? defaultProfile,
                 userGrade: {
                   gradeCode: response.data.userGrade.gradeCode ?? 0,
                   gradeName: response.data.userGrade.gradeName ?? "브론즈",
