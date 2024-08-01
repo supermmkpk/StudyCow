@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar/Navbar";
-import StudyCreate from "../components/StudyCreate/StudyCreate";
+import StudyList from "../components/StudyList/StudyList";
 import "../styles/StudyPage.css";
 
 const StudyPage = () => {
@@ -7,7 +7,7 @@ const StudyPage = () => {
     <>
       <Navbar />
       <div className="main">
-        <StudyCreate />
+        <StudyList />
       </div>
     </>
   );

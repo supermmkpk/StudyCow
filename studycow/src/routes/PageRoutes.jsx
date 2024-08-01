@@ -23,6 +23,9 @@ import MyPlanner from "../components/Planner/MyPlanner.jsx";
 import PlanCreate from "../components/Planner/CreateModify/PlanCreate.jsx";
 import PlanModify from "../components/Planner/CreateModify/PlanModify.jsx";
 
+// 캠스터디 - 메인 페이지(스터디룸 리스트)
+import StudyPage from "../views/StudyPage.jsx";
+
 const PageRoutes = () => (
   <Routes>
     {/* 마이페이지 */}
@@ -41,7 +44,7 @@ const PageRoutes = () => (
     <Route path="/login" element={<SignPage />}></Route>
 
     {/* 캠스터디 */}
-    <Route path="/study" element={<a>study</a>}></Route>
+    <Route path="/study" element={<StudyPage />}></Route>
 
     {/* 플랜 */}
     <Route path="/plan" element={<PlanPage />}>
