@@ -2,6 +2,7 @@ package com.studycow.web.openai;
 
 import com.studycow.dto.openai.ChatGPTRequest;
 import com.studycow.dto.openai.ChatGPTResponse;
+import com.studycow.dto.openai.PlannerChatRequest;
 import com.studycow.dto.openai.ScoreChatRequest;
 import com.studycow.dto.score.ResponseScoreDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,15 +40,28 @@ public class ChatGPTController {
 
     @Operation(summary = "기본 챗봇", description = "chatGPT에게 질문할 수 있습니다. 오남용 금지")
     @GetMapping("/chat")
-    public String chat(@RequestParam(name = "prompt")String prompt){
+    public String chat(@RequestParam(name = "prompt")String prompt) {
         ChatGPTRequest request = new ChatGPTRequest(model, prompt);
         ChatGPTResponse chatGPTResponse =  template.postForObject(apiURL, request, ChatGPTResponse.class);
         return chatGPTResponse.getChoices().get(0).getMessage().getContent();
     }
 
-    public String scoreAdvice(ResponseScoreDto responseScoreDto){
+    public String scoreAdvice(ResponseScoreDto responseScoreDto) {
         ScoreChatRequest request = new ScoreChatRequest(model, responseScoreDto.toString());
         ChatGPTResponse chatGPTResponse =  template.postForObject(apiURL, request, ChatGPTResponse.class);
         return chatGPTResponse.getChoices().get(0).getMessage().getContent();
     }
+
+    /**
+     * 플래서 프롬프트 응답
+     * @param responseScoreDto 성적
+     * @return
+     */
+    public String plannerAdvice(ResponseScoreDto responseScoreDto) {
+        PlannerChatRequest request = new PlannerChatRequest(model, responseScoreDto.toString());
+        ChatGPTResponse chatGPTResponse =  template.postForObject(apiURL, request, ChatGPTResponse.class);
+        return chatGPTResponse.getChoices().get(0).getMessage().getContent();
+    }
+
+
 }

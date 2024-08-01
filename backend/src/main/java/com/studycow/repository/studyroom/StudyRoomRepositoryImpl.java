@@ -3,17 +3,21 @@ package com.studycow.repository.studyroom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import com.studycow.domain.StudyRoom;
 import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.studyroom.StudyRoomDto;
 import com.studycow.dto.studyroom.StudyRoomRequestDto;
+import com.studycow.service.file.FileService;
 import com.studycow.util.QueryDslUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.studycow.domain.QStudyRoom.*;
@@ -34,6 +38,7 @@ public class StudyRoomRepositoryImpl implements StudyRoomRepository {
     @PersistenceContext
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
+    private final FileService fileService;
 
     /**
      * 스터디룸 생성
@@ -65,6 +70,7 @@ public class StudyRoomRepositoryImpl implements StudyRoomRepository {
                         studyRoom.roomStatus,
                         studyRoom.roomUpdateDate,
                         studyRoom.roomContent,
+                        studyRoom.roomThumb,
                         studyRoom.user.id
                 ))
                 .from(studyRoom)
@@ -96,6 +102,7 @@ public class StudyRoomRepositoryImpl implements StudyRoomRepository {
                         studyRoom.roomStatus,
                         studyRoom.roomUpdateDate,
                         studyRoom.roomContent,
+                        studyRoom.roomThumb,
                         studyRoom.user.id
                 ))
                 .from(studyRoom)
@@ -113,22 +120,29 @@ public class StudyRoomRepositoryImpl implements StudyRoomRepository {
      * @throws PersistenceException
      */
     @Override
-    public void updateStudyRoom(Long studyRoomId, StudyRoomRequestDto requestDto, int userId) throws PersistenceException {
+    public void updateStudyRoom(Long studyRoomId, StudyRoomRequestDto requestDto, int userId) throws PersistenceException, IOException {
         StudyRoom studyRoomFound = em.find(StudyRoom.class, studyRoomId);
 
         if (studyRoomFound.getUser().getId() != userId) {
             throw new IllegalStateException("방장만 수정할 수 있습니다.");
         }
 
-        queryFactory
+        JPAUpdateClause updateClause = queryFactory
                 .update(studyRoom)
                 .set(studyRoom.roomTitle, requestDto.getRoomTitle())
                 .set(studyRoom.roomMaxPerson, requestDto.getRoomMaxPerson())
                 .set(studyRoom.roomEndDate, requestDto.getRoomEndDate())
                 .set(studyRoom.roomStatus, requestDto.getRoomStatus())
-                .set(studyRoom.roomContent, requestDto.getRoomContent())
-                .where(studyRoom.id.eq(studyRoomId))
-                .execute();
+                .set(studyRoom.roomContent, requestDto.getRoomContent());
+
+        // 요청에 파일 있을 경우 클라우드에 업로드 후 링크 생성, 수정
+        if (requestDto.getRoomThumb() != null) {
+            String fileLink = fileService.uploadFile(requestDto.getRoomThumb());
+            updateClause.set(studyRoom.roomThumb, fileLink);
+        }
+
+        updateClause.where(studyRoom.id.eq(studyRoomId));
+        updateClause.execute();
     }
 
     /**

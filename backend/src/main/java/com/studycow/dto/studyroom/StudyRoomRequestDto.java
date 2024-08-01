@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -49,6 +50,9 @@ public class StudyRoomRequestDto {
     /** 상세 내용 */
     @NotBlank(message = "상세 내용은 필수입니다.")
     private String roomContent;
+
+    /** 썸네일 */
+    private MultipartFile roomThumb;
 
     /** 생성(방장) 회원 id 번호 */
     /* 토큰 사용
