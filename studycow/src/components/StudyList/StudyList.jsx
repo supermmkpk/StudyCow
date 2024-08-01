@@ -1,5 +1,6 @@
 import "./styles/StudyList.css";
 import StudyRoomItem from "./StudyRoomItem";
+import { Link } from "react-router-dom";
 
 const StudyList = () => {
   // return 전의 아래 코드는 나중에 API로 방 정보와 개수를 받아와 수정할 예정입니다
@@ -9,7 +10,9 @@ const StudyList = () => {
 
   return (
     <div className="studyListContainer">
-      <button className="studyCreateBtn">방 생성</button>
+      <Link to="/study/create">
+        <button className="studyCreateBtn">방 생성</button>
+      </Link>
       <div>
         <p className="rankTitle">누적 공부시간 랭킹</p>
         <div className="rankChange"></div>

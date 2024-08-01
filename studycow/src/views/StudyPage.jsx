@@ -1,13 +1,13 @@
 import Navbar from "../components/Navbar/Navbar";
-import StudyList from "../components/StudyList/StudyList";
 import "../styles/StudyPage.css";
+import { Outlet } from "react-router-dom";
 
 const StudyPage = () => {
   return (
     <>
       <Navbar />
       <div className="main">
-        <StudyList />
+        <Outlet />
       </div>
     </>
   );

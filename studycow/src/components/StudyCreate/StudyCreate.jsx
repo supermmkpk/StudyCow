@@ -21,7 +21,7 @@ const StudyCreate = () => {
           </div>
         </div>
         <div className="DetailInfo">
-          <h1>스터디 한 줄 소개</h1>
+          <h1 className="DetailInfoTitle">스터디 한 줄 소개</h1>
           <input
             className="DetailInfoInput"
             type="textarea"
