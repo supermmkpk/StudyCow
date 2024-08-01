@@ -140,7 +140,6 @@ position: relative;
 
 .catSelectbar select {
   width: 150px;
-  margin-right: 5px;
 }
 
 .catPlanContainer {
@@ -150,7 +149,7 @@ position: relative;
   flex-direction: column;
   position: relative;
   gap: 30px;
-  width: 1200px;
+  width: 1217px;
   left: 120px;
   box-sizing: border-box;
   border: 1px solid #ccc;

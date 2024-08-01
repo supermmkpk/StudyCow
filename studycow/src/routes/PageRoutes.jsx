@@ -27,6 +27,7 @@ import PlanModify from "../components/Planner/CreateModify/PlanModify.jsx";
 import StudyPage from "../views/StudyPage.jsx";
 import StudyList from "../components/StudyList/StudyList.jsx";
 import StudyCreate from "../components/StudyCreate/StudyCreate.jsx";
+import StudyRoom from "../components/StudyRoom/StudyRoom.jsx";
 
 const PageRoutes = () => (
   <Routes>
@@ -50,6 +51,8 @@ const PageRoutes = () => (
       <Route path="" element={<StudyList />} />
       <Route path="create" element={<StudyCreate />} />
     </Route>
+              {/* 스터디룸 테스트 */}
+    <Route path="/test" element={<StudyRoom />} />
 
     {/* 플랜 */}
     <Route path="/plan" element={<PlanPage />}>
