@@ -28,7 +28,7 @@ const useFriendsStore = create((set, get) => ({
 
       const friendsData = response.data.map((friend) => ({
         ...friend,
-        friendThumb: friend.friendThumb ?? { defaultProfile },
+        friendThumb: friend.friendThumb ?? defaultProfile,
       }));
 
       set({ friends: friendsData });
@@ -77,9 +77,7 @@ const useFriendsStore = create((set, get) => ({
 
       const getRequestsData = response.data.map((getRequest) => ({
         ...getRequest,
-        counterpartUserThumb: getRequest.counterpartUserThumb ?? {
-          defaultProfile,
-        },
+        counterpartUserThumb: getRequest.counterpartUserThumb ?? defaultProfile,
       }));
 
       set({ getRequests: getRequestsData });
@@ -137,9 +135,8 @@ const useFriendsStore = create((set, get) => ({
 
       const sendRequestsData = response.data.map((sendRequest) => ({
         ...sendRequest,
-        counterpartUserThumb: sendRequest.counterpartUserThumb ?? {
-          defaultProfile,
-        },
+        counterpartUserThumb:
+          sendRequest.counterpartUserThumb ?? defaultProfile,
       }));
 
       set({ sendRequests: sendRequestsData });
