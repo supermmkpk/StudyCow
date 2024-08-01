@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
+import defaultProfile from "/src/assets/defaultProfile.png"
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/studycow/";
 
@@ -13,7 +14,7 @@ const useInfoStore = create(
       userInfo: {
         userEmail: null,
         userPublic: 0,
-        userThumb: "/src/assets/defaultProfile.png",
+        userThumb: {defaultProfile},
         userGrade: {
           gradeCode: 0,
           gradeName: "브론즈",
@@ -65,7 +66,7 @@ const useInfoStore = create(
                 userEmail: response.data.userEmail ?? null,
                 userNickName: response.data.userNickName ?? null,
                 userThumb:
-                  response.data?.userThumb ?? "/src/assets/defaultProfile.png",
+                  response.data?.userThumb ?? {defaultProfile},
                 userGrade: {
                   gradeCode: response.data.userGrade.gradeCode ?? 0,
                   gradeName: response.data.userGrade.gradeName ?? "브론즈",

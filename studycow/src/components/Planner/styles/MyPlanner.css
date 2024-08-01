@@ -4,7 +4,7 @@
   height: 100%;
   display: flex;
   align-items: center;
-  padding-top: 30px;
+  padding-top: 10px;
   justify-content: center;
   gap: 30px;
 }
@@ -38,7 +38,7 @@ border: none;
 border-radius: 12px;
 margin: 35px;
 padding: 30px;
-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 overflow-y: auto; /* 이미 있음: 세로 스크롤 허용 */
 min-height: 395px;
 max-height: 420px; /* 추가: 최대 높이 설정 */
@@ -122,8 +122,8 @@ position: relative;
 
 
 .catPlanHeader {
-  padding: 5px;
-  margin-top: 10px;
+  padding: 0px;
+  margin-right: 10px;
   max-height: 40px;
   width: 1200px;
   display: flex;
@@ -150,21 +150,22 @@ position: relative;
   flex-direction: column;
   position: relative;
   gap: 30px;
-  width: 100%;
+  width: 1200px;
+  left: 120px;
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 12px;
-  min-height: 300px;
+  height: auto;
   max-height: 500px;
   padding-top: 10px;
-  padding: 30px;
+  padding: 10px;
   background-color: rgba(0, 0, 0, 0); /* 완전 투명 배경 */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 }
 
 .catPlanbox {
   display: flex;
   flex-direction: column;
-  z-index: 1;
   align-items: center;
   justify-content: center;
   width: 1200px;
@@ -174,21 +175,24 @@ position: relative;
   overflow-y: auto; /* 이미 있음: 세로 스크롤 허용 */
   position: relative;
   padding: 20px;
-  padding-top: 30px; /* 상단 패딩 추가 */
+  padding-top: 0px;
   box-sizing: border-box;
 }
 
 .catPlanbox > :first-child {
-  padding-top: 40px;
+  padding-top: 10px;
 }
 
 .catPlanTitle p {
   font-size: 40px;
   margin: 0px;
-  margin-bottom: 10px;
   padding: 0px;
   text-align: center;
   width: 100%;
+}
+.catPlanTitle {
+  margin: 0px;
+  padding: 0px;
 }
 
 .catPlanContent {
