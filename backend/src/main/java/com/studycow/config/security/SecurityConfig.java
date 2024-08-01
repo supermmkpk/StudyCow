@@ -52,6 +52,7 @@ public class SecurityConfig {
             "/login","/swagger-ui.html#/**","/studycow/**"
     };
 
+
     private final CustomUserDetailService userDetailService;
     private final JwtUtil jwtUtil;
 
