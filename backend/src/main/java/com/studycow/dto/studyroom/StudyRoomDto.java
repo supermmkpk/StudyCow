@@ -43,6 +43,9 @@ public class StudyRoomDto {
     private LocalDateTime roomUpdateDate;
     /** 상세 내용 */
     private String roomContent;
+    /** 썸네일 */
+    private String roomThumb;
+
     /** 생성(방장) 회원 id 번호 */
     private int userId; //외래키
 
@@ -65,7 +68,9 @@ public class StudyRoomDto {
                 .roomStatus(this.roomStatus)
                 .roomUpdateDate(this.roomUpdateDate)
                 .roomContent(this.roomContent)
+                .roomThumb(this.roomThumb)
                 .user(user) // User 객체를 설정
                 .build();
     }
+    
 }

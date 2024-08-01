@@ -67,6 +67,9 @@ public class StudyRoom {
     @Column(name = "ROOM_CONTENT", length = 2000)
     private String roomContent;
 
+    @Column(name="ROOM_THUMB", length = 100)
+    private String roomThumb;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
     @NotNull
