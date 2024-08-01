@@ -46,7 +46,7 @@ const CatPlanList = () => {
                 {`0${plan.planStudyTime}:00`} {/* 입력된 시간 표시 */}
               </label>
               <p>
-                {`${sub_code_dic[`${plan.subCode}`]}`} {/* 과목 표시 */}
+                {`${plan.planContent}`} {/* 세부내용 표시 */}
               </p>
               <div className="buttonBox">
                 <button
