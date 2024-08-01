@@ -133,15 +133,24 @@ const Modal = ({ closeModal }) => {
   };
 
   const handleAutoComplete = () => {
-    // 임시 자동완성 데이터
-    const tempSubCode = 1;
-    const tempSubSubject = sub_subjects_dic[sub_code_dic[tempSubCode]][1];
-    const tempTime = 3;
+    // 과목 코드는 1에서 8까지 랜덤으로 선택
+    const tempSubCode = Math.floor(Math.random() * 8) + 1;
+    const selectedSubject = sub_code_dic[tempSubCode];
 
-    setSelectedSubject(sub_code_dic[tempSubCode]);
+    // 선택된 과목 코드에 해당하는 세부 과목 리스트를 가져옴
+    const subSubjectArray = sub_subjects_dic[selectedSubject];
+    const randomSubSubjectIndex = Math.floor(
+      Math.random() * subSubjectArray.length
+    );
+    const tempSubSubject = subSubjectArray[randomSubSubjectIndex];
+
+    // 공부 시간은 1에서 9시간 사이에서 랜덤으로 선택
+    const tempTime = Math.floor(Math.random() * 9) + 1;
+
+    setSelectedSubject(selectedSubject);
     setSelectedSubSubject(tempSubSubject);
     setSelectedTime(tempTime);
-    setContent("자동완성된 내용");
+    setContent(tempSubSubject + " " + tempTime + "시간 공부");
   };
 
   const handleDateChange = (e) => {

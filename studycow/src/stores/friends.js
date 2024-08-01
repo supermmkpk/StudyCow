@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 import useInfoStore from "./infos";
+import defaultProfile from "../assets/defaultProfile.png";
 
 const API_URL = `http://localhost:8080/studycow/`;
 
@@ -27,7 +28,7 @@ const useFriendsStore = create((set, get) => ({
 
       const friendsData = response.data.map((friend) => ({
         ...friend,
-        friendThumb: friend.friendThumb ?? "/src/assets/defaultProfile.png",
+        friendThumb: friend.friendThumb ?? { defaultProfile },
       }));
 
       set({ friends: friendsData });
@@ -76,8 +77,9 @@ const useFriendsStore = create((set, get) => ({
 
       const getRequestsData = response.data.map((getRequest) => ({
         ...getRequest,
-        counterpartUserThumb:
-          getRequest.counterpartUserThumb ?? "/src/assets/defaultProfile.png",
+        counterpartUserThumb: getRequest.counterpartUserThumb ?? {
+          defaultProfile,
+        },
       }));
 
       set({ getRequests: getRequestsData });
@@ -135,8 +137,9 @@ const useFriendsStore = create((set, get) => ({
 
       const sendRequestsData = response.data.map((sendRequest) => ({
         ...sendRequest,
-        counterpartUserThumb:
-          sendRequest.counterpartUserThumb ?? "/src/assets/defaultProfile.png",
+        counterpartUserThumb: sendRequest.counterpartUserThumb ?? {
+          defaultProfile,
+        },
       }));
 
       set({ sendRequests: sendRequestsData });
