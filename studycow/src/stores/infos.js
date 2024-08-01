@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
-import defaultProfile from "/src/assets/defaultProfile.png"
+import defaultProfile from "../assets/defaultProfile.png"
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/studycow/";
 
