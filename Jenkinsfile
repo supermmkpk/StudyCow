@@ -38,6 +38,7 @@ pipeline {
             }
         }
         
+        stage('Deploy') {
             stages {
                 stage('Backend - Deploy') {
                     steps {
@@ -89,4 +90,4 @@ pipeline {
             cleanWs()
         }
     }
-
+}
