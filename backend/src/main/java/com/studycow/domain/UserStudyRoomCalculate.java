@@ -35,7 +35,7 @@ public class UserStudyRoomCalculate {
 
     @Column(name = "SUM_ROOM_TIME", nullable = false)
     @NotNull
-    private String sumRoomTime;
+    private int sumRoomTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ROOM_ID", nullable = false)
