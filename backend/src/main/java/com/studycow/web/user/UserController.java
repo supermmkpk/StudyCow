@@ -4,6 +4,7 @@ import com.studycow.config.jwt.JwtUtil;
 import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.dto.user.UserInfoDto;
 import com.studycow.dto.user.UserUpdateDto;
+import com.studycow.service.file.FileService;
 import com.studycow.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -34,6 +37,7 @@ public class UserController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final FileService fileService;
 
     @Operation(summary="회원", description = "회원")
     @GetMapping("/me")
@@ -49,10 +53,19 @@ public class UserController {
 
     @Operation(summary = "회원 정보 수정", description = "회원의 기본정보를 수정합니다.")
     @PatchMapping("/me")
-    public ResponseEntity<?> UpdateUser(@Valid @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody UserUpdateDto userUpdateDto) {
+    public ResponseEntity<?> UpdateUser(
+            @Valid @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            MultipartFile file,
+            UserUpdateDto userUpdateDto
+    ) throws IOException {
         //String token = authorizationHeader.replace("Bearer ", "");
         //int currentUserId = jwtUtil.getUserId(token);
 
+
+        if(file != null) {
+            String fileLink = fileService.uploadFile(file);
+            userUpdateDto.setUserThumb(fileLink);
+        }
 
         userService.updateUserInfo(userUpdateDto,customUserDetails);
         return new ResponseEntity<>("업데이트 성공",HttpStatus.OK);

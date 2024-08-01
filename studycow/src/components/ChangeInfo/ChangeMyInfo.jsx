@@ -1,75 +1,51 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import useInfoStore from "../../stores/infos";
+import useInfoStore from "../../stores/infos"; // 이미 작성된 store 가져오기
 import "./Styles/ChangeInfo.css";
+import { useNavigate } from "react-router-dom";
 
 const ChangeMyInfo = () => {
-  const { token, userInfo, setUserInfo, apiUrl } = useInfoStore((state) => ({
-    token: state.token,
+  // logout 가져오기
+  const { userInfo, updateUserInfo, logout } = useInfoStore((state) => ({
     userInfo: state.userInfo,
-    setUserInfo: state.setUserInfo,
-    apiUrl: state.apiUrl,
+    updateUserInfo: state.updateUserInfo,
+    logout: state.logout, // 로그아웃 함수 가져오기
   }));
 
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
-  const [thumb, setThumb] = useState(null);
-  const [publicStatus, setPublicStatus] = useState(0);
+  const [thumb, setThumb] = useState(null); // 파일 선택에 대한 상태
+  const [currentThumb, setCurrentThumb] = useState(null); // 현재 이미지 상태
+
+  const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅
 
   useEffect(() => {
+    // 사용자 정보 초기화
     setEmail(userInfo.userEmail || "");
-    setThumb(userInfo.userThumb || null);
-    setNickname(userInfo.userNickname || "");
-    setPublicStatus(userInfo.userPublic || 0);
+    setNickname(userInfo.userNickName || "");
+    setCurrentThumb(userInfo.userThumb || ""); // 현재 이미지 초기화
   }, [userInfo]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      if (!token) {
-        console.error("토큰이 없습니다.");
-        return;
-      }
+    // 파일이 선택되지 않았을 경우 현재 이미지를 사용
+    const imageToUpload = thumb || currentThumb;
+    const success = await updateUserInfo(email, nickname, imageToUpload);
 
-      const formData = new FormData();
-      formData.append("userEmail", email);
-      formData.append("userNickname", nickname);
-      formData.append("userPublic", publicStatus);
-      if (thumb) {
-        formData.append("userThumb", thumb);
-      }
+    if (success) {
+      alert("회원정보가 성공적으로 변경되었습니다.");
 
-      console.log("보내는 데이터:", formData);
-      console.log("토큰:", token);
+      // 로그아웃 로직 추가
+      logout(); // 로그아웃 호출
 
-      const response = await axios.patch(apiUrl, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      console.log("서버 응답:", response);
-
-      if (response.status === 200) {
-        setUserInfo({
-          userEmail: email,
-          userThumb: thumb ? URL.createObjectURL(thumb) : userInfo.userThumb,
-          userNickname: nickname,
-          userPublic: publicStatus,
-        });
-        alert("회원정보가 성공적으로 변경되었습니다.");
-      } else {
-        throw new Error("회원정보 변경에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("Error updating user info:", error);
+      // 로그인 페이지로 리다이렉트
+      navigate("/login");
+    } else {
       alert("회원정보 변경에 실패했습니다.");
     }
   };
 
   const handleFileChange = (e) => {
-    setThumb(e.target.files[0]);
+    setThumb(e.target.files[0]); // 파일 선택 시 상태 업데이트
   };
 
   return (
@@ -96,8 +72,9 @@ const ChangeMyInfo = () => {
             onChange={(e) => setNickname(e.target.value)}
           />
         </div>
+
         <div className="ChangeInfo-form-group">
-          <label htmlFor="thumb">프로필 이미지:</label>
+          <label htmlFor="thumb">프로필 이미지 변경:</label>
           <input
             type="file"
             id="thumb"
@@ -105,13 +82,6 @@ const ChangeMyInfo = () => {
             onChange={handleFileChange}
           />
         </div>
-        <input
-          type="hidden"
-          id="publicStatus"
-          name="publicStatus"
-          value={publicStatus}
-          onChange={(e) => setPublicStatus(Number(e.target.value))}
-        />
         <div className="ChangeInfo-button-group">
           <button type="submit" className="ChangeInfo-submit-button">
             변경
