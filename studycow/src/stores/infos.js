@@ -1,16 +1,16 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
-import defaultProfile from "../assets/defaultProfile.png"
+import defaultProfile from "../assets/defaultProfile.png";
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/studycow/";
+const API_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/studycow/";
 
 const useInfoStore = create(
   persist(
-    (set) => ({
-      // 유저 정보
-      isLogin: false, // 로그인 여부
-      token: null, // 토큰 저장
+    (set, get) => ({
+      isLogin: false,
+      token: null,
       userInfo: {
         userEmail: null,
         userPublic: 0,
@@ -25,7 +25,6 @@ const useInfoStore = create(
         userNickName: null,
       },
 
-      // 임시 회원가입 로직
       sendRegisterRequest: async (userEmail, userPassword, userNickName) => {
         const data = {
           userEmail,
@@ -48,7 +47,6 @@ const useInfoStore = create(
         }
       },
 
-      // 임시 로그인 로직
       sendLoginRequest: async (userEmail, password) => {
         const data = { userEmail, password };
         try {
@@ -62,11 +60,9 @@ const useInfoStore = create(
               token: response.data.token ?? null,
               isLogin: true,
               userInfo: {
-                // 여기에서 response 데이터에 따라 userInfo를 업데이트 합니다.
                 userEmail: response.data.userEmail ?? null,
                 userNickName: response.data.userNickName ?? null,
-                userThumb:
-                  response.data?.userThumb ?? defaultProfile,
+                userThumb: response.data?.userThumb ?? defaultProfile,
                 userGrade: {
                   gradeCode: response.data.userGrade.gradeCode ?? 0,
                   gradeName: response.data.userGrade.gradeName ?? "브론즈",
@@ -76,13 +72,6 @@ const useInfoStore = create(
                 userExp: response.data.userExp ?? 0,
               },
             });
-            console.log(response.data.userEmail);
-            console.log(response.data.userNickName);
-            console.log(response.data.userExp);
-            console.log(response.data.userGrade.gradeCode);
-            console.log(response.data.userGrade.gradeName);
-            console.log(response.data.userGrade.minExp);
-            console.log(response.data.userGrade.maxExp);
             return true;
           } else {
             throw new Error("로그인에러");
@@ -93,19 +82,16 @@ const useInfoStore = create(
         }
       },
 
-      // 임시 로그아웃 로직
       logout: (navigate) => {
         set({ isLogin: false, token: null });
-        navigate("/login"); // 로그아웃 후 로그인 페이지로 리디렉트
+        navigate("/login");
       },
 
-      // 임시 회원탈퇴 로직
       resign: (navigate) => {
         set({ isLogin: false });
-        navigate("/login"); // 로그아웃 후 로그인 페이지로 리디렉트
+        navigate("/login");
       },
 
-      // 임시 토글 동작 로직
       isOpen: false,
       toggleDropdown: () =>
         set((state) => {
@@ -113,9 +99,51 @@ const useInfoStore = create(
           return { isOpen: newState };
         }),
 
-      // Change Info Store 관련 상태와 액션 추가
-      apiUrl: "http://localhost:8080/studycow/user/me",
-      setApiUrl: (url) => set({ apiUrl: url }),
+      ChangeInfoUrl: API_URL + "user/me",
+
+      updateUserInfo: async (email, nickname, thumb, publicStatus) => {
+        try {
+          const { token, ChangeInfoUrl, userInfo } = get();
+          if (!token) {
+            console.error("토큰이 없습니다.");
+            return false;
+          }
+          const formData = new FormData();
+          if (thumb) {
+            formData.append("file", thumb);
+          }
+          formData.append("userEmail", email);
+          formData.append("userNickname", nickname);
+
+          console.log("보내는 데이터:", formData);
+          console.log("토큰:", token);
+
+          const response = await axios.patch(ChangeInfoUrl, formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          });
+
+          if (response.status === 200) {
+            set({
+              userInfo: {
+                ...userInfo,
+                userEmail: email,
+                userNickName: nickname,
+                userThumb: thumb ? thumb : userInfo.userThumb, // createObjectURL 제거
+                userPublic: publicStatus,
+              },
+            });
+            return true;
+          } else {
+            throw new Error("회원정보 변경에 실패했습니다.");
+          }
+        } catch (error) {
+          console.error("Error updating user info:", error);
+          return false;
+        }
+      },
     }),
     {
       name: "info-storage",
