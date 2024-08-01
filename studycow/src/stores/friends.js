@@ -3,7 +3,7 @@ import axios from "axios";
 import useInfoStore from "./infos";
 import defaultProfile from "../assets/defaultProfile.png";
 
-const API_URL = `http://localhost:8080/studycow/`;
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/studycow/";
 
 const useFriendsStore = create((set, get) => ({
   friends: [],
