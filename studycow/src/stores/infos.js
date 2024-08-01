@@ -14,7 +14,7 @@ const useInfoStore = create(
       userInfo: {
         userEmail: null,
         userPublic: 0,
-        userThumb: {defaultProfile},
+        userThumb: defaultProfile,
         userGrade: {
           gradeCode: 0,
           gradeName: "브론즈",
