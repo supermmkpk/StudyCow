@@ -40,8 +40,12 @@ pipeline {
         
         stage('Deploy to Production') {
             when {
-                branch 'master'
-            }
+        anyOf {
+            branch 'master'
+            expression { return env.CHANGE_TARGET == 'master' }
+            expression { return env.GIT_BRANCH == 'origin/master' }
+        }
+    }
             stages {
                 stage('Backend - Deploy') {
                     steps {
