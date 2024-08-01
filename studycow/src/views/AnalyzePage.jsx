@@ -1,16 +1,16 @@
+import "../styles/AnalyzePage.css";
 import Navbar from "../components/Navbar/Navbar";
-import "../styles/StudyPage.css";
 import { Outlet } from "react-router-dom";
 
-const StudyPage = () => {
+const AnalyzePage = () => {
   return (
     <>
       <Navbar />
-      <div className="studyMain">
+      <div className="analyzeMain">
         <Outlet />
       </div>
     </>
   );
 };
 
-export default StudyPage;
+export default AnalyzePage;
