@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ResponseScoreDto {
+    private int subCode;
     private String subName;
     private int targetScore;
     private int targetGrade;
@@ -19,7 +20,8 @@ public class ResponseScoreDto {
     private String advice;
     private List<ScoreDto> scores;
 
-    public ResponseScoreDto(String subName, int targetScore, int targetGrade, int maxScore){
+    public ResponseScoreDto(int subCode, String subName, int targetScore, int targetGrade, int maxScore){
+        this.subCode = subCode;
         this.subName = subName;
         this.targetScore = targetScore;
         this.targetGrade = targetGrade;
@@ -31,6 +33,7 @@ public class ResponseScoreDto {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("ResponseScoreDto{").append("\n");
+        sb.append("subCode='").append(subCode).append("\n");
         sb.append("subName='").append(subName).append('\'').append("\n");
         sb.append("targetScore=").append(targetScore).append("\n");
         sb.append("targetGrade=").append(targetGrade).append("\n");
