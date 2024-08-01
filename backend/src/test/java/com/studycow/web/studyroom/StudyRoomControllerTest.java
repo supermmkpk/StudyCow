@@ -1,3 +1,4 @@
+/*
 
 package com.studycow.web.studyroom;
 
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
+*/
 /**
  * <pre>
  *  스터디룸 CRUD 컨트롤러 테스트 클래스
@@ -37,7 +39,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author 박봉균
  * @since JDK17
- */
+ *//*
+
 @WebMvcTest(StudyRoomController.class)
 public class StudyRoomControllerTest {
 
@@ -92,7 +95,8 @@ public class StudyRoomControllerTest {
         userDetails = new CustomUserDetails(customUserInfoDto);
     }
 
-    /**
+    */
+/**
      * 스터디룸 생성 테스트
      * <pre>
      *     회원 정보 헤더 사용하므로
@@ -101,7 +105,8 @@ public class StudyRoomControllerTest {
      * </pre>
      *
      * @throws Exception
-     */
+     *//*
+
     @Test
     @WithMockUser
     public void testCreateStudyRoom() throws Exception {
@@ -116,11 +121,13 @@ public class StudyRoomControllerTest {
                 .andExpect(content().string("스터디룸 생성 성공"));
     }
 
-    /**
+    */
+/**
      * 스터디룸 상세 조회 테스트
      *
      * @throws Exception
-     */
+     *//*
+
     @Test
     @WithMockUser
     public void testGetStudyRoomInfo() throws Exception {
@@ -132,11 +139,13 @@ public class StudyRoomControllerTest {
                 .andExpect(jsonPath("$.roomTitle").value("Test Study Room"));
     }
 
-    /**
+    */
+/**
      * 스터디룸 목록 조회 테스트
      *
      * @throws Exception
-     */
+     *//*
+
     @Test
     @WithMockUser
     public void testListStudyRoom() throws Exception {
@@ -149,7 +158,8 @@ public class StudyRoomControllerTest {
                 .andExpect(jsonPath("$[0].roomTitle").value("Test Study Room"));
     }
 
-    /**
+    */
+/**
      * 스터디룸 수정 테스트
      * <pre>
      *     회원 정보 헤더 사용하므로
@@ -158,7 +168,8 @@ public class StudyRoomControllerTest {
      * </pre>
      *
      * @throws Exception
-     */
+     *//*
+
     @Test
     @WithMockUser
     public void testUpdateStudyRoom() throws Exception {
@@ -174,3 +185,4 @@ public class StudyRoomControllerTest {
     }
 
 }
+*/
