@@ -138,6 +138,7 @@ public class PlannerController {
 
             return new ResponseEntity<>(plan, HttpStatus.OK);
 
+            
         }catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
