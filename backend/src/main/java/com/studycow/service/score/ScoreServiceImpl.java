@@ -2,6 +2,7 @@ package com.studycow.service.score;
 
 import com.studycow.dto.common.SubjectCodeDto;
 import com.studycow.dto.score.*;
+import com.studycow.repository.common.CommonRepository;
 import com.studycow.repository.score.ScoreRepository;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ScoreServiceImpl implements ScoreService{
     private final ScoreRepository scoreRepository;
+    private final CommonRepository commonRepository;
 
     /**
      * 상세 포함 과목별 성적 리스트 조회
@@ -196,6 +200,32 @@ public class ScoreServiceImpl implements ScoreService{
         }
         // return scoreDtoList;
         return responseScoreDtoList;
+    }
+
+    /**
+     * 최근 n개월간의 성적 통계
+     * @param userId : 성적을 확인하려는 유저
+     * @param myId : 토큰으로 조회한 유저
+     * @param months : n개월
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public List<ResponseStatsDto> scoreStats(int userId, int myId, int months) throws Exception {
+        if(commonRepository.checkPublic(userId, myId) == 1){
+            LocalDate now = LocalDate.now();
+            List<ResponseStatsDto> responseStatsList = scoreRepository.scoreStats(
+                    userId, months, now);
+
+            for(ResponseStatsDto stats : responseStatsList){
+                stats.setDetailStatsList(scoreRepository.statsDetail(
+                        userId, stats.getSubCode(), months, now));
+            }
+
+            return responseStatsList;
+        }else{
+            return null;
+        }
     }
 
 }
