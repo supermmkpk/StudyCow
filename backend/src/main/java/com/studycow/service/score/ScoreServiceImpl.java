@@ -85,7 +85,7 @@ public class ScoreServiceImpl implements ScoreService{
         log.info("return scoreId : {}", scoreId);
 
         if(requestScoreDto.getScoreDetails() != null
-                && requestScoreDto.getScoreDetails() instanceof RequestDetailDto) {
+                && !requestScoreDto.getScoreDetails().isEmpty()) {
             for (RequestDetailDto details : requestScoreDto.getScoreDetails()) {
                 scoreRepository.saveScoreDetails(details, scoreId);
             }
@@ -103,8 +103,7 @@ public class ScoreServiceImpl implements ScoreService{
     public void modifyScore(RequestScoreDto requestScoreDto, int userId, Long scoreId) throws Exception {
         scoreRepository.modifyScore(requestScoreDto, userId, scoreId);
 
-        if(requestScoreDto.getScoreDetails() != null
-                && requestScoreDto.getScoreDetails() instanceof RequestDetailDto) {
+        if(requestScoreDto.getScoreDetails() != null && !requestScoreDto.getScoreDetails().isEmpty()) {
             for (RequestDetailDto details : requestScoreDto.getScoreDetails()) {
                 scoreRepository.saveScoreDetails(details, scoreId);
             }
@@ -176,7 +175,7 @@ public class ScoreServiceImpl implements ScoreService{
     }
 
     /**
-     * 상세 포함 과목별 성적 리스트 조회
+     * 과목별 최근 5개 성적 조회
      * @param userId : 유저 id
      * @throws Exception
      */
