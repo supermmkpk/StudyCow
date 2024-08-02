@@ -7,6 +7,7 @@ const API_URL =
 
 const useStudyStore = create((set, get) => ({
   studyRoomData: {},
+  rooms: [],
 
   setStudyRoomData: (data) => set({ studyRoomData: data }),
 
@@ -34,6 +35,28 @@ const useStudyStore = create((set, get) => ({
     } catch (error) {
       console.error("에러가 발생했습니다:", error);
       return false;
+    }
+  },
+
+  fetchRooms: async () => {
+    const { token } = useInfoStore.getState();
+
+    try {
+      const response = await axios.get(API_URL + `room/list`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const rooms = response.data.map((room) => ({
+        id: room.id,
+        title: room.roomTitle,
+        thumb: room.roomThumb,
+        maxPerson: room.roomMaxPerson,
+        nowPerson: room.roomNowPerson,
+      }));
+      set({ rooms });
+    } catch (error) {
+      console.error("방 정보를 가져오는 데 실패했습니다.", error);
     }
   },
 }));
