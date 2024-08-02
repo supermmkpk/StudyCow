@@ -44,4 +44,10 @@ public interface ScoreService {
 
     /** 미설정 목표 과목 조회 */
     List<SubjectCodeDto> subjectList(int userId) throws PersistenceException;
+
+    /** 과목별 최근 5개 성적 조회 */
+    List<ResponseScoreDto> recentScores(int userId) throws Exception;
+
+    /** 최근 n개월간의 성적 통계 */
+    List<ResponseStatsDto> scoreStats(int userId, int myId, int months) throws Exception;
 }

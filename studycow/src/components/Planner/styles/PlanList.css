@@ -64,7 +64,7 @@
     width: 23px;
   }
   .deleteButton {
-    height: 33px;
-    width: 33px;
+    height: 26px !important;
+    width: 27px !important;
     padding-bottom: 1px;
   }

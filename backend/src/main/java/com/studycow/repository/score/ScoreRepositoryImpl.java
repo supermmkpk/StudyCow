@@ -2,6 +2,7 @@ package com.studycow.repository.score;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -53,15 +55,14 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public List<ScoreDto> listScores(int userId, int subCode, int myId) throws PersistenceException {
+    public List<ScoreDto> listScores(int userId, int subCode, int myId, int limitCnt) throws PersistenceException {
         try{
             User user = em.find(User.class, userId);
 
             if(user.getId() != myId && user.getUserPublic() == 0){
                 throw new IllegalStateException("비공개 유저입니다.");
             }
-
-            return queryFactory
+            var query = queryFactory
                     .select(Projections.constructor(ScoreDto.class,
                             userSubjectScore.id,
                             userSubjectScore.subjectCode.code,
@@ -69,12 +70,15 @@ public class ScoreRepositoryImpl implements ScoreRepository{
                             userSubjectScore.testScore,
                             userSubjectScore.testGrade,
                             userSubjectScore.testDate
-                            ))
+                    ))
                     .from(userSubjectScore)
                     .where(userSubjectScore.user.id.eq(user.getId())
                             .and(userSubjectScore.subjectCode.code.eq(subCode)))
-                    .orderBy(userSubjectScore.testDate.desc())
-                    .fetch();
+                    .orderBy(userSubjectScore.testDate.desc());
+            if(limitCnt > 0){
+                query.limit(limitCnt);
+            }
+            return query.fetch();
 
         }catch(IllegalStateException e) {
             throw e;
@@ -454,6 +458,7 @@ public class ScoreRepositoryImpl implements ScoreRepository{
 
             return queryFactory
                     .select(Projections.constructor(ResponseScoreDto.class,
+                            userScoreTarget.subjectCode.code,
                             userScoreTarget.subjectCode.name,
                             userScoreTarget.targetScore,
                             userScoreTarget.targetGrade,
@@ -469,5 +474,86 @@ public class ScoreRepositoryImpl implements ScoreRepository{
         } catch(Exception e) {
             throw new PersistenceException("성적 조회 중 에러 발생", e);
         }
+    }
+
+    /**
+     * 성적 조회 전 과목 목표 조회
+     * @param userId
+     * @return
+     * @throws PersistenceException
+     */
+    @Override
+    public List<ResponseScoreDto> targetList(int userId) throws PersistenceException {
+        try{
+            User user = em.find(User.class, userId);
+
+            return queryFactory
+                    .select(Projections.constructor(ResponseScoreDto.class,
+                            userScoreTarget.subjectCode.code,
+                            userScoreTarget.subjectCode.name,
+                            userScoreTarget.targetScore,
+                            userScoreTarget.targetGrade,
+                            userScoreTarget.subjectCode.maxScore
+                    ))
+                    .from(userScoreTarget)
+                    .where(userScoreTarget.user.id.eq(user.getId()))
+                    .fetch();
+
+        }catch(IllegalStateException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new PersistenceException("성적 조회 중 에러 발생", e);
+        }
+    }
+
+    /**
+     * 과목별 n개월간의 평균 점수, 등급
+     * @param userId : 성적을 조회할 유저 id
+     * @param months : n개월
+     * @return
+     * @throws PersistenceException
+     */
+    @Override
+    public List<ResponseStatsDto> scoreStats(int userId, int months, LocalDate now) throws PersistenceException {
+        return queryFactory
+                .select(Projections.constructor(ResponseStatsDto.class,
+                        userSubjectScore.subjectCode.code,
+                        userSubjectScore.subjectCode.name,
+                        userSubjectScore.testScore.avg().round(),
+                        userSubjectScore.testGrade.avg().round()))
+                .from(userSubjectScore)
+                .where(userSubjectScore.user.id.eq(userId)
+                        .and(userSubjectScore.testDate.between(
+                                now.minusMonths(months), now
+                        )))
+                .groupBy(userSubjectScore.subjectCode.code)
+                .orderBy(userSubjectScore.subjectCode.code.asc())
+                .fetch();
+    }
+
+    /**
+     * 과목별 n개월간의 틀린 유형
+     *
+     * @param userId
+     * @param months
+     * @return
+     * @throws PersistenceException
+     */
+    @Override
+    public List<ScoreDetailStatsDto> statsDetail(int userId, int subCode, int months, LocalDate now) throws PersistenceException {
+        return queryFactory
+                .select(Projections.constructor(ScoreDetailStatsDto.class,
+                        wrongProblem.problemCategory.code,
+                        wrongProblem.problemCategory.name,
+                        wrongProblem.wrongCount.sum()))
+                .from(wrongProblem)
+                .where(wrongProblem.userSubjectScore.user.id.eq(userId)
+                        .and(wrongProblem.userSubjectScore.subjectCode.code.eq(subCode))
+                        .and(wrongProblem.userSubjectScore.testDate.between(
+                                now.minusMonths(months), now
+                        )))
+                .groupBy(wrongProblem.problemCategory.code)
+                .orderBy(wrongProblem.problemCategory.code.asc())
+                .fetch();
     }
 }
