@@ -172,7 +172,7 @@ public class ScoreServiceImpl implements ScoreService{
     }
 
     /**
-     * 상세 포함 과목별 성적 리스트 조회
+     * 과목별 최근 5개 성적 조회
      * @param userId : 유저 id
      * @throws Exception
      */
@@ -197,5 +197,7 @@ public class ScoreServiceImpl implements ScoreService{
         // return scoreDtoList;
         return responseScoreDtoList;
     }
+
+
 
 }

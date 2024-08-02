@@ -130,7 +130,6 @@ public class PlannerController {
     @GetMapping("/auto/{planId}")
     public ResponseEntity<?> autoPlan(@AuthenticationPrincipal CustomUserDetails user,
                                      @PathVariable int planId) {
-
         try{
             int userId = user.getUser().getUserId();
 
