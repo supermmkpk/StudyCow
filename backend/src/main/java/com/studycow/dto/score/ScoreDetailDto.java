@@ -10,10 +10,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ScoreDetailDto {
+    /** 오답 내역 ID */
     private Long wrongDetailId;
+    /** 점수 ID */
     private Long scoreId;
+    /** 오답 유형 코드 */
     private int catCode;
+    /** 오답 유형명 */
     private String catName;
+    /** 오답 문항 개수 */
     private int wrongCnt;
 
     @Override
