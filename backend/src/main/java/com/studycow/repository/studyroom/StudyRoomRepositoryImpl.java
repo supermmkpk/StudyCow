@@ -10,15 +10,22 @@ import com.studycow.dto.studyroom.StudyRoomDto;
 import com.studycow.dto.studyroom.StudyRoomRequestDto;
 import com.studycow.service.file.FileService;
 import com.studycow.util.QueryDslUtil;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.studycow.domain.QStudyRoom.*;
 
@@ -40,6 +47,30 @@ public class StudyRoomRepositoryImpl implements StudyRoomRepository {
     private final JPAQueryFactory queryFactory;
     private final FileService fileService;
 
+    //Redis
+    private final RedisTemplate<String, Object> redisTemplate;
+    //채팅방을 위한 레디스 설정
+    private final RedisMessageListenerContainer redisMessageListenerContainer;
+    private HashOperations<String, String, StudyRoom> hashOperations;
+    //채팅방 대화 메시지 발행을 위한 redis topic 정보, 서버별로 채팅방에 매치되는 topic 정보를 Map에 넣어 roomId로 찾을 수 있도록 함.
+    private Map<String, ChannelTopic> topics;
+
+    private static final String CHAT_ROOMS = "CHAT_ROOM";
+
+    @PostConstruct
+    private void init() {
+        hashOperations = redisTemplate.opsForHash();
+        topics = new HashMap<>();
+    }
+
+    public StudyRoom findById(String id) {
+        return hashOperations.get(CHAT_ROOMS, id);
+    }
+
+    public ChannelTopic getTopic(String roomId){
+        return topics.get(roomId);
+    }
+
     /**
      * 스터디룸 생성
      *
@@ -48,6 +79,7 @@ public class StudyRoomRepositoryImpl implements StudyRoomRepository {
     @Override
     public void createStudyRoom(StudyRoom studyRoom) throws PersistenceException {
         em.persist(studyRoom);
+
     }
 
     /**

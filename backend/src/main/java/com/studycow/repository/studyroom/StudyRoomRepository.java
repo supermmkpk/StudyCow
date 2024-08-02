@@ -29,4 +29,6 @@ public interface StudyRoomRepository {
 
     /** 스터디룸 수정 */
     void updateStudyRoom(Long studyRoomId, StudyRoomRequestDto requestDto, int userId) throws PersistenceException, IOException;
+
+
 }
