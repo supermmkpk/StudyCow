@@ -1,5 +1,8 @@
+DROP DATABASE IF EXISTS `study_cow`;
 CREATE DATABASE  IF NOT EXISTS `study_cow` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `study_cow`;
+
+
 -- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
 -- Host: localhost    Database: study_cow
@@ -70,7 +73,7 @@ CREATE TABLE `t_category` (
   KEY `idx_status` (`cat_status`),
   KEY `FKdotp8fhys3qxe6iamjt1481x` (`sub_code`),
   CONSTRAINT `FKdotp8fhys3qxe6iamjt1481x` FOREIGN KEY (`sub_code`) REFERENCES `t_subject_code` (`sub_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,9 +231,9 @@ DROP TABLE IF EXISTS `t_proc_room_study`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `t_proc_room_study` (
   `proc_date` date NOT NULL,
+  `sum_room_time` int NOT NULL,
   `proc_room_id` bigint NOT NULL AUTO_INCREMENT,
   `room_id` bigint NOT NULL,
-  `sum_room_time` varchar(255) NOT NULL,
   PRIMARY KEY (`proc_room_id`),
   UNIQUE KEY `uni_room_date` (`room_id`,`proc_date`),
   CONSTRAINT `FKnorwjxqby9nbvuk6hdrrqjc9s` FOREIGN KEY (`room_id`) REFERENCES `t_room` (`room_id`)
@@ -272,6 +275,7 @@ CREATE TABLE `t_room` (
   `room_id` bigint NOT NULL AUTO_INCREMENT,
   `room_update_date` datetime(6) NOT NULL,
   `room_title` varchar(50) NOT NULL,
+  `room_thumb` varchar(100) DEFAULT NULL,
   `room_content` varchar(2000) DEFAULT NULL,
   PRIMARY KEY (`room_id`),
   KEY `idx_title_status` (`room_title`,`room_status`),
@@ -319,7 +323,7 @@ CREATE TABLE `t_subject_code` (
   `sub_name` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`sub_code`),
   KEY `idx_status` (`sub_status`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -416,4 +420,4 @@ CREATE TABLE `t_wrong_detail` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-30 14:10:18
+-- Dump completed on 2024-08-02 10:49:46
