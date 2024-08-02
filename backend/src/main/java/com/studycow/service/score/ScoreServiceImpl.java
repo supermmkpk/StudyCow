@@ -38,7 +38,7 @@ public class ScoreServiceImpl implements ScoreService{
 
         // 과목별 성적 리스트
         //List<ScoreDto> scoreDtoList = scoreRepository.listScores(userId, subCode, myId);
-        responseScoreDto.setScores(scoreRepository.listScores(userId, subCode, myId));
+        responseScoreDto.setScores(scoreRepository.listScores(userId, subCode, myId, 0));
 
         // 오답 유형 리스트 조회
         for(ScoreDto scores : responseScoreDto.getScores()){
@@ -169,6 +169,33 @@ public class ScoreServiceImpl implements ScoreService{
     @Override
     public List<SubjectCodeDto> subjectList(int userId) throws PersistenceException {
         return scoreRepository.subjectList(userId);
+    }
+
+    /**
+     * 상세 포함 과목별 성적 리스트 조회
+     * @param userId : 유저 id
+     * @throws Exception
+     */
+    @Override
+    public List<ResponseScoreDto> recentScores(int userId) throws Exception {
+        List<ResponseScoreDto> responseScoreDtoList = scoreRepository.targetList(userId);
+
+        // 과목별 성적 리스트
+        for(ResponseScoreDto responseScoreDto : responseScoreDtoList) {
+            responseScoreDto.setScores(scoreRepository.listScores(userId,
+                    responseScoreDto.getSubCode(), userId, 5));
+
+            // 오답 유형 리스트 조회
+            for (ScoreDto scores : responseScoreDto.getScores()) {
+                Long scoreId = scores.getScoreId();
+
+                List<ScoreDetailDto> scoreDetailDtoList = scoreRepository.listScoreDetails(scoreId);
+                if (scoreDetailDtoList != null && !scoreDetailDtoList.isEmpty())
+                    scores.setScoreDetails(scoreDetailDtoList);
+            }
+        }
+        // return scoreDtoList;
+        return responseScoreDtoList;
     }
 
 }

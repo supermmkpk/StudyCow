@@ -18,7 +18,7 @@ import java.util.Map;
 
 public interface ScoreRepository {
     /** 유저 과목별 성적 리스트 조회 */
-    List<ScoreDto> listScores(int userId, int subCode, int myId) throws PersistenceException;
+    List<ScoreDto> listScores(int userId, int subCode, int myId, int limitCnt) throws PersistenceException;
 
     /** 단일 성적 상세 조회 */
     ScoreDto scoreDetail(Long scoreId, int userId, int myId) throws PersistenceException;
@@ -55,4 +55,7 @@ public interface ScoreRepository {
 
     /** 성적 조회 전 과목 목표 조회 */
     ResponseScoreDto subTarget(int userId, int subCode, int myId) throws PersistenceException;
+
+    /** 최근 성적 조회 전 성적 목표 조회 */
+    List<ResponseScoreDto> targetList(int userId) throws PersistenceException;
 }

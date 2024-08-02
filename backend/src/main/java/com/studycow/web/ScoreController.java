@@ -203,4 +203,16 @@ public class ScoreController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Operation(summary = "과목별 최근 5개 성적 조회", description = "과목별 최근 5개 성적을 조회합니다.")
+    @GetMapping("/{userId}/auto")
+    public ResponseEntity<?> recentScores(@PathVariable int userId) {
+        try {
+            List<ResponseScoreDto> responseScoreDtoList = scoreService.recentScores(userId);
+            return ResponseEntity.ok(responseScoreDtoList);
+        } catch(Exception e) {
+            //e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
