@@ -1,7 +1,7 @@
 import React from "react";
 import Sidebutton from'./Sidebar/Sidebutton.jsx';
 import settingButton from"./Sidebar/img/settingButton1.png";
-import useStudyStore from "../../stores/studies.js";
+import useStudyStore from "../../stores/study.js";
 import soundOnButton from "./Sidebar/img/volOn.png";
 import soundOffButton from "./Sidebar/img/volOff.png";
 import camOnButton from "./Sidebar/img/camOn.png";

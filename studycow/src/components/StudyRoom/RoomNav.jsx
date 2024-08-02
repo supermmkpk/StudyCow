@@ -5,7 +5,7 @@ import listButton from './Navbar/img/listButton.png'
 import exitButton from './Navbar/img/exitButton.png'
 import chatButton from './Navbar/img/chatButton.png'
 import lankingButton from './Navbar/img/lankingButton.png'
-import useStudyStore from "../../stores/studies.js";
+import useStudyStore from "../../stores/study.js";
 import usePlanStore from "../../stores/plan.js";
 import Logo from '../../assets/logo.png'
 import "./styles/RoomNav.css"
