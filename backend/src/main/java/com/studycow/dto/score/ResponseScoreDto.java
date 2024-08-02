@@ -26,7 +26,7 @@ public class ResponseScoreDto {
     private int maxScore;
     /** 조언 */
     private String advice;
-    /** 점수 목록 */
+    /** 성적 목록 */
     private List<ScoreDto> scores;
 
     public ResponseScoreDto(int subCode, String subName, int targetScore, int targetGrade, int maxScore){

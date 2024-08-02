@@ -14,12 +14,19 @@ import java.util.List;
 @Getter
 @Setter
 public class ScoreDto {
+    /** 성적 ID */
     private Long scoreId;
+    /** 과목 코드 */
     private int subCode;
+    /** 과목 이름 */
     private String subName;
+    /** 점수 */
     private int testScore;
+    /** 등급(1~9) */
     private Integer testGrade;
+    /** 시험 일자 */
     private LocalDate testDate;
+    /** 오답 내역 목록 */
     private List<ScoreDetailDto> scoreDetails;
 
     public ScoreDto(Long scoreId, int subCode, String subName,
