@@ -1,31 +1,122 @@
 package com.studycow.web.chat;
 
 import com.studycow.dto.chat.ChatMessage;
-import com.studycow.repository.studyroom.StudyRoomRepository;
+import com.studycow.dto.chat.ChatRoom;
+import com.studycow.repository.chat.ChatRoomRepository;
+import com.studycow.service.chat.RedisPublisher;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.web.bind.annotation.*;
 
-/**
- *
- */
+import java.util.HashMap;
+import java.util.Map;
 
+@RestController
 @RequiredArgsConstructor
-@Controller
+@Tag(name = "CHAT", description = "채팅 관련 메서드")
 public class ChatController {
 
-    private final SimpMessageSendingOperations messagingTemplate;
-    private final StudyRoomRepository studyRoomRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final RedisPublisher redisPublisher;
 
-    @MessageMapping("/chat/message")
-    public void message(ChatMessage message){
-        if(ChatMessage.MessageType.ENTER.equals(message.getType()))
-            studyRoomRepository.
-            message.setMessage(message.getSender()+"님이 입장하셨습니다.");
-        System.out.println(message);
-        messagingTemplate.convertAndSend("/sub/chat/room"+message.getRoomId(),message);
+    @Operation(summary = "방 생성", description = "새로운 채팅 방을 생성합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "채팅 방 생성 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    })
+    @PostMapping("/rooms")
+    public ResponseEntity<?> createRoom(@RequestParam String name, @RequestParam String roomId) {
+        try {
+            ChatRoom chatRoom = chatRoomRepository.createRoom(name, roomId);
+            return new ResponseEntity<>(chatRoom, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
+
+    @Operation(summary = "방 정보 조회", description = "특정 채팅 방의 정보를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "채팅 방 정보 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "채팅 방을 찾을 수 없음")
+    })
+    @GetMapping("/rooms/{roomId}")
+    public ResponseEntity<?> getRoomById(@PathVariable String roomId) {
+        ChatRoom chatRoom = chatRoomRepository.getRoomById(roomId);
+        if (chatRoom != null) {
+            return new ResponseEntity<>(chatRoom, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("채팅 방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Operation(summary = "방에 입장", description = "채팅 방에 입장합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "방 입장 성공"),
+            @ApiResponse(responseCode = "404", description = "채팅 방을 찾을 수 없음")
+    })
+    @PostMapping("/rooms/{roomId}/enter")
+    public ResponseEntity<?> enterRoom(@PathVariable String roomId) {
+        ChatRoom chatRoom = chatRoomRepository.getRoomById(roomId);
+        if (chatRoom != null) {
+            try {
+                chatRoomRepository.enterRoom(roomId);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return new ResponseEntity<>("채팅 방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Operation(summary = "메시지 전송", description = "STOMP를 통해 채팅 메시지를 전송합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "메시지 전송 성공"),
+            @ApiResponse(responseCode = "404", description = "채팅 방을 찾을 수 없음")
+    })
+    @MessageMapping("/chat/message")
+    @SendTo("/sub/chat/room/{roomId}")
+    public ResponseEntity<?> sendMessage(ChatMessage message) {
+        ChannelTopic topic = chatRoomRepository.getTopic(message.getRoomId());
+        if (topic != null) {
+            try {
+                redisPublisher.publish(topic, message);
+                return new ResponseEntity<>(message, HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return new ResponseEntity<>("채팅 방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Operation(summary = "메시지 전송", description = "REST API를 통해 채팅 메시지를 전송합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "메시지 전송 성공"),
+            @ApiResponse(responseCode = "404", description = "채팅 방을 찾을 수 없음")
+    })
+    @PostMapping("/chat/message")
+    public ResponseEntity<?> sendMessageTest(@RequestBody ChatMessage message) {
+        ChannelTopic topic = chatRoomRepository.getTopic(message.getRoomId());
+        if (topic != null) {
+            try {
+                redisPublisher.publish(topic, message);
+                return new ResponseEntity<>(message, HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return new ResponseEntity<>("채팅 방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 }
