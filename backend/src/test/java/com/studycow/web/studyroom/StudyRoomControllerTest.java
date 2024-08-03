@@ -7,15 +7,17 @@ import com.studycow.dto.studyroom.StudyRoomDto;
 import com.studycow.dto.studyroom.StudyRoomRequestDto;
 import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.dto.user.CustomUserInfoDto;
+import com.studycow.service.file.FileService;
 import com.studycow.service.studyroom.StudyRoomService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,6 +48,9 @@ public class StudyRoomControllerTest {
 
     @MockBean
     private StudyRoomService studyRoomService;
+
+    @MockBean
+    private FileService fileService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -86,8 +91,7 @@ public class StudyRoomControllerTest {
                 0,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                "testNickname",
-                LocalDate.now());
+                "testNickname");
 
         // CustomUserDetails 객체 생성
         userDetails = new CustomUserDetails(customUserInfoDto);
@@ -108,20 +112,29 @@ public class StudyRoomControllerTest {
     public void testCreateStudyRoom() throws Exception {
         doNothing().when(studyRoomService).createStudyRoom(any(StudyRoomDto.class));
 
-        mockMvc.perform(post("/room/create")
+
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/room/create")
+                        .file("roomThumb", new byte[]{}) // 빈 파일을 첨부하거나 실제 파일을 첨부
+                        .param("roomTitle", "Test Study Room")
+                        .param("roomMaxPerson", "5")
+                        .param("roomEndDate", "2025-08-03")
+                        .param("roomStatus", "1")
+                        .param("roomContent", "This is a test study room")
                         .with(user(userDetails))
                         .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(studyRoomRequestDto)))
-                .andExpect(status().isCreated())
-                .andExpect(content().string("스터디룸 생성 성공"));
+                        .with(request -> {
+                            request.setMethod("POST"); // POST 메서드로 설정
+                            return request;
+                        }))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string("스터디룸 생성 성공"));
     }
 
     /**
      * 스터디룸 상세 조회 테스트
      *
      * @throws Exception
-     */
+    */
     @Test
     @WithMockUser
     public void testGetStudyRoomInfo() throws Exception {
@@ -137,7 +150,7 @@ public class StudyRoomControllerTest {
      * 스터디룸 목록 조회 테스트
      *
      * @throws Exception
-     */
+    */
     @Test
     @WithMockUser
     public void testListStudyRoom() throws Exception {
@@ -159,19 +172,27 @@ public class StudyRoomControllerTest {
      * </pre>
      *
      * @throws Exception
-     */
+    */
     @Test
     @WithMockUser
     public void testUpdateStudyRoom() throws Exception {
         doNothing().when(studyRoomService).updateStudyRoom(any(Long.class), any(StudyRoomRequestDto.class), any(Integer.class));
 
-        mockMvc.perform(patch("/room/1")
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/room/1")
+                        .file("roomThumb", new byte[]{}) // 빈 파일을 첨부하거나 실제 파일을 첨부
+                        .param("roomTitle", "Test Study Room")
+                        .param("roomMaxPerson", "5")
+                        .param("roomEndDate", "2025-08-02")
+                        .param("roomStatus", "1")
+                        .param("roomContent", "This is a test study room")
                         .with(user(userDetails))
                         .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(studyRoomRequestDto)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("스터디룸 수정 성공"));
+                        .with(request -> {
+                                request.setMethod("PATCH"); // PATCH 메서드로 설정
+                                return request;
+                        }))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("스터디룸 수정 성공"));
     }
 
 }

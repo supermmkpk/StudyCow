@@ -1,4 +1,4 @@
-package com.studycow.dto;
+package com.studycow.dto.score;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class SubjectCodeDto {
-    private int subCode;
-    private String subName;
-    private int subMaxScore;
+public class ScoreDetailStatsDto {
+    private int catCode;
+    private String catName;
+    private int wrongCnt;
 }

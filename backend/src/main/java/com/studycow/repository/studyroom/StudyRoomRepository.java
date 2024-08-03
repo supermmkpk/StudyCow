@@ -6,6 +6,7 @@ import com.studycow.dto.studyroom.StudyRoomDto;
 import com.studycow.dto.studyroom.StudyRoomRequestDto;
 import jakarta.persistence.PersistenceException;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -27,5 +28,7 @@ public interface StudyRoomRepository {
     List<StudyRoomDto> listStudyRoom(ListOptionDto listOptionDto) throws PersistenceException;
 
     /** 스터디룸 수정 */
-    void updateStudyRoom(Long studyRoomId, StudyRoomRequestDto requestDto, int userId) throws PersistenceException;
+    void updateStudyRoom(Long studyRoomId, StudyRoomRequestDto requestDto, int userId) throws PersistenceException, IOException;
+
+
 }

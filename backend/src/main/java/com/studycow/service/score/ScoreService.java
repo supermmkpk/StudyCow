@@ -1,8 +1,7 @@
 package com.studycow.service.score;
 
-import com.studycow.dto.SubjectCodeDto;
-import com.studycow.dto.score.ScoreDto;
-import com.studycow.dto.score.ScoreTargetDto;
+import com.studycow.dto.common.SubjectCodeDto;
+import com.studycow.dto.score.*;
 import jakarta.persistence.PersistenceException;
 
 import java.util.List;
@@ -17,32 +16,38 @@ import java.util.Map;
  */
 public interface ScoreService {
     /** 유저 과목별 성적 리스트 조회 */
-    List<ScoreDto> listScores(int userId, int subCode) throws Exception;
+    ResponseScoreDto listScores(int userId, int subCode, int myId) throws Exception;
 
     /** 단일 성적 조회 */
-    ScoreDto scoreDetail(Long scoreId) throws Exception;
+    ScoreDto scoreDetail(Long scoreId, int userId, int myId) throws Exception;
 
     /** 유저 성적 입력 */
-    void saveScore(Map<String, Object> scoreMap) throws Exception;
+    void saveScore(RequestScoreDto requestScoreDto, int userId) throws Exception;
 
     /** 단일 성적 수정 */
-    void modifyScore(Map<String, Object> scoreMap) throws Exception;
+    void modifyScore(RequestScoreDto requestScoreDto, int userId, Long scoreId) throws Exception;
 
     /** 단일 성적 삭제 */
-    void deleteScore(Long scoreId) throws Exception;
+    void deleteScore(int userId, Long scoreId) throws Exception;
 
     /** 성적 목표 등록 */
-    void saveScoreTarget(Map<String, Object> targetMap) throws Exception;
+    void saveScoreTarget(RequestTargetDto requestTargetDto, int userId) throws Exception;
 
     /** 성적 목표 조회 */
-    List<ScoreTargetDto> targetList(int userId) throws PersistenceException;
+    List<ScoreTargetDto> targetList(int userId, int myId) throws PersistenceException;
 
     /** 성적 목표 삭제 */
-    void deleteTarget(Long scoreId) throws Exception;
+    void deleteTarget(int userId, Long targetId) throws Exception;
 
     /** 성적 목표 수정 */
-    void modifyTarget(Map<String, Object> targetMap) throws Exception;
+    void modifyTarget(RequestTargetDto requestTargetDto, int userId, Long targetId) throws Exception;
 
     /** 미설정 목표 과목 조회 */
     List<SubjectCodeDto> subjectList(int userId) throws PersistenceException;
+
+    /** 과목별 최근 5개 성적 조회 */
+    List<ResponseScoreDto> recentScores(int userId) throws Exception;
+
+    /** 최근 n개월간의 성적 통계 */
+    List<ResponseStatsDto> scoreStats(int userId, int myId, int months) throws Exception;
 }

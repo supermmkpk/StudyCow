@@ -1,0 +1,14 @@
+.studyRoomHeader {
+    width: 1440px;
+    background-color: black;
+    height: 70px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.studyRoomMain {
+    width: 1440px;
+    background-color: grey;
+    height: 703px;
+    box-sizing: border-box;
+}

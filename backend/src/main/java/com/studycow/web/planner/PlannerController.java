@@ -6,6 +6,7 @@ import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.service.planner.PlannerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/planner")
+@CrossOrigin("*")
 @Tag(name = "Planner", description = "플래너 기본 기능")
 public class PlannerController {
 
@@ -36,7 +38,7 @@ public class PlannerController {
     @Operation(summary = "플래너 생성", description = "해당 유저의 플래너를 추가합니다")
     @PostMapping("create")
     public ResponseEntity<?> createSubjectPlan(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                               PlannerCreateDto plannerCreateDto) {
+                                               @RequestBody @Valid PlannerCreateDto plannerCreateDto) {
         try {
             plannerService.createPlan(customUserDetails, plannerCreateDto);
             return new ResponseEntity<>("등록 성공", HttpStatus.CREATED);
@@ -119,6 +121,24 @@ public class PlannerController {
         try{
             plannerService.deletePlan(planId, user);
             return new ResponseEntity<>("삭제 성공",HttpStatus.OK);
+        }catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "플랜 자동생성", description = "플랜을 자동으로 생성합니다")
+    @GetMapping("/auto/{planId}")
+    public ResponseEntity<?> autoPlan(@AuthenticationPrincipal CustomUserDetails user,
+                                     @PathVariable int planId) {
+
+        try{
+            int userId = user.getUser().getUserId();
+
+            PlannerGetDto plan = plannerService.getPlanByIdForUser(userId,planId);
+
+            return new ResponseEntity<>(plan, HttpStatus.OK);
+
+            
         }catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

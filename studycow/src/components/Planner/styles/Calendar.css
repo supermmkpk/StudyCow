@@ -1,0 +1,75 @@
+.Calendar {
+    font-weight: bold;
+    width: 350px;
+    height: auto;
+    border-radius: 15px;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    overflow: hidden;
+    background-color: #e9e9eb;
+  }
+  
+  .calendarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #b0b6b7;
+    color: #f8f8f8;
+  }
+  
+  .calendarButton {
+    background: none;
+    border: none;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin: 0;
+    padding: 0px 20px;
+  }
+  
+  .calendarButton:hover {
+    transform: scale(1.2);
+  }
+  
+  .MonthYear {
+    margin-top: 7px;
+    font-family: "CustomFontGothic", sans-serif;
+    font-size: 25px;
+  }
+  
+  .calendarGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 15px;
+    background-color: #e9e9eb;
+  }
+  
+  .DayBase {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    border-radius: 25%;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+  
+  .WeekDay {
+    font-weight: bold;
+    color: #3b3b3e;
+  }
+  
+  .Day {
+    background-color: var(--day-bg-color, #f8f8f8);
+    color: var(--day-color, black);
+    cursor: pointer;
+    border: var(--day-border, none);
+  }
+  
+  .Day:hover {
+    background-color: var(--day-hover-bg-color, #e6f2ff);
+  }
+  

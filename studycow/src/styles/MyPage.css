@@ -18,6 +18,7 @@
   .MyPageSidebar {
     z-index: 2;
     width: 395px;
+    position: relative;
     background-color: #7092BE;
     box-sizing: border-box;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
@@ -25,7 +26,7 @@
   
   .MyPageContent {
     padding: 100px;
-    padding-top: 200px;
+    padding-top: 50px;
     z-index: 1;
     width: 804px;
     background-color: #fff;
