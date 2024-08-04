@@ -9,9 +9,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "CHAT", description = "채팅 관련 메서드")
+@Slf4j
 public class ChatController {
 
     private final ChatRoomRepository chatRoomRepository;
@@ -77,24 +80,20 @@ public class ChatController {
         }
     }
 
-    @Operation(summary = "메시지 전송", description = "STOMP를 통해 채팅 메시지를 전송합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "메시지 전송 성공"),
-            @ApiResponse(responseCode = "404", description = "채팅 방을 찾을 수 없음")
-    })
+
     @MessageMapping("/chat/message")
-    @SendTo("/sub/chat/room/{roomId}")
-    public ResponseEntity<?> sendMessage(ChatMessage message) {
+    public void sendMessage(ChatMessage message) {
+        log.info(message.toString());
         ChannelTopic topic = chatRoomRepository.getTopic(message.getRoomId());
+        log.info(topic.toString());
         if (topic != null) {
             try {
+                log.info("topic :"+topic.toString()+" message: " + message.getMessage());
                 redisPublisher.publish(topic, message);
-                return new ResponseEntity<>(message, HttpStatus.OK);
+
             } catch (Exception e) {
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+                log.info(e.getMessage());
             }
-        } else {
-            return new ResponseEntity<>("채팅 방을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -108,6 +107,7 @@ public class ChatController {
         ChannelTopic topic = chatRoomRepository.getTopic(message.getRoomId());
         if (topic != null) {
             try {
+                log.info("topic :"+topic.toString()+" message: " + message.getMessage());
                 redisPublisher.publish(topic, message);
                 return new ResponseEntity<>(message, HttpStatus.OK);
             } catch (Exception e) {
