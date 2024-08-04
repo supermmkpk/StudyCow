@@ -17,7 +17,6 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  * @author 채기훈
  * @since JDK17
  */
-
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker

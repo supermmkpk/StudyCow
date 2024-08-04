@@ -1,6 +1,5 @@
-package com.studycow.config;
+package com.studycow.config.redis;
 
-import com.studycow.domain.UserStudyRoomChat;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -16,7 +15,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @author 채기훈
  * @since JDK17
  */
-
 @Configuration
 public class RedisConfig {
 
