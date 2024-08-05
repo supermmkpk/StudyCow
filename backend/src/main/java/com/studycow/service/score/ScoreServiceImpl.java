@@ -208,7 +208,7 @@ public class ScoreServiceImpl implements ScoreService{
      */
     @Override
     public List<ScoreDto> recentUserScore(int userId) throws Exception {
-            // 최근 5개 성적
+            // 최근 10개 성적
             List<ScoreDto> recentScoreList = scoreRepository.listScores(userId, null, userId, 10);
 
             // 오답 유형 리스트 조회

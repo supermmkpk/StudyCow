@@ -12,7 +12,15 @@ public class PlannerChatRequest {
     private String model;
     private List<Message> messages;
 
-    public PlannerChatRequest(String model, List<ScoreDto> recentScores) {
+    /**
+     * 플래너 자동 생성 Prompt
+     *
+     * @param model GPT 모델
+     * @param recentScores 최근 점수 목록(json)
+     * @param requestDay 플랜 요청 일수(몇일치?)
+     * @param startDay 시작 일자(YYYY-MM-DD)
+     */
+    public PlannerChatRequest(String model, List<ScoreDto> recentScores, int requestDay, String startDay) {
 
         StringBuilder content = new StringBuilder();
         content
@@ -85,9 +93,6 @@ public class PlannerChatRequest {
                 .append("} \n ``` \n");
 
         // 과목 코드 DB
-//                .append("``` \n")
-
-
         content
                 .append("과목 테이블의 각 칼럼의 의미, DDL, 테이블 내용은 다음과 같습니다. 칼럼 의미, DDL, 테이블을 잘 숙지하여 과목코드, 과목명, 과목 최대 점수에 착오 없기 바랍니다. \n")
                 .append("sub_code : 과목 코드\n")
@@ -224,14 +229,19 @@ public class PlannerChatRequest {
                 .append("- 학습 내용은 구체적이고 실행 가능해야 합니다. \n")
                 .append("- 과목별 세부 유형에 대한 계획을 제공해야 합니다. \n")
                 .append("- 과목 테이블(t_subject_code)의 sub_code와 세부 유형 테이블(t_category)의 sub_code는 일치해야 합니다. \n")
-                .append("- 계획은 다양한 학습 방법(예: 복습, 문제 풀이, 요약 정리 등)을 포함해야 합니다. \n\n")
+                .append("- 계획은 다양한 학습 방법(예: 복습, 문제 풀이, 요약 정리, 모의고사 풀이, 오답 노트 등)을 포함해야 합니다. \n\n")
                 .append("출력 형식: \n")
                 .append("{ \n")
                 .append("  \"analysis\": \"데이터 분석 및 전략 설명 (문자열)\", \n")
                 .append("  \"plans\": [PlannerCreateDto 객체들의 배열] \n")
                 .append("} \n")
                 .append(" \n")
-                .append("이 형식에 맞춰 분석 결과와 7일간의 학습 계획을 JSON 형태로 제공해주세요.");
+                .append("이 형식에 맞춰 분석 결과와 ")
+                .append(requestDay)
+                .append("일간의 학습 계획을 JSON 형태로 제공해주세요! \n")
+                .append("단, 학습 계획은 ")
+                .append(startDay)
+                .append("부터 시작해야 합니다.");
 
         System.out.println(content.toString());
 
@@ -239,4 +249,5 @@ public class PlannerChatRequest {
         this.messages =  new ArrayList<>();
         this.messages.add(new Message("user", content.toString()));
     }
+
 }
