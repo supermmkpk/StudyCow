@@ -5,7 +5,7 @@ import RoomContent from './RoomContent.jsx'
 import RoomChat from "./RoomChat.jsx";
 import RoomPlanner from "./RoomPlanner.jsx";
 import './styles/StudyRoom.css'
-import useStudyStore from "../../stores/studies.js";
+import useStudyStore from "../../stores/study.js";
 
 function StudyRoom() {
   const {showChat, showList, showLank} = useStudyStore();

@@ -1,5 +1,6 @@
 package com.studycow.web.planner;
 
+import com.studycow.dto.plan.PlanCountByDateDto;
 import com.studycow.dto.plan.PlannerCreateDto;
 import com.studycow.dto.plan.PlannerGetDto;
 import com.studycow.dto.user.CustomUserDetails;
@@ -81,6 +82,19 @@ public class PlannerController {
 
     }
 
+    @Operation(summary = "플래너 월 및 일자별 기준 개수 조회", description = "선택한 월의 플래너 일자별 개수를 출력합니다.")
+    @GetMapping("grass/{year}/{month}")
+    public ResponseEntity<?> grassPlan(@AuthenticationPrincipal CustomUserDetails user,@PathVariable int year,@PathVariable int month) {
+        try {
+            List<PlanCountByDateDto> grass = plannerService.getPlanCountByDateForUser(month, year, user.getUser().getUserId());
+            return new ResponseEntity<>(grass, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
     @Operation(summary = "플래너 상세 조회", description = "선택한 플래너의 상세 정보를 출력합니다")
     @GetMapping("{planId}")
     public ResponseEntity<?> getPlan(@AuthenticationPrincipal CustomUserDetails user,
@@ -126,21 +140,4 @@ public class PlannerController {
         }
     }
 
-    @Operation(summary = "플랜 자동생성", description = "플랜을 자동으로 생성합니다")
-    @GetMapping("/auto/{planId}")
-    public ResponseEntity<?> autoPlan(@AuthenticationPrincipal CustomUserDetails user,
-                                     @PathVariable int planId) {
-
-        try{
-            int userId = user.getUser().getUserId();
-
-            PlannerGetDto plan = plannerService.getPlanByIdForUser(userId,planId);
-
-            return new ResponseEntity<>(plan, HttpStatus.OK);
-
-            
-        }catch(Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
 }

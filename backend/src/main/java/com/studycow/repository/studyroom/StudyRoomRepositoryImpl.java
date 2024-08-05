@@ -2,9 +2,15 @@ package com.studycow.repository.studyroom;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberTemplate;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
 import com.studycow.domain.StudyRoom;
+import com.studycow.domain.UserStudyRoomEnter;
+import com.studycow.dto.calculate.RankRoomDto;
+import com.studycow.dto.calculate.RankUserDto;
 import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.studyroom.StudyRoomDto;
 import com.studycow.dto.studyroom.StudyRoomRequestDto;
@@ -18,9 +24,15 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.studycow.domain.QStudyRoom.*;
+import static com.studycow.domain.QUserStudyRoomCalculate.userStudyRoomCalculate;
+import static com.studycow.domain.QUserStudyRoomEnter.userStudyRoomEnter;
+import static com.studycow.domain.QUserStudyTImeCalculate.userStudyTImeCalculate;
 
 
 /**
@@ -157,6 +169,84 @@ public class StudyRoomRepositoryImpl implements StudyRoomRepository {
     }
 
     /**
+     * 최근 입장한 스터디룸 목록 조회
+     *
+     * @param userId : 유저Id(로그인 유저)
+     */
+    @Override
+    public List<StudyRoomDto> recentStudyRoom(int userId) throws PersistenceException {
+        return queryFactory
+                .select(Projections.constructor(StudyRoomDto.class,
+                        userStudyRoomEnter.studyRoom.id,
+                        userStudyRoomEnter.studyRoom.roomTitle,
+                        userStudyRoomEnter.studyRoom.roomMaxPerson,
+                        userStudyRoomEnter.studyRoom.roomNowPerson,
+                        userStudyRoomEnter.studyRoom.roomCreateDate,
+                        userStudyRoomEnter.studyRoom.roomEndDate,
+                        userStudyRoomEnter.studyRoom.roomStatus,
+                        userStudyRoomEnter.studyRoom.roomUpdateDate,
+                        userStudyRoomEnter.studyRoom.roomContent,
+                        userStudyRoomEnter.studyRoom.roomThumb,
+                        userStudyRoomEnter.studyRoom.user.id))
+                .from(userStudyRoomEnter)
+                .where(userStudyRoomEnter.user.id.eq(userId))
+                .groupBy(userStudyRoomEnter.studyRoom.id)
+                .orderBy(userStudyRoomEnter.id.max().desc())
+                .fetch();
+    }
+
+    /**
+     * 날짜별 방 랭킹
+     *
+     * @param date : 조회 기준 날짜
+     */
+    @Override
+    public List<RankRoomDto> rankStudyRoom(LocalDate date, Integer limit) throws PersistenceException {
+        var rank = Expressions.numberTemplate(Integer.class,
+                "rank() over (order by {0} desc)", userStudyRoomCalculate.sumRoomTime);
+
+        return queryFactory
+                .select(Projections.constructor(RankRoomDto.class,
+                        rank,
+                        userStudyRoomCalculate.studyRoom.id,
+                        userStudyRoomCalculate.studyRoom.roomTitle,
+                        userStudyRoomCalculate.procDate,
+                        userStudyRoomCalculate.sumRoomTime))
+                .from(userStudyRoomCalculate)
+                .where(userStudyRoomCalculate.procDate.eq(hasDate(date))
+                        .and(userStudyRoomCalculate.sumRoomTime.ne(0)))
+                .orderBy(userStudyRoomCalculate.sumRoomTime.desc())
+                .limit(hasLimit(limit))
+                .fetch();
+    }
+
+    /**
+     * 날짜별 유저 랭킹
+     *
+     * @param date : 조회 기준 날짜
+     * @param limit : 순위 제한
+     */
+    @Override
+    public List<RankUserDto> rankUser(LocalDate date, Integer limit) throws PersistenceException {
+        var rank = Expressions.numberTemplate(Integer.class,
+                "rank() over (order by {0} desc)", userStudyTImeCalculate.sumStudyTime);
+
+        return queryFactory
+                .select(Projections.constructor(RankUserDto.class,
+                        rank,
+                        userStudyTImeCalculate.user.id,
+                        userStudyTImeCalculate.user.userNickname,
+                        userStudyTImeCalculate.procDate,
+                        userStudyTImeCalculate.sumStudyTime))
+                .from(userStudyTImeCalculate)
+                .where(userStudyTImeCalculate.procDate.eq(hasDate(date))
+                        .and(userStudyTImeCalculate.sumStudyTime.ne(0)))
+                .orderBy(userStudyTImeCalculate.sumStudyTime.desc())
+                .limit(hasLimit(limit))
+                .fetch();
+    }
+
+    /**
      * 스터디룸명 검색 동적 쿼리
      *
      * @param searchText 검색어
@@ -165,6 +255,27 @@ public class StudyRoomRepositoryImpl implements StudyRoomRepository {
     private BooleanExpression containsName(String searchText) {
         return (searchText != null && !searchText.isBlank())
                 ? studyRoom.roomTitle.contains(searchText) : null;
+    }
+
+    /**
+     * 랭킹조회 동적 쿼리
+     *
+     * @param searchDate 검색날짜
+     * @return BooleanExpression
+     */
+    private LocalDate hasDate(LocalDate searchDate) {
+        return (searchDate != null)
+                ? searchDate : LocalDateTime.now().minusHours(6).toLocalDate();
+    }
+
+    /**
+     * 랭킹조회 동적 쿼리
+     *
+     * @param limit 랭킹제한
+     * @return int
+     */
+    private int hasLimit(Integer limit) {
+        return (limit != null && limit <= 0) ? limit : 10;
     }
 
 }

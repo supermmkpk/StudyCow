@@ -1,9 +1,11 @@
 package com.studycow.service.studyroom;
 
+import com.studycow.dto.calculate.RankDto;
 import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.studyroom.StudyRoomDto;
 import com.studycow.dto.studyroom.StudyRoomRequestDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -27,5 +29,11 @@ public interface StudyRoomService {
 
     /** 스터디룸 수정 */
     void updateStudyRoom(Long studyRoomId, StudyRoomRequestDto studyRoomRequestDto, int userId) throws Exception;
+
+    /** 최근 입장한 스터디룸 목록 조회 */
+    List<StudyRoomDto> recentStudyRoom(int userId) throws Exception;
+
+    /** 날짜 별 랭킹 조회 */
+    RankDto getRanks(LocalDate date, Integer limit) throws Exception;
 
 }

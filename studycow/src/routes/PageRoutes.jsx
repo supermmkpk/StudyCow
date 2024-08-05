@@ -4,6 +4,8 @@ import { Route, Routes } from "react-router-dom";
 import MainPage from "../views/MainPage.jsx";
 // 비로그인
 import Main_Unlogin from "../components/MainPage/Main_Unlogin.jsx";
+// 로그인
+import Main_Login from "../components/MainPage/Main_Login.jsx";
 
 // 로그인/회원가입페이지
 import SignPage from "../views/SignPage.jsx";
@@ -29,6 +31,9 @@ import StudyList from "../components/StudyList/StudyList.jsx";
 import StudyCreate from "../components/StudyCreate/StudyCreate.jsx";
 import StudyRoom from "../components/StudyRoom/StudyRoom.jsx";
 
+// 성적 등록
+import ScoreRegist from "../components/ScoreRegist/ScoreRegist.jsx";
+
 const PageRoutes = () => (
   <Routes>
     {/* 마이페이지 */}
@@ -39,9 +44,7 @@ const PageRoutes = () => (
     </Route>
 
     {/* 홈 */}
-    <Route path="/" element={<MainPage />}>
-      <Route path="" element={<Main_Unlogin />} />
-    </Route>
+    <Route path="/" element={<MainPage />} />
 
     {/* 로그인 */}
     <Route path="/login" element={<SignPage />}></Route>
@@ -51,7 +54,7 @@ const PageRoutes = () => (
       <Route path="" element={<StudyList />} />
       <Route path="create" element={<StudyCreate />} />
     </Route>
-              {/* 스터디룸 테스트 */}
+    {/* 스터디룸 테스트 */}
     <Route path="/test" element={<StudyRoom />} />
 
     {/* 플랜 */}
@@ -63,6 +66,9 @@ const PageRoutes = () => (
 
     {/* 성적분석 */}
     <Route path="/analyze" element={<a>analyze</a>}></Route>
+
+    {/*성적등록*/}
+    <Route path="/score/regist" element={<ScoreRegist />} />
   </Routes>
 );
 
