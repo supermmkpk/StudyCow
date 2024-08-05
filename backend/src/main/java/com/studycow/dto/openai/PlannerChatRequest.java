@@ -20,11 +20,11 @@ public class PlannerChatRequest {
      * @param requestDay 플랜 요청 일수(몇일치?)
      * @param startDay 시작 일자(YYYY-MM-DD)
      */
-    public PlannerChatRequest(String model, List<ScoreDto> recentScores, int requestDay, String startDay) {
+    public PlannerChatRequest(String model, List<ScoreDto> recentScores, int requestDay, String startDay, int studyTime) {
 
         StringBuilder content = new StringBuilder();
         content
-            .append("당신은 학생들의 학습 데이터를 분석하고 개인화된 수능 학습 계획을 생성하는 AI 교육 전문가입니다. 주어진 학생의 최근 점수 데이터를 기반으로 수능 교육 과정을 기반으로 하는 효과적인 학습 계획을 수립해야 합니다. \n\n")
+            .append("당신은 학생들의 학습 데이터를 분석하고 개인화된 수능 학습 계획을 생성하는 AI 교육 전문가입니다. 주어진 학생의 최근 점수 데이터를 기반으로 수능 교육 과정에 대하여 효과적인 학습 계획을 수립해야 합니다. \n\n")
             .append("입력 데이터: \n");
 
         // 학생의 최근 점수 데이터(5개)
@@ -89,7 +89,7 @@ public class PlannerChatRequest {
                 .append("    /** 오답 유형명 */ \n")
                 .append("    private String catName; \n")
                 .append("    /** 오답 문항 개수 */ \n")
-                .append("    private int wrongCnt;")
+                .append("    private int wrongCnt; \n")
                 .append("} \n ``` \n");
 
         // 과목 코드 DB
@@ -217,7 +217,11 @@ public class PlannerChatRequest {
                 .append("2. 가장 개선이 필요한 과목을 식별하세요. \n")
                 .append("3. 각 과목에 대한 맞춤형 학습 전략을 개발하세요. \n")
                 .append("4. 우선순위를 정하고 시간 관리 제안을 포함한 종합적인 학습 계획을 수립하세요. \n\n")
-                .append("그리고 이 분석을 바탕으로 다음 7일간의 일일 학습 계획을 PlannerCreateDto 형식의 JSON 배열로 생성해주세요. 각 계획은 다음 필드를 포함해야 합니다: \n")
+                .append("그리고 이 분석을 바탕으로 ")
+                .append(startDay)
+                .append("부터 다음 ")
+                .append(requestDay)
+                .append("일간의 일일 학습 계획을 PlannerCreateDto 형식의 JSON 배열로 생성해주세요. 각 계획은 다음 필드를 포함해야 합니다: \n")
                 .append("- subCode: 과목 코드 (정수) \n")
                 .append("- planDate: 계획 날짜 (YYYY-MM-DD 형식의 문자열) \n")
                 .append("- planContent: 구체적인 학습 내용 (문자열) \n")
@@ -230,18 +234,16 @@ public class PlannerChatRequest {
                 .append("- 과목별 세부 유형에 대한 계획을 제공해야 합니다. \n")
                 .append("- 과목 테이블(t_subject_code)의 sub_code와 세부 유형 테이블(t_category)의 sub_code는 일치해야 합니다. \n")
                 .append("- 계획은 다양한 학습 방법(예: 복습, 문제 풀이, 요약 정리, 모의고사 풀이, 오답 노트 등)을 포함해야 합니다. \n\n")
+                .append("다음 규칙을 반드시 따라주세요: \n")
+                .append("- 매일 총 학습 시간은 정확히 ").append(studyTime).append("분이어야 합니다. \n\n")
                 .append("출력 형식: \n")
                 .append("{ \n")
                 .append("  \"analysis\": \"데이터 분석 및 전략 설명 (문자열)\", \n")
                 .append("  \"plans\": [PlannerCreateDto 객체들의 배열] \n")
                 .append("} \n")
                 .append(" \n")
-                .append("이 형식에 맞춰 분석 결과와 ")
-                .append(requestDay)
-                .append("일간의 학습 계획을 JSON 형태로 제공해주세요! \n")
-                .append("단, 학습 계획은 ")
-                .append(startDay)
-                .append("부터 시작해야 합니다.");
+                .append("이 형식에 맞춰 분석 결과와 학습 계획을 JSON 형태로 제공해주세요!");
+
 
         System.out.println(content.toString());
 
