@@ -21,6 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <pre>
+ *     전역 예외처리기 설정
+ * </pre>
+ * @author 채기훈
+ * @since JDK17
+ */
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -71,15 +78,27 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
         log.error(e.getMessage());
-        ErrorResponse response = new ErrorResponse(ErrorCode.NO_AUTHENTICAION);
+        ErrorResponse response = new ErrorResponse(ErrorCode.NOT_AUTHENTICAION);
         return ResponseEntity.status(response.getErrorCode().getStatus()).body(response);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    protected ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
+    /**
+     * 시큐리티에서 인가 처리 대신해서 사용 x
+     * @param e
+     * @return
+     */
+//    @ExceptionHandler(AuthenticationException.class)
+//    protected ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
+//        log.error(e.getMessage());
+//        ErrorResponse response = new ErrorResponse(ErrorCode.NO_AUTHENTICAION);
+//        return ResponseEntity.status(response.getErrorCode().getStatus()).body(response);
+//    }
+
+
+    @ExceptionHandler(value = {CustomException.class})
+    protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
         log.error(e.getMessage());
-        ErrorResponse response = new ErrorResponse(ErrorCode.NO_AUTHENTICAION);
+        ErrorResponse response = new ErrorResponse(ErrorCode.BAD_REQUEST);
         return ResponseEntity.status(response.getErrorCode().getStatus()).body(response);
     }
-
 }
