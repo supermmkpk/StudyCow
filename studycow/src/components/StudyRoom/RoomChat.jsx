@@ -7,9 +7,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/RoomChat.css'
 
 let stompClient = null;
-const roomId = '1';
 
-function RoomChat() {
+function RoomChat(roomId) {
   const { token, userInfo } = useInfoStore();
   
   const [messages, setMessages] = useState([]);
@@ -25,11 +24,11 @@ function RoomChat() {
     stompClient = new Client({
       webSocketFactory: () => socket,
       debug: (str) => {
-        console.log('STOMP: ' + str);
+        // console.log('STOMP: ' + str);
       },
       onConnect: (frame) => {
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/sub/chat/room/' + roomId, function(message) {
+        // console.log('Connected: ' + frame);
+        stompClient.subscribe('/sub/chat/room/' + roomId.roomId, function(message) {
           showMessage(JSON.parse(message.body));
         });
         sendEnterMessage();
@@ -66,7 +65,7 @@ function RoomChat() {
     if (stompClient && stompClient.active) {
       const chatMessage = {
         type: type,
-        roomId: roomId,
+        roomId: roomId.roomId,
         message: message
       };
       stompClient.publish({
