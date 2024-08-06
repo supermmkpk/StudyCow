@@ -31,12 +31,13 @@ const TestAnalyze = () => {
         <h1>{userInfo.userNickName}님 어서오세요</h1>
         <div className="gradeSubjectSelect">
           <select
-            id="subject"
             name="subject"
             onChange={handleSubjectChange}
             value={selectedSubject}
             className="form-control ml-2"
           >
+            {/* disabled: 다른 과목 선택 후 '과목 선택'을 선택할 수 없도록 하는 역할
+            hidden: 다른 과목 선택 후 '과목 선택'이 목록에 표시되지 않게 하는 역할 */}
             <option value="" disabled hidden>
               과목 선택
             </option>
