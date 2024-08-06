@@ -1,28 +1,24 @@
 package com.studycow.repository.score;
 
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.studycow.domain.*;
 import com.studycow.dto.common.SubjectCodeDto;
 import com.studycow.dto.score.*;
+import com.studycow.dto.target.RequestTargetDto;
+import com.studycow.dto.target.ScoreTargetDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static com.studycow.domain.QSubjectCode.subjectCode;
 import static com.studycow.domain.QUserScoreTarget.userScoreTarget;
@@ -58,14 +54,15 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      * @throws PersistenceException : JPA 표준 예외
      */
     @Override
-    public List<ScoreDto> listScores(int userId, Integer subCode, int myId, int limitCnt) throws PersistenceException {
+    public List<ScoreDto> listScores(int userId, Integer subCode, int myId, Integer limitCnt) throws PersistenceException {
         try{
             User user = em.find(User.class, userId);
 
             if(user.getId() != myId && user.getUserPublic() == 0){
                 throw new IllegalStateException("비공개 유저입니다.");
             }
-            var query = queryFactory
+
+            return queryFactory
                     .select(Projections.constructor(ScoreDto.class,
                             userSubjectScore.id,
                             userSubjectScore.subjectCode.code,
@@ -77,11 +74,9 @@ public class ScoreRepositoryImpl implements ScoreRepository{
                     .from(userSubjectScore)
                     .where(userSubjectScore.user.id.eq(user.getId())
                             .and(hasSubCode(subCode)))
-                    .orderBy(userSubjectScore.testDate.desc());
-            if(limitCnt > 0){
-                query.limit(limitCnt);
-            }
-            return query.fetch();
+                    .orderBy(userSubjectScore.testDate.desc())
+                    .limit(hasLimit(limitCnt))
+                    .fetch();
 
         }catch(IllegalStateException e) {
             throw e;
@@ -289,160 +284,8 @@ public class ScoreRepositoryImpl implements ScoreRepository{
         }
     }
 
-    /** 성적 목표 등록
-     * <pre>
-     *      페이지에서 입력한 목표 성적을 입력한다
-     * </pre>
-     * @param requestTargetDto : 목표 성적 정보
-     * @param userId : 유저 id
-     * @throws PersistenceException : JPA 표준 예외
-     */
-    @Override
-    public void saveScoreTarget(RequestTargetDto requestTargetDto, int userId) throws PersistenceException {
-        try {
-            User user = em.find(User.class, userId);
-            SubjectCode subjectCode = em.find(SubjectCode.class, requestTargetDto.getSubCode());
-            int targetScore = requestTargetDto.getTargetScore();
-            int targetGrade = requestTargetDto.getTargetGrade();
-
-            UserScoreTarget userScoreTarget = new UserScoreTarget(
-                    null, user, subjectCode, targetScore, targetGrade
-            );
-
-            em.persist(userScoreTarget);
-        }catch(Exception e){
-            throw new PersistenceException("목표 등록 중 에러 발생", e);
-        }
-    }
-
-    /** 성적 목표 리스트 조회
-     * <pre>
-     *      등록한 성적 목표의 목록을 조회한다
-     * </pre>
-     * @param userId : 유저 ID
-     * @throws PersistenceException : JPA 표준 예외
-     */
-    @Override
-    public List<ScoreTargetDto> targetList(int userId, int myId) throws PersistenceException {
-        try{
-            User user = em.find(User.class, userId);
-
-            if(user.getId() != myId && user.getUserPublic() == 0){
-                throw new IllegalStateException("비공개 유저입니다.");
-            }
-            return queryFactory
-                    .select(Projections.constructor(ScoreTargetDto.class,
-                            userScoreTarget.id,
-                            userScoreTarget.subjectCode.code,
-                            userScoreTarget.subjectCode.name,
-                            userScoreTarget.targetScore,
-                            userScoreTarget.targetGrade,
-                            userScoreTarget.subjectCode.maxScore))
-                    .from(userScoreTarget)
-                    .where(userScoreTarget.user.id.eq(userId))
-                    .orderBy(userScoreTarget.subjectCode.code.asc())
-                    .fetch();
-        }catch(IllegalStateException e) {
-            throw e;
-        }catch(Exception e){
-            throw new PersistenceException("목표 조회 중 에러 발생", e);
-        }
-    }
-
-    /** 성적 목표 삭제
-     * <pre>
-     *      등록된 성적 목표를 삭제한다
-     * </pre>
-     * @param targetId : 성적 목표 ID
-     * @throws PersistenceException : JPA 표준 예외
-     */
-    @Override
-    public void deleteScoreTarget(int userId, Long targetId) throws PersistenceException {
-        try{
-            UserScoreTarget ut = em.find(UserScoreTarget.class, targetId);
-            if(ut != null) {
-                if (ut.getUser().getId() != userId) {
-                    throw new IllegalStateException("권한이 없습니다.");
-                }
-                queryFactory
-                        .delete(userScoreTarget)
-                        .where(userScoreTarget.id.eq(targetId))
-                        .execute();
-            }else{
-                throw new EntityNotFoundException("해당 목표를 찾을 수 없습니다.");
-            }
-        }catch(EntityNotFoundException | IllegalStateException e) {
-            throw e;
-        }catch(Exception e){
-            throw new PersistenceException("목표 삭제 중 에러 발생", e);
-        }
-    }
-
-    /** 성적 목표 수정
-     * <pre>
-     *      등록된 성적 목표를 수정한다
-     * </pre>
-     * @param requestTargetDto : 성적 목표 정보
-     * @param userId : 유저id
-     * @throws PersistenceException : JPA 표준 예외
-     */
-    @Override
-    public void modifyScoreTarget(RequestTargetDto requestTargetDto, int userId, Long targetId) throws PersistenceException {
-        try {
-            UserScoreTarget ut = em.find(UserScoreTarget.class, targetId);
-            if(ut != null) {
-                if (ut.getUser().getId() != userId) {
-                    throw new IllegalStateException("권한이 없습니다.");
-                }
-                SubjectCode subjectCode = em.find(SubjectCode.class, requestTargetDto.getSubCode());
-                Integer targetScore = requestTargetDto.getTargetScore();
-                Integer targetGrade = requestTargetDto.getTargetGrade();
-
-                queryFactory
-                        .update(userScoreTarget)
-                        .set(userScoreTarget.subjectCode.code, subjectCode.getCode())
-                        .set(userScoreTarget.targetScore, targetScore)
-                        .set(userScoreTarget.targetGrade, targetGrade)
-                        .where(userScoreTarget.id.eq(ut.getId()))
-                        .execute();
-            }else{
-                throw new EntityNotFoundException("해당 목표를 찾을 수 없습니다.");
-            }
-        }catch(EntityNotFoundException | IllegalStateException e) {
-            throw e;
-        } catch(Exception e) {
-            throw new PersistenceException("목표 수정 중 에러 발생", e);
-        }
-    }
-
-    /** 미등록 목표 과목 조회
-     * <pre>
-     *      목표 등록 시 아직 등록하지 않은 목표 과목을 조회한다
-     * </pre>
-     * @param userId : 유저 id
-     * @throws PersistenceException : JPA 표준 예외
-     */
-    @Override
-    public List<SubjectCodeDto> subjectList(int userId) throws PersistenceException {
-        return queryFactory
-                .select(Projections.constructor(SubjectCodeDto.class,
-                        subjectCode.code,
-                        subjectCode.name,
-                        subjectCode.maxScore))
-                .from(subjectCode)
-                .where(subjectCode.code.notIn(
-                        JPAExpressions
-                                .select(userScoreTarget.subjectCode.code)
-                                .from(userScoreTarget)
-                                .where(userScoreTarget.user.id.eq(userId))
-                )
-                        .and(subjectCode.status.eq(1)))
-                .orderBy(subjectCode.code.asc())
-                .fetch();
-    }
-
     /**
-     * 성적 조회 전 과목 목표 조회
+     * 성적 조회 과목 정보
      * @param userId
      * @param subCode
      * @param myId
@@ -453,7 +296,7 @@ public class ScoreRepositoryImpl implements ScoreRepository{
     public ResponseScoreDto subTarget(int userId, int subCode, int myId) throws PersistenceException {
         try{
             User user = em.find(User.class, userId);
-            SubjectCode subjectCode = em.find(SubjectCode.class, subCode);
+            SubjectCode subCodeInfo = em.find(SubjectCode.class, subCode);
 
             if(user.getId() != myId && user.getUserPublic() == 0){
                 throw new IllegalStateException("비공개 유저입니다.");
@@ -461,17 +304,18 @@ public class ScoreRepositoryImpl implements ScoreRepository{
 
             return queryFactory
                     .select(Projections.constructor(ResponseScoreDto.class,
-                            userScoreTarget.subjectCode.code,
-                            userScoreTarget.subjectCode.name,
+                            subjectCode.code,
+                            subjectCode.name,
                             userScoreTarget.targetScore,
                             userScoreTarget.targetGrade,
-                            userScoreTarget.subjectCode.maxScore
+                            subjectCode.maxScore
                     ))
-                    .from(userScoreTarget)
-                    .where(userScoreTarget.subjectCode.code.eq(subjectCode.getCode())
-                            .and(userScoreTarget.user.id.eq(user.getId())))
+                    .from(subjectCode)
+                    .leftJoin(userScoreTarget).on(
+                            subjectCode.code.eq(userScoreTarget.subjectCode.code)
+                                    .and(userScoreTarget.user.id.eq(user.getId())))
+                    .where(subjectCode.code.eq(subCodeInfo.getCode()))
                     .fetchOne();
-
         }catch(IllegalStateException e) {
             throw e;
         } catch(Exception e) {
@@ -535,15 +379,14 @@ public class ScoreRepositoryImpl implements ScoreRepository{
     }
 
     /**
-     * 과목별 n개월간의 틀린 유형
+     * 과목별 특정 기간동안 틀린 유형
      *
      * @param userId
-     * @param months
      * @return
      * @throws PersistenceException
      */
     @Override
-    public List<ScoreDetailStatsDto> statsDetail(int userId, int subCode, int months, LocalDate now) throws PersistenceException {
+    public List<ScoreDetailStatsDto> statsDetail(int userId, int subCode, LocalDate startDate, LocalDate endDate) throws PersistenceException {
         return queryFactory
                 .select(Projections.constructor(ScoreDetailStatsDto.class,
                         wrongProblem.problemCategory.code,
@@ -553,7 +396,7 @@ public class ScoreRepositoryImpl implements ScoreRepository{
                 .where(wrongProblem.userSubjectScore.user.id.eq(userId)
                         .and(wrongProblem.userSubjectScore.subjectCode.code.eq(subCode))
                         .and(wrongProblem.userSubjectScore.testDate.between(
-                                now.minusMonths(months), now
+                                startDate, endDate
                         )))
                 .groupBy(wrongProblem.problemCategory.code)
                 .orderBy(wrongProblem.problemCategory.code.asc())
@@ -568,6 +411,10 @@ public class ScoreRepositoryImpl implements ScoreRepository{
      */
     private BooleanExpression hasSubCode(Integer subCode) {
         return subCode != null ? userSubjectScore.subjectCode.code.eq(subCode) : null;
+    }
+
+    private int hasLimit(Integer limit) {
+        return (limit != null && limit <= 10) ? limit : 10;
     }
 
 }

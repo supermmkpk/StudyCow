@@ -2,6 +2,8 @@ package com.studycow.service.score;
 
 import com.studycow.dto.common.SubjectCodeDto;
 import com.studycow.dto.score.*;
+import com.studycow.dto.target.RequestTargetDto;
+import com.studycow.dto.target.ScoreTargetDto;
 import com.studycow.repository.common.CommonRepository;
 import com.studycow.repository.score.ScoreRepository;
 import jakarta.persistence.PersistenceException;
@@ -10,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -35,11 +36,12 @@ public class ScoreServiceImpl implements ScoreService{
      * @throws Exception
      */
     @Override
-    public ResponseScoreDto listScores(int userId, int subCode, int myId) throws Exception {
+    public ResponseScoreDto listScores(int userId, int subCode, int myId, Integer limitCnt) throws Exception {
+        // 과목의 목표 조회
         ResponseScoreDto responseScoreDto = scoreRepository.subTarget(userId, subCode, myId);
 
         // 과목별 성적 리스트
-        responseScoreDto.setScores(scoreRepository.listScores(userId, subCode, myId, 0));
+        responseScoreDto.setScores(scoreRepository.listScores(userId, subCode, myId, limitCnt));
 
         // 오답 유형 리스트 조회
         for(ScoreDto scores : responseScoreDto.getScores()){
@@ -49,7 +51,27 @@ public class ScoreServiceImpl implements ScoreService{
             if(scoreDetailDtoList != null && !scoreDetailDtoList.isEmpty())
                 scores.setScoreDetails(scoreDetailDtoList);
         }
-        // return scoreDtoList;
+
+        int scoreSize = responseScoreDto.getScores().size();
+
+        if(scoreSize > 0) {
+            // 가장 최근 성적
+            responseScoreDto.setNowScore(responseScoreDto.getScores().get(0).getTestScore());
+            // 오답유형 통계
+            responseScoreDto.setDetailStats(
+                    scoreRepository.statsDetail(
+                            userId,
+                            subCode,
+                            responseScoreDto.getScores().get(scoreSize - 1).getTestDate(),
+                            responseScoreDto.getScores().get(0).getTestDate()
+                    )
+            );
+        }
+        if(scoreSize > 1)
+            // 성적 등락확인
+            responseScoreDto.setDiffScore(responseScoreDto.getNowScore() -
+                    responseScoreDto.getScores().get(1).getTestScore());
+
         return responseScoreDto;
     }
 
@@ -119,59 +141,6 @@ public class ScoreServiceImpl implements ScoreService{
     }
 
     /**
-     * 성적 목표 등록
-     * @param requestTargetDto : 성적 목표 정보
-     * @throws Exception
-     */
-    @Override
-    @Transactional
-    public void saveScoreTarget(RequestTargetDto requestTargetDto, int userId) throws Exception {
-        scoreRepository.saveScoreTarget(requestTargetDto, userId);
-    }
-
-    /**
-     * 목표 목록 조회
-     * @param userId : 유저 id
-     * @throws Exception
-     */
-    @Override
-    public List<ScoreTargetDto> targetList(int userId, int myId) throws PersistenceException {
-        return scoreRepository.targetList(userId, myId);
-    }
-
-    /**
-     * 성적 목표 삭제
-     * @param targetId : 목표 id
-     * @throws Exception
-     */
-    @Override
-    @Transactional
-    public void deleteTarget(int userId, Long targetId) throws Exception {
-        scoreRepository.deleteScoreTarget(userId, targetId);
-    }
-
-    /**
-     * 성적 목표 수정
-     * @param requestTargetDto : 목표 정보
-     * @throws Exception
-     */
-    @Override
-    @Transactional
-    public void modifyTarget(RequestTargetDto requestTargetDto, int userId, Long targetId) throws Exception {
-        scoreRepository.modifyScoreTarget(requestTargetDto, userId, targetId);
-    }
-
-    /**
-     * 미설정 목표 과목 조회
-     * @param userId : 유저 id
-     * @throws Exception
-     */
-    @Override
-    public List<SubjectCodeDto> subjectList(int userId) throws PersistenceException {
-        return scoreRepository.subjectList(userId);
-    }
-
-    /**
      * 과목별 최근 5개 과목 목표별 성적 조회
      * @param userId : 유저 id
      * @throws Exception
@@ -233,7 +202,7 @@ public class ScoreServiceImpl implements ScoreService{
      */
     @Override
     public List<ResponseStatsDto> scoreStats(int userId, int myId, int months) throws Exception {
-        if(commonRepository.checkPublic(userId, myId) == 1){
+        /*if(commonRepository.checkPublic(userId, myId) == 1){
             LocalDate now = LocalDate.now();
             List<ResponseStatsDto> responseStatsList = scoreRepository.scoreStats(
                     userId, months, now);
@@ -246,7 +215,8 @@ public class ScoreServiceImpl implements ScoreService{
             return responseStatsList;
         }else{
             return null;
-        }
+        }*/
+        return null;
     }
 
 }
