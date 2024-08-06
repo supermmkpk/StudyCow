@@ -1,9 +1,14 @@
 import "./styles/GradeAnalyzeBox.css";
+import RecentGradeGraph from "./RecendGradeGraph";
+import LearningStatus from "./LearningStatus"; // Import LearningStatus component
 
 const GradeAnalyzeBox = () => {
   return (
     <div className="selectedSubjectBox">
-      <h1>상자</h1>
+      <div className="upsidePartBox">
+        <RecentGradeGraph />
+        <LearningStatus />
+      </div>
     </div>
   );
 };

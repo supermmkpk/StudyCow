@@ -6,11 +6,21 @@ import RoomChat from "./RoomChat.jsx";
 import RoomPlanner from "./RoomPlanner.jsx";
 import './styles/StudyRoom.css'
 import useStudyStore from "../../stores/study.js";
+import usePlanStore from "../../stores/plan.js";
 import { useParams } from 'react-router-dom';
-import RoomCam from "./RoomCam.jsx";
+import RoomTimer from "./RoomTimer.jsx";
 
 function StudyRoom() {
   const {showChat, showList, showLank } = useStudyStore();
+  const todayPlans = usePlanStore(state => state.todayPlans);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+
+  console.log(todayPlans)
 
   // URL에서 roomId 추출
   const { roomId } = useParams();
@@ -26,7 +36,8 @@ function StudyRoom() {
             <RoomSidebar />
         </div>
         <div className="studyRoomCamContainer">
-          <RoomContent />
+          <button onClick={openModal}>타이머 열기</button>
+          <RoomTimer isOpen={isModalOpen} onClose={closeModal} />
         </div>
             <div>
             {showList && (

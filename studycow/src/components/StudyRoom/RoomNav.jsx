@@ -4,6 +4,7 @@ import Navbutton from './Navbar/Navbutton.jsx'
 import listButton from './Navbar/img/listButton.png'
 import exitButton from './Navbar/img/exitButton.png'
 import chatButton from './Navbar/img/chatButton.png'
+import timerButton from './Navbar/img/timerButton.png'
 import lankingButton from './Navbar/img/lankingButton.png'
 import useStudyStore from "../../stores/study.js";
 import usePlanStore from "../../stores/plan.js";
@@ -40,6 +41,7 @@ function RoomNav() {
       </div>
       <div className="studyNavButtonContainer">
         <div className="utilButton">
+          <Navbutton image={timerButton} onButtonClick={toggleChat}/>
           <Navbutton image={chatButton} onButtonClick={toggleChat}/>
           <Navbutton image={listButton} onButtonClick={toggleList}/>
           <Navbutton image={lankingButton} onButtonClick={toggleLank}/>

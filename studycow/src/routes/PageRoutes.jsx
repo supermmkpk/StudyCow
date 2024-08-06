@@ -30,6 +30,8 @@ import StudyPage from "../views/StudyPage.jsx";
 import StudyList from "../components/StudyList/StudyList.jsx";
 import StudyCreate from "../components/StudyCreate/StudyCreate.jsx";
 import StudyRoom from "../components/StudyRoom/StudyRoom.jsx";
+import RoomCam from "../components/StudyRoom/RoomCam.jsx";
+import Test from "../components/StudyRoom/Test.jsx";
 
 // 성적 등록
 import ScoreRegist from "../components/ScoreRegist/ScoreRegist.jsx";
@@ -59,6 +61,7 @@ const PageRoutes = () => (
       <Route path="create" element={<StudyCreate />} />
     </Route>
     <Route path="/study/room/:roomId" element={<StudyRoom />} />
+    {/* <Route path="/studytest" element={<Test />} /> */}
 
     {/* 플랜 */}
     <Route path="/plan" element={<PlanPage />}>
