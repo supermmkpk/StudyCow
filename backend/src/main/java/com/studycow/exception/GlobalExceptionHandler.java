@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleException(java.lang.Exception e) {
         log.error(e.getMessage(), e);
         ErrorResponse response = new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR);
-        return ResponseEntity.status(response.getErrorCode().getStatus()).body(response);
+        return ResponseEntity.status(response.getErrorCode()).body(response);
     }
 
 
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
         }
 
         com.studycow.exception.ErrorResponse response  = new com.studycow.exception.ErrorResponse(ErrorCode.BAD_REQUEST,errors);
-        return ResponseEntity.status(response.getErrorCode().getStatus()).body(response);
+        return ResponseEntity.status(response.getErrorCode()).body(response);
     }
 
     /**
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
         log.error(e.getMessage());
         ErrorResponse response = new ErrorResponse(ErrorCode.NOT_AUTHENTICAION);
-        return ResponseEntity.status(response.getErrorCode().getStatus()).body(response);
+        return ResponseEntity.status(response.getErrorCode()).body(response);
     }
 
     /**
@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
         log.error(e.getMessage());
         ErrorResponse response = new ErrorResponse(ErrorCode.NOT_AUTHENTICAION);
-        return ResponseEntity.status(response.getErrorCode().getStatus()).body(response);
+        return ResponseEntity.status(response.getErrorCode()).body(response);
     }
 
 
@@ -100,6 +100,6 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage());
         ErrorCode errorCode = e.getErrorCode();
         ErrorResponse response = new ErrorResponse(errorCode);
-        return ResponseEntity.status(response.getErrorCode().getStatus()).body(response);
+        return ResponseEntity.status(response.getErrorCode()).body(response);
     }
 }
