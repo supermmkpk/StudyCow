@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 import static com.studycow.domain.QStudyRoom.*;
 import static com.studycow.domain.QUserStudyRoomCalculate.userStudyRoomCalculate;
 import static com.studycow.domain.QUserStudyRoomEnter.userStudyRoomEnter;
-import static com.studycow.domain.QUserStudyTImeCalculate.userStudyTImeCalculate;
+import static com.studycow.domain.QUserStudyTimeCalculate.userStudyTimeCalculate;
 
 
 /**
@@ -229,19 +229,19 @@ public class StudyRoomRepositoryImpl implements StudyRoomRepository {
     @Override
     public List<RankUserDto> rankUser(LocalDate date, Integer limit) throws PersistenceException {
         var rank = Expressions.numberTemplate(Integer.class,
-                "rank() over (order by {0} desc)", userStudyTImeCalculate.sumStudyTime);
+                "rank() over (order by {0} desc)", userStudyTimeCalculate.sumStudyTime);
 
         return queryFactory
                 .select(Projections.constructor(RankUserDto.class,
                         rank,
-                        userStudyTImeCalculate.user.id,
-                        userStudyTImeCalculate.user.userNickname,
-                        userStudyTImeCalculate.procDate,
-                        userStudyTImeCalculate.sumStudyTime))
-                .from(userStudyTImeCalculate)
-                .where(userStudyTImeCalculate.procDate.eq(hasDate(date))
-                        .and(userStudyTImeCalculate.sumStudyTime.ne(0)))
-                .orderBy(userStudyTImeCalculate.sumStudyTime.desc())
+                        userStudyTimeCalculate.user.id,
+                        userStudyTimeCalculate.user.userNickname,
+                        userStudyTimeCalculate.procDate,
+                        userStudyTimeCalculate.sumStudyTime))
+                .from(userStudyTimeCalculate)
+                .where(userStudyTimeCalculate.procDate.eq(hasDate(date))
+                        .and(userStudyTimeCalculate.sumStudyTime.ne(0)))
+                .orderBy(userStudyTimeCalculate.sumStudyTime.desc())
                 .limit(hasLimit(limit))
                 .fetch();
     }
