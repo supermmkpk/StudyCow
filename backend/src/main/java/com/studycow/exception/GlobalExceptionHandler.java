@@ -97,14 +97,14 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 시큐리티에서 인가 처리 대신해서 사용 x
+     * 시큐리티에서 인가 처리 대신해서 사용
      * @param e
      * @return
      */
     @ExceptionHandler(AuthenticationException.class)
     protected ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
         log.error(e.getMessage());
-        ErrorResponse response = new ErrorResponse(ErrorCode.NOT_AUTHENTICAION);
+        ErrorResponse response = new ErrorResponse(ErrorCode.USER_NOT_FOUND);
         return ResponseEntity.status(response.getErrorCode()).body(response);
     }
 
