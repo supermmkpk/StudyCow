@@ -31,6 +31,7 @@ import StudyList from "../components/StudyList/StudyList.jsx";
 import StudyCreate from "../components/StudyCreate/StudyCreate.jsx";
 import StudyRoom from "../components/StudyRoom/StudyRoom.jsx";
 import RoomCam from "../components/StudyRoom/RoomCam.jsx";
+import RoomCam from "../components/StudyRoom/RoomCam.jsx";
 import Test from "../components/StudyRoom/Test.jsx";
 
 // 성적 등록
