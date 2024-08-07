@@ -133,13 +133,7 @@ public class StudyRoomRepositoryImpl implements StudyRoomRepository {
      */
     @Override
     public void updateStudyRoom(Long studyRoomId, StudyRoomRequestDto requestDto, int userId) throws PersistenceException, IOException {
-        StudyRoom studyRoomFound = em.find(StudyRoom.class, studyRoomId);
-
-        if (studyRoomFound.getUser().getId() != userId) {
-            throw new IllegalStateException("방장만 수정할 수 있습니다.");
-        }
-
-        JPAUpdateClause updateClause = queryFactory
+                JPAUpdateClause updateClause = queryFactory
                 .update(studyRoom)
                 .set(studyRoom.roomTitle, requestDto.getRoomTitle())
                 .set(studyRoom.roomMaxPerson, requestDto.getRoomMaxPerson())

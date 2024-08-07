@@ -31,7 +31,6 @@ const TestAnalyze = () => {
         <h1>{userInfo.userNickName}님 어서오세요</h1>
         <div className="gradeSubjectSelect">
           <select
-            id="subject"
             name="subject"
             onChange={handleSubjectChange}
             value={selectedSubject}
