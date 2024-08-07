@@ -80,14 +80,12 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                         .authenticationEntryPoint(authenticationEntryPoint))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-<<<<<<< HEAD
+
                         .requestMatchers("/ws/**").permitAll()
-                        .anyRequest().permitAll());
-=======
                         .anyRequest().authenticated());
 
 
->>>>>>> 6bbade021985ed30fb7fa954ba3b8992d6831f0c
+
         return http.build();
     }
 
