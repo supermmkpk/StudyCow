@@ -6,6 +6,8 @@ import com.studycow.dto.calculate.RankDto;
 import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.studyroom.StudyRoomDto;
 import com.studycow.dto.studyroom.StudyRoomRequestDto;
+import com.studycow.exception.CustomException;
+import com.studycow.exception.ErrorCode;
 import com.studycow.repository.studyroom.StudyRoomRepository;
 import com.studycow.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +44,7 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     @Transactional
     public void createStudyRoom(StudyRoomDto studyRoomDto) throws Exception {
         User user = userRepository.findById((long) studyRoomDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 사용자 ID가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         StudyRoom studyRoom = studyRoomDto.toEntity(user);
         studyRoomRepository.createStudyRoom(studyRoom);
@@ -59,7 +61,7 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     public StudyRoomDto getStudyRoomInfo(Long studyRoomId) throws Exception {
         StudyRoomDto studyRoomDto = studyRoomRepository.getStudyRoomInfo(studyRoomId);
         if (studyRoomDto == null) {
-            throw new IllegalArgumentException("존재하지 않는 방입니다.");
+            throw new CustomException(ErrorCode.NOT_FOUND_ROOM);
         }
         return studyRoomDto;
     }
@@ -86,6 +88,14 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     @Override
     @Transactional
     public void updateStudyRoom(Long studyRoomId, StudyRoomRequestDto studyRoomRequestDto, int userId) throws Exception {
+        // 수정하고자 하는 방 조회
+        StudyRoomDto studyRoomFound = studyRoomRepository.getStudyRoomInfo(studyRoomId);
+
+        // 방장만 수정 하능
+        if (studyRoomFound.getUserId() != userId) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED_ROOM_UPDATE);
+        }
+
         studyRoomRepository.updateStudyRoom(studyRoomId, studyRoomRequestDto, userId);
     }
 
