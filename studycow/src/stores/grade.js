@@ -32,9 +32,13 @@ const useGradeStore = create((set) => ({
         }
       );
 
-      // 응답 데이터를 변환하여 {testDate: testScore} 형식으로 저장
+      // 응답 데이터를 변환하여 {testDate: {testScore, scoreDetails}} 형식으로 저장
       const grades = response.data.scores.reduce((acc, score) => {
-        acc[score.testDate] = score.testScore;
+        acc[score.testDate] = {
+          scoreId: score.scoreId,
+          testScore: score.testScore,
+          scoreDetails: score.scoreDetails,
+        };
         return acc;
       }, {});
 
