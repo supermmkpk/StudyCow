@@ -40,7 +40,6 @@ function RoomChat({ roomId }) {
     stompClient.connectHeaders = {
       'Authorization': 'Bearer ' + token
     };
-
     stompClient.activate();
   };
 
