@@ -6,8 +6,10 @@ import com.studycow.dto.openai.PlannerChatRequest;
 import com.studycow.dto.openai.ScoreChatRequest;
 import com.studycow.dto.score.ResponseScoreDto;
 import com.studycow.dto.score.ScoreDto;
+import com.studycow.dto.target.ScoreTargetDto;
 import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.service.score.ScoreService;
+import com.studycow.service.target.TargetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -37,6 +39,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatGPTController {
     private final ScoreService scoreService;
+    private final TargetService targetService;
 
     @Value("${openai.model}")
     private String model;
@@ -87,8 +90,11 @@ public class ChatGPTController {
             int userId = userDetails.getUser().getUserId();
 
             List<ScoreDto> recentScores = scoreService.recentUserScore(userId);
-            PlannerChatRequest request = new PlannerChatRequest(model, recentScores, startDay, studyTime);
+            List<ScoreTargetDto> scoreTargets = targetService.targetList(userId, userId);
+
+            PlannerChatRequest request = new PlannerChatRequest(model, recentScores, scoreTargets, startDay, studyTime);
             ChatGPTResponse chatGPTResponse = template.postForObject(apiURL, request, ChatGPTResponse.class);
+            System.out.println(chatGPTResponse.getChoices().get(0).getMessage().getContent());
             return ResponseEntity.ok(chatGPTResponse.getChoices().get(0).getMessage().getContent());
         } catch(Exception e)  {
             return new ResponseEntity<>("플래너 자동생성 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST);
