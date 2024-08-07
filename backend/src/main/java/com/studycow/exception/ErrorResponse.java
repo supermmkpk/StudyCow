@@ -20,7 +20,8 @@ import java.util.List;
 @Getter
 public class ErrorResponse {
     private final LocalDateTime timestamp = LocalDateTime.now();
-    private HttpStatus errorCode;
+    private HttpStatus errorCodeName;
+    private int errorCode;
     private String errorMessage;
     private List<FieldError> validationErrors;
 
@@ -33,13 +34,15 @@ public class ErrorResponse {
     }
 
     public ErrorResponse(ErrorCode errorCode, List<FieldError> validationErrors) {
-        this.errorCode = errorCode.getStatus();
+        this.errorCode = errorCode.getStatus().value();
+        this.errorCodeName = errorCode.getStatus();
         this.errorMessage = errorCode.getMessage();
         this.validationErrors = validationErrors;
     }
 
     public ErrorResponse(ErrorCode errorCode) {
-        this.errorCode = errorCode.getStatus();
+        this.errorCode = errorCode.getStatus().value();
+        this.errorCodeName = errorCode.getStatus();
         this.errorMessage = errorCode.getMessage();
     }
 
