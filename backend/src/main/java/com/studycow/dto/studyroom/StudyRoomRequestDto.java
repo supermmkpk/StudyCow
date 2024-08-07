@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -41,6 +42,7 @@ public class StudyRoomRequestDto {
     /** 스터디 종료 일자 */
     @NotNull(message = "스터디 종료 일자는 필수입니다.")
     @Future(message = "스터디 종료 일자는 오늘 이후여야 합니다.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate roomEndDate;
 
     /** 스터디룸 상태 */
