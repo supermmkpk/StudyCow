@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
-import * as posenet from '@tensorflow-models/posenet';
-import * as tf from '@tensorflow/tfjs';
+import { Hands } from '@mediapipe/hands';
+import { Camera } from '@mediapipe/camera_utils';
 import UserVideoComponent from "./UserVideoComponent.jsx";
 import "./OnlineMeeting.css";
 
@@ -26,7 +26,7 @@ class OnlineMeeting extends Component {
       timer: 0,
       isTimerRunning: false,
       lastPoseDetectedTime: Date.now(),
-      isPoseNetAvailable: false,
+      isHandsAvailable: false,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -34,7 +34,7 @@ class OnlineMeeting extends Component {
     this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
     this.onbeforeunload = this.onbeforeunload.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
-    this.detectPose = this.detectPose.bind(this);
+    this.detectHands = this.detectHands.bind(this);
     this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
     this.handleChangeUserName = this.handleChangeUserName.bind(this);
     this.handleJoinSession = this.handleJoinSession.bind(this);
@@ -43,19 +43,26 @@ class OnlineMeeting extends Component {
   async componentDidMount() {
     window.addEventListener("beforeunload", this.onbeforeunload);
 
-    try {
-      await tf.setBackend('webgl');
-      console.log("TensorFlow backend set to WebGL");
-      this.net = await posenet.load();
-      console.log("PoseNet model loaded successfully");
-      this.setState({ isPoseNetAvailable: true });
-    } catch (error) {
-      console.error('Failed to initialize PoseNet:', error);
-    }
+    const hands = new Hands({
+      locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+      }
+    });
+
+    hands.setOptions({
+      maxNumHands: 2,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+
+    hands.onResults(this.onResults.bind(this));
+
+    this.hands = hands;
 
     this.interval = setInterval(() => {
-      if (this.state.isPoseNetAvailable && this.state.publisher) {
-        this.detectPose();
+      if (this.state.isHandsAvailable && this.state.publisher) {
+        this.detectHands();
       }
       console.log("Timer state:", this.state.isTimerRunning, "Current time:", this.state.timer);
     }, 1000);
@@ -66,7 +73,7 @@ class OnlineMeeting extends Component {
     clearInterval(this.interval);
   }
 
-  async detectPose() {
+  async detectHands() {
     if (this.state.publisher && this.state.publisher.videos && this.state.publisher.videos[0]) {
       const video = this.state.publisher.videos[0].video;
 
@@ -81,26 +88,50 @@ class OnlineMeeting extends Component {
       }
 
       try {
-        const pose = await this.net.estimateSinglePose(video);
-        console.log("Pose detected:", pose);
-
-        const currentTime = Date.now();
-        if (pose.score > 0.3) {
-          console.log("Valid pose detected, score:", pose.score);
-          this.setState(prevState => ({
-            lastPoseDetectedTime: currentTime,
-            isTimerRunning: true,
-            timer: prevState.isTimerRunning ? prevState.timer + 1 : prevState.timer
-          }));
-        } else if (currentTime - this.state.lastPoseDetectedTime > 10000) {
-          console.log("No valid pose detected for 10 seconds, pausing timer");
-          this.setState({ isTimerRunning: false });
-        }
+        this.hands.send({ image: video });
       } catch (error) {
-        console.error('Error during pose estimation:', error);
+        console.error('Error sending video to Mediapipe Hands:', error);
       }
     } else {
       console.log("Video reference is not available");
+    }
+  }
+
+  onResults(results) {
+    const currentTime = Date.now();
+    console.log("Mediapipe Hands results received:", results);
+
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+      console.log("Hands detected:", results.multiHandLandmarks);
+      this.setState(prevState => ({
+        lastPoseDetectedTime: currentTime,
+        isTimerRunning: true,
+        timer: prevState.isTimerRunning ? prevState.timer + 1 : prevState.timer
+      }));
+    } else {
+      const timeSinceLastPose = currentTime - this.state.lastPoseDetectedTime;
+      console.log("No hands detected. Time since last pose:", timeSinceLastPose, "ms");
+
+      if (timeSinceLastPose > 10000) {
+        console.log("No hands detected for 10 seconds, pausing timer");
+        this.setState({ isTimerRunning: false });
+      }
+    }
+  }
+
+  onResults(results) {
+    const currentTime = Date.now();
+
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+      console.log("Hands detected:", results.multiHandLandmarks);
+      this.setState(prevState => ({
+        lastPoseDetectedTime: currentTime,
+        isTimerRunning: true,
+        timer: prevState.isTimerRunning ? prevState.timer + 1 : prevState.timer
+      }));
+    } else if (currentTime - this.state.lastPoseDetectedTime > 10000) {
+      console.log("No hands detected for 10 seconds, pausing timer");
+      this.setState({ isTimerRunning: false });
     }
   }
 
@@ -198,6 +229,7 @@ class OnlineMeeting extends Component {
                   this.setState({
                     mainStreamManager: publisher,
                     publisher: publisher,
+                    isHandsAvailable: true,
                   }, () => {
                     console.log("Publisher set in state");
                   });
@@ -246,7 +278,7 @@ class OnlineMeeting extends Component {
               </p>
             </div>
             <div>
-              <p>PoseNet Available: {this.state.isPoseNetAvailable ? "Yes" : "No"}</p>
+              <p>Hands Available: {this.state.isHandsAvailable ? "Yes" : "No"}</p>
               <p>Timer Running: {this.state.isTimerRunning ? "Yes" : "No"}</p>
               <p>Current Time: {this.state.timer} seconds</p>
             </div>
