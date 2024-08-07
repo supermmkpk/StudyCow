@@ -43,13 +43,13 @@ import java.util.Arrays;
  * @author 채기훈
  * @since JDK17
  */
-
 @Configuration
 @EnableWebSecurity // HTTP 요청에 대한 인증 및 인가 구성
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
 
+    private final AuthenticationEntryPoint authenticationEntryPoint;
     private static final String[] AUTH_WHITELIST = {
             "/studycow/",
             "/api/v1/auth/**",
@@ -77,11 +77,10 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAuthFilter(userDetailService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint(getAuthenticationEntryPoint())
-                        .accessDeniedHandler(accessDeniedHandler()))
+                        .authenticationEntryPoint(authenticationEntryPoint))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                        .anyRequest().permitAll());
+                        .anyRequest().authenticated());
 
 
         return http.build();

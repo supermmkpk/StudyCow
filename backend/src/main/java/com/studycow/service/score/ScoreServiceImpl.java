@@ -5,6 +5,8 @@ import com.studycow.dto.score.*;
 import com.studycow.dto.target.RequestTargetDto;
 import com.studycow.dto.target.ScoreTargetDto;
 import com.studycow.repository.common.CommonRepository;
+import com.studycow.repository.planner.PlannerRepository;
+import com.studycow.repository.planner.PlannerRepositoryCustom;
 import com.studycow.repository.score.ScoreRepository;
 import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScoreServiceImpl implements ScoreService{
     private final ScoreRepository scoreRepository;
+    private final PlannerRepositoryCustom plannerRepository;
     private final CommonRepository commonRepository;
 
     /**
@@ -52,6 +55,9 @@ public class ScoreServiceImpl implements ScoreService{
                 scores.setScoreDetails(scoreDetailDtoList);
         }
 
+        // 해당 과목에 대한 총 학습시간
+        //responseScoreDto.setSumStudyTime(scoreRepository.planStudyTime(userId, subCode));
+        responseScoreDto.setSumStudyTime(plannerRepository.planStudyTime(userId,subCode));
         int scoreSize = responseScoreDto.getScores().size();
 
         if(scoreSize > 0) {

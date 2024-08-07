@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.hc.core5.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
 import java.time.LocalDateTime;
@@ -20,9 +20,10 @@ import java.util.List;
 @Getter
 public class ErrorResponse {
     private final LocalDateTime timestamp = LocalDateTime.now();
-    private ErrorCode errorCode;
+    private HttpStatus errorCodeName;
+    private int errorCode;
+    private String errorMessage;
     private List<FieldError> validationErrors;
-
 
     @Getter
     @Setter
@@ -33,11 +34,16 @@ public class ErrorResponse {
     }
 
     public ErrorResponse(ErrorCode errorCode, List<FieldError> validationErrors) {
-        this.errorCode = errorCode;
+        this.errorCode = errorCode.getStatus().value();
+        this.errorCodeName = errorCode.getStatus();
+        this.errorMessage = errorCode.getMessage();
         this.validationErrors = validationErrors;
     }
+
     public ErrorResponse(ErrorCode errorCode) {
-        this.errorCode = errorCode;
+        this.errorCode = errorCode.getStatus().value();
+        this.errorCodeName = errorCode.getStatus();
+        this.errorMessage = errorCode.getMessage();
     }
 
 }

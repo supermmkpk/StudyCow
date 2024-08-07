@@ -33,6 +33,7 @@ import StudyRoom from "../components/StudyRoom/StudyRoom.jsx";
 import RoomCam from "../components/StudyRoom/RoomCam.jsx";
 import RoomCam from "../components/StudyRoom/RoomCam.jsx";
 import Test from "../components/StudyRoom/Test.jsx";
+import OnlineMeeting from "../components/StudyRoom/test/OnlineMeeting.jsx";
 
 // 성적 등록
 import ScoreRegist from "../components/ScoreRegist/ScoreRegist.jsx";
@@ -62,7 +63,6 @@ const PageRoutes = () => (
       <Route path="create" element={<StudyCreate />} />
     </Route>
     <Route path="/study/room/:roomId" element={<StudyRoom />} />
-    {/* <Route path="/studytest" element={<Test />} /> */}
 
     {/* 플랜 */}
     <Route path="/plan" element={<PlanPage />}>
