@@ -72,7 +72,6 @@ public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .anyRequest().permitAll());
-
         return http.build();
     }
 
