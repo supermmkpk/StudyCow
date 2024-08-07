@@ -10,6 +10,7 @@ import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.service.score.ScoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,32 +55,43 @@ public class ChatGPTController {
         return chatGPTResponse.getChoices().get(0).getMessage().getContent();
     }
 
-    public String scoreAdvice(ResponseScoreDto responseScoreDto) {
-        ScoreChatRequest request = new ScoreChatRequest(model, responseScoreDto.toString());
-        ChatGPTResponse chatGPTResponse =  template.postForObject(apiURL, request, ChatGPTResponse.class);
-        return chatGPTResponse.getChoices().get(0).getMessage().getContent();
+    @Operation(
+            summary = "성적 조언 생성",
+            description = "chatGPT를 이용하여 불러온 성적에 대한 조언 생성. 오남용 금지")
+    @PostMapping("/advice-score")
+    public ResponseEntity<?> scoreAdvice(
+            @RequestBody @Valid ResponseScoreDto responseScoreDto) {
+        try {
+            ScoreChatRequest request = new ScoreChatRequest(model, responseScoreDto.toString());
+            ChatGPTResponse chatGPTResponse = template.postForObject(apiURL, request, ChatGPTResponse.class);
+            responseScoreDto.setAdvice(chatGPTResponse.getChoices().get(0).getMessage().getContent());
+
+            return ResponseEntity.ok(responseScoreDto);
+        }catch (Exception e){
+            return new ResponseEntity<>("성적 조언생성 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 
     @Operation(
-            summary = "플래너 자동화",
-            description = "chatGPT를 이용하여 플래너 자동 생성. 오남용 금지. <br>" +
-                    "requestDay(몇일치?): int, startDay(시작일): String(YYYY-MM-DD)")
+            summary = "플래너 자동 생성",
+            description = "chatGPT를 이용하여 플래너 7일치 자동 생성. 오남용 금지. <br>" +
+                    "{ startDay(시작일): String(YYYY-MM-DD), studyTime(하루 공부시간): int(분) }")
     @GetMapping("/auto-planner")
     public ResponseEntity<?> plannerAutomation(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestParam("requestDay") int requestDay,
-            @RequestParam("startDay") String startDay
+            @RequestParam("startDay") String startDay,
+            @RequestParam("studyTime") int studyTime
     ) {
         try {
             int userId = userDetails.getUser().getUserId();
 
             List<ScoreDto> recentScores = scoreService.recentUserScore(userId);
-            PlannerChatRequest request = new PlannerChatRequest(model, recentScores, requestDay, startDay);
+            PlannerChatRequest request = new PlannerChatRequest(model, recentScores, startDay, studyTime);
             ChatGPTResponse chatGPTResponse = template.postForObject(apiURL, request, ChatGPTResponse.class);
             return ResponseEntity.ok(chatGPTResponse.getChoices().get(0).getMessage().getContent());
         } catch(Exception e)  {
-            return new ResponseEntity<>("플래너 자동생성 실패", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("플래너 자동생성 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

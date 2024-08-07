@@ -1,0 +1,13 @@
+.selectedSubjectBox {
+  width: 1000px;
+}
+
+.upsidePartBox {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.downsidePartBox {
+  display: flex;
+  justify-content: space-evenly;
+}
