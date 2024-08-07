@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
-    "@tensorflow/tfjs": "^4.20.0",
+    "@tensorflow-models/posenet": "^2.2.2",
+    "@tensorflow/tfjs": "^3.21.0",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
