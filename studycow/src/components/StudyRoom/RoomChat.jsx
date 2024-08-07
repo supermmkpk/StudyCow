@@ -36,7 +36,6 @@ function RoomChat({ roomId }) {
         alert('웹소켓 서버 접속 불가');
       }
     });
-
     stompClient.connectHeaders = {
       'Authorization': 'Bearer ' + token
     };
