@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import axios from "axios";
 import useInfoStore from "./infos";
 import useRoomStore from"./OpenVidu";
+import useRoomStore from"./OpenVidu";
 
 const API_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/studycow/";
@@ -217,10 +218,91 @@ const useStudyStore = create(
         }
       },
       
+
+
+      // 방 입장 시 정보
+      logId: 0,
+      rankInfo: [],
+      myRankInfo: [],
+      myStudyTime: 0,
+      setLogId: (data) => set({ logId: data }),
+      setRankInfo: (data) => set({ rankInfo: data }),
+      setMyStudyTime: (data) => set({ myStudyTime: data }),
+
+      // 내 랭크 인포 필터링
+      filterRankInfoByNickName: () => {
+        const { userInfo } = useInfoStore.getState();
+        const { rankInfo } = get(); // 현재 상태 가져오기
+
+        const userNickName = userInfo.userNickName
+
+        const filteredRankInfo = rankInfo.filter(item => item.userName === userNickName);
+        set({ myRankInfo: filteredRankInfo });
+      },
+    
+      // // userNickName을 업데이트하고 필터링을 자동으로 실행하는 액션
+      // setUserNickName: (nickName) => {
+      //   set({ userNickName: nickName }, () => {
+      //     get().filterRankInfoByNickName(); // userNickName이 변경된 후 필터링 실행
+      //   });
+      // },
+
+      // 방 입장 함수
+      registerRoom: async (rId) => {
+        const { token } = useInfoStore.getState(); // 토큰은 여전히 useInfoStore에서 가져옵니다.
+      
+        try {
+          const response = await axios.post(
+            `${API_URL}roomLog/enter/${rId}`,
+            {},            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+      
+          // 응답 코드가 200일 경우
+          if (response.status === 200) {
+            const data = response.data;
+            console.log(`${rId}번`+"방 입장 성공", data);
+      
+            // 응답 데이터에서 필요한 정보를 추출
+            const { logId, studyTime , rankDto } = data;
+            set({ logId: logId, myStudyTime: studyTime, rankInfo: rankDto });
+      
+          } else {
+            console.error(`응답 코드 오류: ${response.status}`);
+          }
+        } catch (error) {
+          if (error.response) {
+            // 서버가 상태 코드를 응답했을 때
+            switch (error.response.status) {
+              case 400:
+                console.error("잘못된 요청입니다. 요청을 확인해 주세요.", error.response.data);
+                break;
+              case 500:
+                console.error("서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.", error.response.data);
+                break;
+              default:
+                console.error(`알 수 없는 오류가 발생했습니다. 상태 코드: ${error.response.status}`, error.response.data);
+            }
+          } else if (error.request) {
+            // 요청이 전송되었으나 응답을 받지 못했을 때
+            console.error("응답을 받지 못했습니다. 네트워크를 확인해 주세요.", error.request);
+          } else {
+            // 다른 오류
+            console.error("요청 중 오류가 발생했습니다.", error.message);
+          }
+        }
+      },
+      
     }),
     {
       name: "study-storage",
       partialize: (state) => ({
+        logId: state.logId,
+        rankInfo: state.rankInfo,
+        myStudyTime: state.myStudyTime,
         studyRoomData: state.studyRoomData,
         rooms: state.rooms,
         recentRoom: state.recentRoom,
