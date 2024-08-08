@@ -1,6 +1,9 @@
 package com.studycow.studyroom;
 
 import com.studycow.domain.UserGrade;
+import com.studycow.dto.calculate.RankDto;
+import com.studycow.dto.calculate.RankRoomDto;
+import com.studycow.dto.calculate.RankUserDto;
 import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.studyroom.StudyRoomDto;
 import com.studycow.dto.studyroom.StudyRoomRequestDto;
@@ -221,6 +224,74 @@ class StudyRoomControllerTest {
         verify(studyRoomService, times(1)).updateStudyRoom(eq(studyRoomId), eq(updateRequestDto), eq(userDetails.getUser().getUserId()));
     }
 
+    /**
+     * 최근 입장 스터디룸 목록 조회 테스트
+     *
+     * @throws Exception
+     */
+    @Test
+    void recentRoomTest() throws Exception {
+        /* --- GIVEN --- */
+        // 스터디룸 DTO 객체 리스트
+        int userId = 1;
+        List<StudyRoomDto> studyRoomDtoList = new ArrayList<>();
+        studyRoomDtoList.add(new StudyRoomDto(
+                1L, "Recent Study Room 1", 5, 2, LocalDate.now(), LocalDate.now().plusDays(7),
+                1, LocalDateTime.now(), "This is a recent study room 1.", "https://test-file-link.com/recent1.jpg", 1));
+        studyRoomDtoList.add(new StudyRoomDto(
+                2L, "Recent Study Room 2", 5, 3, LocalDate.now(), LocalDate.now().plusDays(10),
+                1, LocalDateTime.now(), "This is a recent study room 2.", "https://test-file-link.com/recent2.jpg", 2));
+        // 회원 정보
+        CustomUserDetails userDetails = new CustomUserDetails(customUserInfoDto);
 
+        /* --- WHEN --- */
+        // 스터디룸 서비스 recentStudyRoom() 모의 동작 설정
+        when(studyRoomService.recentStudyRoom(userId)).thenReturn(studyRoomDtoList);
+        // 최근 방문 스터디룸 목록 조회 API 호출
+        ResponseEntity<?> response = studyRoomController.recentRoom(userDetails);
+
+        /* --- THEN --- */
+        // 응답 검증
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(studyRoomDtoList);
+        // 메서드 호출 검증
+        verify(studyRoomService, times(1)).recentStudyRoom(userId);
+    }
+
+    /**
+     * 날짜별 랭킹 조회 테스트
+     *
+     * @throws Exception
+     */
+    @Test
+    void rankRoomUserTest() throws Exception {
+        /* --- GIVEN --- */
+        LocalDate date = LocalDate.now();
+        Integer limit = 10;
+        // RankRoomDto 리스트(방 랭킹)
+        List<RankRoomDto> rankRoomDtoList = new ArrayList<>();
+        rankRoomDtoList.add(new RankRoomDto(1, 1L, "Rank 1 Room", date, 100));
+        rankRoomDtoList.add(new RankRoomDto(2, 2L, "Rank 2 Room", date, 80));
+        // RankUserDto 리스트(회원 랭킹)
+        List<RankUserDto> rankUserDtoList = new ArrayList<>();
+        rankUserDtoList.add(new RankUserDto(1, 1, "Rank 1 User", date, 200));
+        rankUserDtoList.add(new RankUserDto(2, 2, "Rank 2 User", date, 180));
+        // RankDto 객체
+        RankDto rankDto = new RankDto(rankRoomDtoList, rankUserDtoList);
+        //회원 정보
+
+        /* --- WHEN --- */
+        // 스터디룸 서비스 getRanks() 모의 동작
+        when(studyRoomService.getRanks(date, limit)).thenReturn(rankDto);
+        // 랭킹 조회 API 호출
+        ResponseEntity<?> response = studyRoomController.rankRoomUser(date, limit);
+
+        /* --- THEN --- */
+        // 응답 검증
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(rankDto);
+        // 메서드 호출 검증
+        verify(studyRoomService, times(1)).getRanks(date, limit);
+    }
 
 }
