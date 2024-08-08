@@ -19,6 +19,7 @@ function StudyRoom() {
   const { roomId } = useParams();
 
   useEffect(() => {
+    console.log(roomId)
         // 컴포넌트가 마운트될 때 registerRoom 함수 호출
     const fetchData = async () => {
       await registerRoom(roomId);
