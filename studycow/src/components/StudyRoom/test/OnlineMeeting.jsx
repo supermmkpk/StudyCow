@@ -13,7 +13,7 @@ class OnlineMeeting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mySessionId: "SessionA",
+      mySessionId: `SessionA-${Date.now()}`,
       myUserName: "Participant" + Math.floor(Math.random() * 100),
       session: undefined,
       mainStreamManager: undefined,
@@ -33,7 +33,7 @@ class OnlineMeeting extends Component {
     this.leaveSession = this.leaveSession.bind(this);
     this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
     this.onbeforeunload = this.onbeforeunload.bind(this);
-    this.handleToggle = this.handleToggle.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);  // 이 줄을 수정했습니다
     this.detectHands = this.detectHands.bind(this);
     this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
     this.handleChangeUserName = this.handleChangeUserName.bind(this);
@@ -118,7 +118,6 @@ class OnlineMeeting extends Component {
       }
     }
   }
-
 
   onbeforeunload(event) {
     this.leaveSession();
@@ -237,7 +236,7 @@ class OnlineMeeting extends Component {
     this.setState({
       session: undefined,
       subscribers: [],
-      mySessionId: "SessionA",
+      mySessionId: `SessionA-${Date.now()}`,
       myUserName: "Participant" + Math.floor(Math.random() * 100),
       mainStreamManager: undefined,
       publisher: undefined,
@@ -340,27 +339,50 @@ class OnlineMeeting extends Component {
   }
 
   async getToken() {
-    const sessionId = await this.createSession(this.state.mySessionId);
-    return await this.createToken(sessionId);
+    try {
+      const sessionId = await this.createSession(this.state.mySessionId);
+      return await this.createToken(sessionId);
+    } catch (error) {
+      console.error("Error in getToken:", error);
+      // 사용자에게 오류 메시지를 표시하거나 다른 처리를 할 수 있습니다.
+    }
   }
 
   async createSession(sessionId) {
-    const response = await axios.post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions", { customSessionId: sessionId }, {
-      headers: {
-        Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data.id;
+    try {
+      const response = await axios.post(
+          OPENVIDU_SERVER_URL + "/openvidu/api/sessions",
+          { customSessionId: sessionId },
+          {
+            headers: {
+              Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+              "Content-Type": "application/json",
+            },
+          }
+      );
+      return response.data.id;
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        console.log("Session already exists");
+        return sessionId; // 이미 존재하는 세션이면 그대로 사용
+      } else {
+        console.error("Error creating session:", error);
+        throw error;
+      }
+    }
   }
 
   async createToken(sessionId) {
-    const response = await axios.post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection", {}, {
-      headers: {
-        Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.post(
+        OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection",
+        {},
+        {
+          headers: {
+            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            "Content-Type": "application/json",
+          },
+        }
+    );
     return response.data.token;
   }
 }
