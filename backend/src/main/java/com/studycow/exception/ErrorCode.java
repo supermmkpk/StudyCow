@@ -33,6 +33,10 @@ public enum ErrorCode {
     NOT_FOUND_PLANNER(HttpStatus.NOT_FOUND,"해당 플래너가 존재하지 않습니다."),
     LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED,"로그인이 필요한 서비스입니다."),
     NOT_FOUND_SUBJECT_CODE(HttpStatus.NOT_FOUND,"해당 과목코드가 존재하지 않습니다."),
+    USER_PRIVATE(HttpStatus.UNAUTHORIZED, "비공개 유저입니다."),
+    NOT_FOUND_SCORE_ID(HttpStatus.NOT_FOUND, "해당 성적이 존재하지 않습니다."),
+    NOT_FOUND_CATEGORY_CODE(HttpStatus.NOT_FOUND,"해당 문제유형이 존재하지 않습니다."),
+    NOT_MATCH_SUBJECT_CATEGORY(HttpStatus.BAD_REQUEST,"문제유형이 과목과 부합하지 않습니다."),
 
     //파일 관리 오류 코드
     IO_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "파일 또는 입출력 처리 중 오류가 발생했습니다."),
@@ -40,15 +44,7 @@ public enum ErrorCode {
     //스터디룸 오류 코드
     NOT_FOUND_ROOM(HttpStatus.NOT_FOUND,"해당 스터디룸이 존재하지 않습니다."),
     UNAUTHORIZED_ROOM_UPDATE(HttpStatus.UNAUTHORIZED, "방장만 접근할 수 있는 서비스입니다."),
-    LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED,"로그인이 필요한 서비스입니다."),
-    NOT_FOUND_SUBJECT_CODE(HttpStatus.NOT_FOUND,"해당 과목코드가 존재하지 않습니다."),
-    USER_PRIVATE(HttpStatus.UNAUTHORIZED, "비공개 유저입니다."),
-    NOT_FOUND_SCORE_ID(HttpStatus.NOT_FOUND, "해당 성적이 존재하지 않습니다."),
-    NOT_FOUND_CATEGORY_CODE(HttpStatus.NOT_FOUND,"해당 문제유형이 존재하지 않습니다."),
-    NOT_MATCH_SUBJECT_CATEGORY(HttpStatus.BAD_REQUEST,"문제유형이 과목과 부합하지 않습니다.");
-
-
-
+    
     // 친구 관리 오류 코드
     DUPLICATE_FRIEND(HttpStatus.CONFLICT, "이미 친구 관계입니다."),
     DUPLICATE_FRIEND_REQUEST(HttpStatus.CONFLICT, "이미 친구 요청을 보냈습니다."),
