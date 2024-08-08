@@ -18,7 +18,7 @@ function RoomChat({ roomId }) {
 
   // 연결
   const connect = () => {
-    const socket = new SockJS(`wss://${window.location.host}/studycow/ws-stomp`);
+    const socket = new SockJS(`https://${window.location.host}/studycow/ws-stomp`);
     
     stompClient = new Client({
       webSocketFactory: () => socket,
