@@ -35,6 +35,9 @@ public enum ErrorCode {
     LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED,"로그인이 필요한 서비스입니다."),
     NOT_FOUND_SUBJECT_CODE(HttpStatus.NOT_FOUND,"해당 과목코드가 존재하지 않습니다.");
 
+
+
+
     private HttpStatus status;
     private final String message;
 }
