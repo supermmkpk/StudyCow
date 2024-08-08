@@ -179,6 +179,28 @@ const usePlanStore = create(
         }
       },
 
+      getSubjectPlans: async (subjectId) => {
+        const { token } = useInfoStore.getState();
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+        try {
+          const response = await axios.get(API_URL + "planner/list/subject", {
+            params: { subjectId },
+            headers,
+          });
+          if (response.status === 200) {
+            set({ subPlans: response.data ?? [] });
+            return response.data; // 변경된 부분: 성공 시 데이터를 반환
+          } else {
+            throw new Error("정보불러오기 에러");
+          }
+        } catch (e) {
+          console.log(e);
+          return false;
+        }
+      },
+
       deletePlan: async (planId) => {
         const { token } = useInfoStore.getState();
         console.log("Deleting plan with ID:", planId);
