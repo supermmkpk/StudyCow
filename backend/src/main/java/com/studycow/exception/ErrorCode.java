@@ -37,7 +37,9 @@ public enum ErrorCode {
     USER_PRIVATE(HttpStatus.UNAUTHORIZED, "비공개 유저입니다."),
     NOT_FOUND_SCORE_ID(HttpStatus.NOT_FOUND, "해당 성적이 존재하지 않습니다."),
     NOT_FOUND_CATEGORY_CODE(HttpStatus.NOT_FOUND,"해당 문제유형이 존재하지 않습니다."),
-    NOT_MATCH_SUBJECT_CATEGORY(HttpStatus.BAD_REQUEST,"문제유형이 과목과 부합하지 않습니다.");
+    NOT_MATCH_SUBJECT_CATEGORY(HttpStatus.BAD_REQUEST,"문제유형이 과목과 부합하지 않습니다."),
+    NOT_FOUND_TARGET_ID(HttpStatus.NOT_FOUND,"해당 문제유형이 존재하지 않습니다."),
+    BAD_TARGET_SCORE(HttpStatus.BAD_REQUEST,"목표성적을 잘못 입력하였습니다.");
 
 
 
