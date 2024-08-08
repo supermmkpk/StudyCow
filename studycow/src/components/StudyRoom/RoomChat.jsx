@@ -18,8 +18,8 @@ function RoomChat({ roomId }) {
 
   // 연결
   const connect = () => {
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const socket = new SockJS(`${wsProtocol}//${window.location.host}/studycow/ws-stomp`);
+    const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+    const socket = new SockJS(`${protocol}//${window.location.host}/studycow/ws-stomp`);
     
     stompClient = new Client({
       webSocketFactory: () => socket,
