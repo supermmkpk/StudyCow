@@ -1,23 +1,13 @@
 package com.studycow.web.friend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.studycow.domain.User;
-import com.studycow.domain.UserGrade;
 import com.studycow.dto.friend.FriendDto;
 import com.studycow.dto.friend.FriendRequestDto;
 import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.user.CustomUserDetails;
 import com.studycow.dto.user.CustomUserInfoDto;
-import com.studycow.dto.user.RegisterRequestDto;
 import com.studycow.service.friend.FriendService;
-import com.studycow.service.user.UserService;
-import com.studycow.web.FriendController;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.checkerframework.common.aliasing.qual.Unique;
-import org.hibernate.annotations.ColumnDefault;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -235,9 +224,7 @@ public class FriendControllerTest {
                         .with(user(userDetails1))
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(content().string("친구 요청 취소 성공"));
+                .andExpect(content().string("친구 요청 삭제 성공"));
     }
-
-
 
 }
