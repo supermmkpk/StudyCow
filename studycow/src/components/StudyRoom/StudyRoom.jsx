@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import RoomNav from './RoomNav.jsx';
 import RoomSidebar from "./RoomSidebar.jsx";
 import RoomChat from "./RoomChat.jsx";
@@ -8,11 +8,24 @@ import "./styles/StudyRoom.css";
 import useStudyStore from "../../stores/study.js";
 import { useParams } from "react-router-dom";
 
+
+import StudyRoomLeaderBoard from "./StudyRoomLeaderBoard.jsx";
+
+
 function StudyRoom() {
-  const { showChat, showList, showLank } = useStudyStore();
+  const { showChat, showList, showLank, registerRoom } = useStudyStore();
 
   // URL에서 roomId 추출
   const { roomId } = useParams();
+
+  useEffect(() => {
+        // 컴포넌트가 마운트될 때 registerRoom 함수 호출
+    const fetchData = async () => {
+      await registerRoom(roomId);
+    };
+
+    fetchData();
+  }, []); // 빈 배열은 컴포넌트가 처음 마운트될 때만 실행되도록 합니다
 
   return (
     <>
@@ -35,7 +48,7 @@ function StudyRoom() {
             )}
             {showLank && (
               <div className="studyRoomUtilItem">
-                {/* Lank content */}
+                <StudyRoomLeaderBoard />
               </div>
             )}
             {showChat && (
