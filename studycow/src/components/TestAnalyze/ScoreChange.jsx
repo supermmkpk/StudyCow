@@ -3,7 +3,7 @@ import "./styles/ScoreChange.css";
 import useScoreChangeStore from "../../stores/scoreChange";
 import useSubjectStore from "../../stores/subjectStore"; // subject store import
 
-const ScoreChange = ({ initialData, onClose }) => {
+const ScoreChange = ({ initialData, onClose, onScoreChange }) => {
   const { updatePlanner, deletePlanner } = useScoreChangeStore();
   const { subjects, fetchSubjects, problemTypes, fetchProblemTypes } =
     useSubjectStore();
@@ -91,13 +91,21 @@ const ScoreChange = ({ initialData, onClose }) => {
     if (!validateForm()) {
       return;
     }
-    updatePlanner(initialData.scoreId, scoreData);
-    onClose();
+    updatePlanner(initialData.scoreId, scoreData).then(() => {
+      onClose(); // 모달 닫기
+      if (onScoreChange) {
+        onScoreChange(); // 부모 컴포넌트에 신호 보내기
+      }
+    });
   };
 
   const handleDelete = () => {
-    deletePlanner(initialData.scoreId);
-    onClose();
+    deletePlanner(initialData.scoreId).then(() => {
+      onClose(); // 모달 닫기
+      if (onScoreChange) {
+        onScoreChange(); // 부모 컴포넌트에 신호 보내기
+      }
+    });
   };
 
   return (

@@ -31,11 +31,12 @@ const RecentGradeGraph = () => {
     userId: state.userInfo.userId,
   }));
 
-  const { selectedSubject, subjectGrades, fetchSelectedSubjectGrade } =
+  const { selectedSubject, subjectGrades, fetchSelectedSubjectGrade, setSelectedSubject } =
     useGradeStore((state) => ({
       selectedSubject: state.selectedSubject,
       subjectGrades: state.subjectGrades,
       fetchSelectedSubjectGrade: state.fetchSelectedSubjectGrade,
+      setSelectedSubject: state.setSelectedSubject,
     }));
 
   const [showModal, setShowModal] = useState(false);
@@ -157,6 +158,12 @@ const RecentGradeGraph = () => {
     onClick: handleChartClick, // 클릭 이벤트 핸들러 추가
   };
 
+  const handleScoreChange = () => {
+    // 성적이 변경된 후 과목 선택을 새로고침하여 데이터를 다시 불러옴
+    setSelectedSubject("");
+    setTimeout(() => setSelectedSubject(selectedSubject), 0);
+  };
+
   return (
     <div className="subject-grade-graph">
       <Line options={options} data={data} />
@@ -169,6 +176,7 @@ const RecentGradeGraph = () => {
               onClose={() => setShowModal(false)}
               initialData={modalData} // 클릭한 데이터를 initialData로 전달
               subjectGrades={subjectGrades} // subjectGrades를 ScoreChange에 전달
+              onScoreChange={handleScoreChange} // 부모 컴포넌트에 변경 신호를 보내기 위한 함수 전달
             />
           </div>
         </div>

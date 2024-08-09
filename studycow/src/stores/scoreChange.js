@@ -9,8 +9,8 @@ const useScoreChangeStore = create((set) => ({
   // 현재 상태
   scoreChangeStatus: null, // 상태 (성공, 실패, 로딩 등)
 
-  // 플래너 정보를 수정하는 함수
-  updatePlanner: async (planId, planData) => {
+  // 성적 정보를 수정하는 함수
+  updatePlanner: async (scoreId, planData) => {
     const { token } = useInfoStore.getState(); // 인증 토큰 가져오기
 
     try {
@@ -18,7 +18,7 @@ const useScoreChangeStore = create((set) => ({
       set({ scoreChangeStatus: "loading" });
 
       const response = await axios.patch(
-        `${API_URL}planner/${planId}`,
+        `${API_URL}score/modify/${scoreId}`,
         planData,
         {
           headers: {
@@ -31,28 +31,28 @@ const useScoreChangeStore = create((set) => ({
       if (response.status === 200) {
         // 성공 상태로 설정
         set({ scoreChangeStatus: "success" });
-        console.log("플래너 정보가 성공적으로 수정되었습니다.", response.data);
+        console.log("성적 정보가 성공적으로 수정되었습니다.", response.data);
       } else {
         // 실패 상태로 설정
         set({ scoreChangeStatus: "error" });
-        console.error("플래너 정보 수정에 실패했습니다.", response.status);
+        console.error("성적 정보 수정에 실패했습니다.", response.status);
       }
     } catch (error) {
       // 오류 발생 상태로 설정
       set({ scoreChangeStatus: "error" });
-      console.error("플래너 정보 수정 중 오류가 발생했습니다.", error);
+      console.error("성적 정보 수정 중 오류가 발생했습니다.", error);
     }
   },
 
-  // 플래너 정보를 삭제하는 함수
-  deletePlanner: async (planId) => {
+  // 성적 정보를 삭제하는 함수
+  deletePlanner: async (scoreId) => {
     const { token } = useInfoStore.getState(); // 인증 토큰 가져오기
 
     try {
       // 로딩 상태로 설정
       set({ scoreChangeStatus: "loading" });
 
-      const response = await axios.delete(`${API_URL}planner/${planId}`, {
+      const response = await axios.delete(`${API_URL}score/delete/${scoreId}`, {
         headers: {
           Authorization: `Bearer ${token}`, // 인증 헤더 설정
         },
@@ -61,16 +61,16 @@ const useScoreChangeStore = create((set) => ({
       if (response.status === 200) {
         // 성공 상태로 설정
         set({ scoreChangeStatus: "success" });
-        console.log("플래너 정보가 성공적으로 삭제되었습니다.");
+        console.log("성적 정보가 성공적으로 삭제되었습니다.");
       } else {
         // 실패 상태로 설정
         set({ scoreChangeStatus: "error" });
-        console.error("플래너 정보 삭제에 실패했습니다.", response.status);
+        console.error("성적 정보 삭제에 실패했습니다.", response.status);
       }
     } catch (error) {
       // 오류 발생 상태로 설정
       set({ scoreChangeStatus: "error" });
-      console.error("플래너 정보 삭제 중 오류가 발생했습니다.", error);
+      console.error("성적 정보 삭제 중 오류가 발생했습니다.", error);
     }
   },
 
