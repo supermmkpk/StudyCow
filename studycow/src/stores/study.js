@@ -147,6 +147,23 @@ const useStudyStore = create(
           set({ recentRoom: null });
         }
       },
+
+      yesterdayRankInfo: [],
+      fetchYesterdayRankInfo: async () => {
+        const { token } = useInfoStore.getState();
+
+        try {
+          const response = await axios.get(API_URL + `room/rank`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          console.log(response.data);
+          set({ yesterdayRankInfo: response.data });
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
     {
       name: "study-storage",

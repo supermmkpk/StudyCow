@@ -2,22 +2,43 @@ import "./styles/StudyList.css";
 import StudyRoomItem from "./StudyRoomItem";
 import { Link } from "react-router-dom";
 import useStudyStore from "../../stores/study";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Container, Typography, Paper, Box, Avatar } from "@mui/material";
+import { keyframes } from "@emotion/react";
+
+// 랭킹 이미지들
+import firstPlaceImg from "../StudyRoom/img/firstPlaceImg.png";
+import secondPlaceImg from "../StudyRoom/img/secondPlaceImg.png";
+import thirdPlaceImg from "../StudyRoom/img/thirdPlaceImg.png";
+
+// 슬라이딩 애니메이션을 위한 keyframes를 정의
+const slide = keyframes`
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+`;
 
 const StudyList = () => {
-  const { rooms, recentRoom, fetchRooms, fetchRecentRoom } = useStudyStore(
-    (state) => ({
-      rooms: state.rooms,
-      recentRoom: state.recentRoom,
-      fetchRooms: state.fetchRooms,
-      fetchRecentRoom: state.fetchRecentRoom,
-    })
-  );
+  const {
+    rooms,
+    recentRoom,
+    fetchRooms,
+    fetchRecentRoom,
+    yesterdayRankInfo,
+    fetchYesterdayRankInfo,
+  } = useStudyStore((state) => ({
+    rooms: state.rooms,
+    recentRoom: state.recentRoom,
+    fetchRooms: state.fetchRooms,
+    fetchRecentRoom: state.fetchRecentRoom,
+    yesterdayRankInfo: state.yesterdayRankInfo,
+    fetchYesterdayRankInfo: state.fetchYesterdayRankInfo,
+  }));
 
   useEffect(() => {
     fetchRooms();
     fetchRecentRoom();
-  }, [fetchRooms, fetchRecentRoom]);
+    fetchYesterdayRankInfo;
+  }, [fetchRooms, fetchRecentRoom, fetchYesterdayRankInfo]);
 
   return (
     <div className="studyListContainer">
