@@ -21,6 +21,13 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * <pre>
+ *   회원 로직 테스트
+ * </pre>
+ * @author 채기훈
+ * @since JDK17
+ */
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
