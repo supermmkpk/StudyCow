@@ -94,8 +94,15 @@ public class ChatGPTController {
 
             PlannerChatRequest request = new PlannerChatRequest(model, recentScores, scoreTargets, startDay, studyTime);
             ChatGPTResponse chatGPTResponse = template.postForObject(apiURL, request, ChatGPTResponse.class);
-            System.out.println(chatGPTResponse.getChoices().get(0).getMessage().getContent());
-            return ResponseEntity.ok(chatGPTResponse.getChoices().get(0).getMessage().getContent());
+            String response = chatGPTResponse.getChoices().get(0).getMessage().getContent();
+
+            // JSON 마크다운 제거
+            if (response.startsWith("``` json") && response.endsWith("```")) {
+                // 마크다운을 제거하기 위해 처음과 끝의 부분을 잘라냅니다.
+                response = response.substring(8, response.length() - 3).trim();
+            }
+
+            return ResponseEntity.ok(response);
         } catch(Exception e)  {
             return new ResponseEntity<>("플래너 자동생성 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }

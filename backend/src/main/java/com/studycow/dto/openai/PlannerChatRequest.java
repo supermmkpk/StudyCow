@@ -465,8 +465,6 @@ public class PlannerChatRequest {
                 .append(startDay)
                 .append("부터 5일간의 학습 계획을 JSON 형태로 제공해주세요.");
 
-        System.out.println(content.toString());
-
         this.model = model;
         this.messages =  new ArrayList<>();
         this.messages.add(new Message("user", content.toString()));
