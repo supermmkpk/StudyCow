@@ -142,7 +142,7 @@ const useStudyStore = create(
       // 방 입장 함수
       registerRoom: async (rId) => {
         const { token } = useInfoStore.getState(); // userNickName을 가져옵니다.
-      
+
         try {
           const response = await axios.post(
             `${API_URL}roomLog/enter/${rId}`,
@@ -153,19 +153,18 @@ const useStudyStore = create(
               },
             }
           );
-      
+
           if (response.status === 200) {
             const data = response.data;
             console.log("방 입장 성공", data);
-      
+
             const { logId, studyTime, rankDto } = data;
-      
+
             // 상태 업데이트
             const studyStore = useStudyStore.getState();
             studyStore.setLogId(logId);
             studyStore.setMyStudyTime(studyTime);
             studyStore.setRankInfo(rankDto);
-      
           } else {
             console.error(`응답 코드 오류: ${response.status}`);
           }
@@ -217,6 +216,23 @@ const useStudyStore = create(
           });
           console.log(response.data);
           set({ roomDetailInfo: response.data });
+        } catch (error) {
+          console.log(error);
+        }
+      },
+
+      yesterdayRankInfo: [],
+      fetchYesterdayRankInfo: async () => {
+        const { token } = useInfoStore.getState();
+
+        try {
+          const response = await axios.get(API_URL + `room/rank`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          console.log(response.data);
+          set({ yesterdayRankInfo: response.data });
         } catch (error) {
           console.log(error);
         }
