@@ -9,27 +9,30 @@ import com.studycow.dto.listoption.ListOptionDto;
 import com.studycow.dto.user.CustomUserInfoDto;
 import com.studycow.dto.user.RegisterRequestDto;
 import com.studycow.repository.friend.FriendRepository;
+import com.studycow.repository.user.UserRepository;
 import com.studycow.service.friend.FriendService;
-import com.studycow.service.user.UserGradeRepository;
+import com.studycow.repository.user.UserGradeRepository;
 import com.studycow.service.user.UserService;
 import com.studycow.web.friend.FriendController;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
 @ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Transactional
 public class FriendTest {
     @Autowired
     private FriendController friendController;
@@ -37,53 +40,50 @@ public class FriendTest {
     private FriendService friendService;
     @Autowired
     private FriendRepository friendRepository;
+
     @Autowired
-    private ApplicationContext applicationContext;
+    private UserService userService;
+    @Autowired
+    private UserGradeRepository userGradeRepository;
 
-    private static UserGradeRepository userGradeRepository;
-    private static UserService userService;
+    private int userId1;
+    private int userId2;
+    private int userId3;
 
-    private CustomUserInfoDto customUserInfoDto1;
-    private CustomUserInfoDto customUserInfoDto2;
-
-    @BeforeAll
-    static void setUp() {
-        // ApplicationContext를 통해 UserService 빈을 가져옵니다.
-        ApplicationContext context = new AnnotationConfigApplicationContext(StudycowApplication.class);
-        userService = context.getBean(UserService.class);
-        userGradeRepository = context.getBean(UserGradeRepository);
-
+    @BeforeEach
+    void setUp() {
         // 테스트용 UserGrade 생성
         UserGrade userGrade = new UserGrade(1, "Beginner", 0, 100);
         userGradeRepository.save(userGrade);
 
         // 회원 검증 위한 회원 생성
         RegisterRequestDto registerRequestDto = new RegisterRequestDto();
-        registerRequestDto.setUserEmail("testEmail@mail.com");
+        registerRequestDto.setUserEmail("test1@mail.com");
         registerRequestDto.setUserPassword("testPass");
         registerRequestDto.setUserNickName("testNick");
         registerRequestDto.setUserPublic(1);
-        userService.register(registerRequestDto);
+        userId1 = userService.register(registerRequestDto).getUserId();
 
         registerRequestDto = new RegisterRequestDto();
-        registerRequestDto.setUserEmail("testEmail2@mail.com");
+        registerRequestDto.setUserEmail("test2@mail.com");
         registerRequestDto.setUserPassword("testPass2");
         registerRequestDto.setUserNickName("testNick2");
         registerRequestDto.setUserPublic(1);
-        userService.register(registerRequestDto);
+        userId2 = userService.register(registerRequestDto).getUserId();
 
-        customUserInfoDto1 = new CustomUserInfoDto(1, "testName", "testEmail", "testPass", 1, "testThumb", 1, 0, LocalDateTime.now(), LocalDateTime.now(), "testNick");
-        customUserInfoDto2 = new CustomUserInfoDto(2, "testName2", "testEmail2", "testPass2", 1, "testThumb2", 1, 0, LocalDateTime.now(), LocalDateTime.now(), "testNick2");
+        registerRequestDto = new RegisterRequestDto();
+        registerRequestDto.setUserEmail("test3@mail.com");
+        registerRequestDto.setUserPassword("testPass3");
+        registerRequestDto.setUserNickName("testNick3");
+        registerRequestDto.setUserPublic(1);
+        userId3 = userService.register(registerRequestDto).getUserId();
     }
 
     @Test
-    @Order(1)
     void testSendFriendRequest() throws Exception {
         // Given
-        int fromUserId = 1;
-        int toUserId = 2;
-        FriendRequestSendRequestDto requestDto = new FriendRequestSendRequestDto();
-        requestDto.setToUserId(toUserId);
+        int fromUserId = userId1;
+        int toUserId = userId2;
 
         // When
         friendService.saveFriendRequest(fromUserId, toUserId);
@@ -94,15 +94,16 @@ public class FriendTest {
     }
 
     @Test
-    @Order(2)
     void testListFriendRequestSent() throws Exception {
         // Given
-        int userId = 1;
+        int fromUserId = userId1;
+        int toUserId = userId2;
         ListOptionDto listOptionDto = new ListOptionDto();
         listOptionDto.setSearchText("test");
 
         // When
-        List<FriendRequestDto> result = friendService.listFriendRequestSent(userId, listOptionDto);
+        friendService.saveFriendRequest(fromUserId, toUserId);
+        List<FriendRequestDto> result = friendService.listFriendRequestSent(fromUserId, listOptionDto);
 
         // Then
         assertNotNull(result);
@@ -111,15 +112,16 @@ public class FriendTest {
     }
 
     @Test
-    @Order(3)
     void testListFriendRequestReceived() throws Exception {
         // Given
-        int userId = 2;
+        int fromUserId = userId1;
+        int toUserId = userId2;
         ListOptionDto listOptionDto = new ListOptionDto();
         listOptionDto.setSearchText("test");
 
         // When
-        List<FriendRequestDto> result = friendService.listFriendRequestReceived(userId, listOptionDto);
+        friendService.saveFriendRequest(fromUserId, toUserId);
+        List<FriendRequestDto> result = friendService.listFriendRequestReceived(toUserId, listOptionDto);
 
         // Then
         assertNotNull(result);
@@ -128,32 +130,38 @@ public class FriendTest {
     }
 
     @Test
-    @Order(4)
     void testAcceptFriendRequest() throws Exception {
         // Given
         int friendRequestId = 1;
-        int userId = 2;
+        int fromUserId = userId1;
+        int toUserId = userId2;
 
         // When
-        friendService.acceptFriendRequest(friendRequestId, userId);
+        friendService.saveFriendRequest(fromUserId, toUserId);
+        friendService.acceptFriendRequest(friendService.recentFriendRequestId(), toUserId);
 
         // Then
         assertFalse(() -> friendRepository.existsFriendRequestById(friendRequestId));
-        List<FriendDto> friends = friendRepository.listFriends(userId, new ListOptionDto());
-        assertTrue(friends.stream().anyMatch(friend -> friend.getFriendUserId() == userId));
+        List<FriendDto> friends = friendRepository.listFriends(fromUserId, new ListOptionDto());
+        assertTrue(friends.stream().anyMatch(friend -> friend.getFriendUserId() == toUserId));
     }
 
     @Test
-    @Order(5)
     void testListFriends() throws Exception {
         // Given
-        int userId = 1;
+        int fromUserId = userId1;
+        int toUserId1 = userId2;
+        int toUserId2 = userId3;
+        int userId = userId1;
         ListOptionDto listOptionDto = new ListOptionDto();
         listOptionDto.setSearchText("test");
-        listOptionDto.setSortKey("friendDate");
         listOptionDto.setIsDESC(true);
 
         // When
+        friendService.saveFriendRequest(fromUserId, toUserId1);
+        friendService.acceptFriendRequest(friendService.recentFriendRequestId(), toUserId1);
+        friendService.saveFriendRequest(fromUserId, toUserId2);
+        friendService.acceptFriendRequest(friendService.recentFriendRequestId(), toUserId2);
         List<FriendDto> result = friendService.listFriends(userId, listOptionDto);
 
         // Then
@@ -165,29 +173,32 @@ public class FriendTest {
     }
 
     @Test
-    @Order(6)
     void testCancelFriend() throws Exception {
         // Given
-        int friendUserId = 2;
-        int userId = 1;
+        int fromUserId = userId1;
+        int toUserId = userId2;
+        int userId = userId1;
 
         // When
-        friendService.deleteFriend(friendUserId, userId);
+        friendService.saveFriendRequest(fromUserId, toUserId);
+        friendService.acceptFriendRequest(friendService.recentFriendRequestId(), toUserId);
+        friendService.deleteFriend(toUserId, userId);
 
         // Then
         List<FriendDto> friends = friendRepository.listFriends(userId, new ListOptionDto());
-        assertTrue(friends.stream().noneMatch(friend -> friend.getFriendUserId() == friendUserId));
+        assertTrue(friends.stream().noneMatch(friend -> friend.getFriendUserId() == toUserId));
     }
 
     @Test
-    @Order(7)
     void testCancelFriendRequest() throws Exception {
         // Given
-        friendService.saveFriendRequest(1, 2);
-        int friendRequestId = 2;
+        int fromUserId = userId1;
+        int toUserId = userId2;
+        int friendRequestId = 1;
 
         // When
-        friendService.deleteFriendRequest(friendRequestId);
+        friendService.saveFriendRequest(fromUserId, toUserId);
+        friendService.deleteFriendRequest(friendService.recentFriendRequestId());
 
         // Then
         assertFalse(friendRepository.existsFriendRequestById(friendRequestId));

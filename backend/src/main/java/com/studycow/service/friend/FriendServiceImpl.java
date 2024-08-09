@@ -117,6 +117,16 @@ public class FriendServiceImpl implements FriendService {
     }
 
     /**
+     * 최근 저장된 friendRequest 조회
+     *
+     * @return
+     */
+    @Override
+    public int recentFriendRequestId() throws Exception {
+        return friendRepository.recentFriendRequestId();
+    }
+
+    /**
      * 받은 친구 요청 목록 조회
      *
      * @return FriendRequestDto 리스트
