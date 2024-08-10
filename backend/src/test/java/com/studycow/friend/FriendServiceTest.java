@@ -1,15 +1,11 @@
 package com.studycow.friend;
 
-import com.studycow.StudycowApplication;
 import com.studycow.domain.UserGrade;
 import com.studycow.dto.friend.FriendDto;
 import com.studycow.dto.friend.FriendRequestDto;
-import com.studycow.dto.friend.FriendRequestSendRequestDto;
 import com.studycow.dto.listoption.ListOptionDto;
-import com.studycow.dto.user.CustomUserInfoDto;
 import com.studycow.dto.user.RegisterRequestDto;
 import com.studycow.repository.friend.FriendRepository;
-import com.studycow.repository.user.UserRepository;
 import com.studycow.service.friend.FriendService;
 import com.studycow.repository.user.UserGradeRepository;
 import com.studycow.service.user.UserService;
@@ -17,15 +13,10 @@ import com.studycow.web.friend.FriendController;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class FriendTest {
+public class FriendServiceTest {
     @Autowired
     private FriendController friendController;
     @Autowired

@@ -183,7 +183,7 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public void deleteFriend(int friendUserId, int userId) throws Exception {
         //친구 관계 존재 여부 검증
-        if(friendRepository.existsFriend(friendUserId,userId)) {
+        if(!friendRepository.existsFriend(friendUserId,userId)) {
             throw new CustomException(ErrorCode.NOT_FOUND_FRIEND);
         }
 
