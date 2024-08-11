@@ -108,7 +108,7 @@ const ScoreRegist = ({ onCancel, onSubmit }) => {
       return false;
     }
 
-    // 오답 데이터 검증
+    // 오답 데이터 검증 로직
     for (const wrong of wrongs) {
       if (wrong.catCode !== "" && wrong.wrongCnt <= 0) {
         setErrorMessage("오답 개수는 0 이상이어야 합니다.");
