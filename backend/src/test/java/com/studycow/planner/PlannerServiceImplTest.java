@@ -34,10 +34,17 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * 플래너 단위 테스트 코드
+ *
+ * @author 채기훈
+ * @since JDK17
+ */
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
 class PlannerServiceImplTest {
+
 
     @Mock
     private PlannerRepository plannerRepository;
@@ -58,6 +65,9 @@ class PlannerServiceImplTest {
     private CustomUserDetails customUserDetails;
     private PlannerCreateDto plannerCreateDto;
 
+    /**
+     * 테스트를 위한 사전 객체 생성
+     */
     @BeforeEach
     void setUp() {
         testUserInfo = new CustomUserInfoDto();
@@ -89,6 +99,9 @@ class PlannerServiceImplTest {
         plannerCreateDto.setPlanStudyTime(60);
     }
 
+    /**
+     * 플래너 생성 로직 테스트
+     */
     @Test
     void givenValidPlannerCreateDto_whenCreatePlan_thenPlanIsSaved() {
         // Given
@@ -102,6 +115,9 @@ class PlannerServiceImplTest {
         verify(plannerRepository).save(any(UserSubjectPlan.class));
     }
 
+    /**
+     * 유효하지 않는 유저가 플래너를 생성했을때 검증
+     */
     @Test
     void givenNonExistentUser_whenCreatePlan_thenThrowCustomException() {
         // Given
@@ -111,6 +127,9 @@ class PlannerServiceImplTest {
         assertThrows(CustomException.class, () -> plannerService.createPlan(customUserDetails, plannerCreateDto));
     }
 
+    /**
+     * 특정 날짜 기준 플래너 조회 테스트
+     */
     @Test
     void givenExistingUserAndDate_whenGetPlansByDateForUser_thenReturnPlanList() {
         // Given
@@ -127,6 +146,9 @@ class PlannerServiceImplTest {
         assertEquals(1, result.size());
     }
 
+    /**
+     * 특정 과목 기준 플래너 조회 테스트
+     */
     @Test
     void givenExistingUserAndSubject_whenGetPlansBySubjectForUser_thenReturnPlanList() {
         // Given
@@ -143,6 +165,9 @@ class PlannerServiceImplTest {
         assertEquals(1, result.size());
     }
 
+    /**
+     * 특정 플래너 기준 상세 조회 테스트
+     */
     @Test
     void givenExistingUserAndPlan_whenGetPlanByIdForUser_thenReturnPlan() {
         // Given
@@ -157,6 +182,9 @@ class PlannerServiceImplTest {
         assertNotNull(result);
     }
 
+    /**
+     * 특정 월의 일별 플랜 개수 조회 테스트
+     */
     @Test
     void givenValidMonthAndYear_whenGetPlanCountByDateForUser_thenReturnPlanCountList() {
         // Given
@@ -175,6 +203,9 @@ class PlannerServiceImplTest {
         assertEquals(1, result.size());
     }
 
+    /**
+     * 플래너 업데이트 테스트
+     */
     @Test
     void givenExistingPlanAndValidDto_whenUpdatePlan_thenPlanIsUpdated() {
         // Given
@@ -188,6 +219,9 @@ class PlannerServiceImplTest {
         verify(plannerRepository).save(any(UserSubjectPlan.class));
     }
 
+    /**
+     * 플래너 삭제 테스트
+     */
     @Test
     void givenExistingPlan_whenDeletePlan_thenPlanIsDeleted() {
         // Given
@@ -200,6 +234,9 @@ class PlannerServiceImplTest {
         verify(plannerRepository).delete(testPlan);
     }
 
+    /**
+     * 플래너 상태 변경 테스트
+     */
     @Test
     void givenExistingPlan_whenChangePlanStatus_thenStatusIsChanged() {
         // Given
