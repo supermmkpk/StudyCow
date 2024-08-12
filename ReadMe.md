@@ -34,6 +34,7 @@
 
 - Front 
 <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+ <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
 - Back-end : Java, Spring
 - 버전 및 이슈관리 : Gitlab 
 - 협업 툴 : Jira, Discord, Notion
