@@ -33,7 +33,7 @@
 ## 1. 개발 환경 및 요구사항 명세
 
 - Front 
-<img src="https://img.shields.io/badge/js-#F7DF1E?style=for-the-badge&logo=javascript&logoColor=white">
+<img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
 - Back-end : Java, Spring
 - 버전 및 이슈관리 : Gitlab 
 - 협업 툴 : Jira, Discord, Notion
