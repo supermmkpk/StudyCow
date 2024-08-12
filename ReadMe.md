@@ -24,7 +24,7 @@
 
 | **채기훈** | **황민채** |
 | :------: |  :------: |
-| [<img src="![Designer.jpeg](./Designer.jpeg)" height=150 width=150> <br/> @Hun425](https://github.com/Hun425) | [<img src="https://avatars.githubusercontent.com/trick0846?v=4" height=150 width=150> <br/> @trick0846](https://github.com/trick0846) |
+| [<img src="https://avatars.githubusercontent.com/Hun425?v=4" height=150 width=150><br/> @Hun425](https://github.com/Hun425) | [<img src="https://avatars.githubusercontent.com/trick0846?v=4" height=150 width=150> <br/> @trick0846](https://github.com/trick0846) |
 
 </div>
 
@@ -33,7 +33,7 @@
 ## 1. 개발 환경 및 요구사항 명세
 
 - Front 
-<img src="https://img.shields.io/badge/js-#F7DF1E?style=for-the-badge&logo=javascript&logoColor=white">
+<img src="https://img.shields.io/badge/js-#F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white">
 - Back-end : Java, Spring
 - 버전 및 이슈관리 : Gitlab 
 - 협업 툴 : Jira, Discord, Notion
