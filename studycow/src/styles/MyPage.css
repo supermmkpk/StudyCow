@@ -38,5 +38,5 @@
 
   .FriendsTitle {
     font-size: calc(30 / 1440 * 100vw);
-    margin: 20px 0px;
+    margin: calc(20 / 1440 * 100vw) 0;
   }
