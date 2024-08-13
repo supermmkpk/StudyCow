@@ -7,34 +7,34 @@
 }
 
 .userGradeImage {
-  width: 200px; /* 원하는 너비로 조절 */
+  width: calc(200 / 1440 * 100vw); /* 원하는 너비로 조절 */
   height: auto; /* 이미지 비율을 유지하면서 높이 조절 */
   border-radius: 50%; /* 원형으로 만들기 위해 적용 */
 }
 
 .userGradeText {
-  margin-top: 30px; /* 이미지와 텍스트 사이의 간격 */
-  font-size: 25px; /* 텍스트 크기 */
+  margin-top: calc(30 / 1440 * 100vw); /* 이미지와 텍스트 사이의 간격 */
+  font-size: calc(25 / 1440 * 100vw); /* 텍스트 크기 */
   color: #333; /* 텍스트 색상 */
 }
 
 .userGradeProgressBarContainer {
   width: 100%; /* 바의 전체 너비 */
   background-color: #e0e0e0; /* 바의 배경색 */
-  border-radius: 10px; /* 둥근 모서리 */
-  margin-top: 10px; /* 텍스트와의 간격 */
-  height: 20px; /* 바의 높이 */
+  border-radius: calc(10 / 1440 * 100vw); /* 둥근 모서리 */
+  margin-top: calc(10 / 1440 * 100vw); /* 텍스트와의 간격 */
+  height: calc(20 / 1440 * 100vw); /* 바의 높이 */
   overflow: hidden;
 }
 
 .userGradeProgressBar {
   height: 100%;
   background-color: #4caf50; /* 진행 바의 색상 (녹색) */
-  border-radius: 10px; /* 둥근 모서리 */
+  border-radius: calc(10 / 1440 * 100vw); /* 둥근 모서리 */
 }
 
 .userGradeExpText {
-  margin-top: 5px; /* 바와의 간격 */
-  font-size: 16px; /* 텍스트 크기 */
+  margin-top: calc(5 / 1440 * 100vw); /* 바와의 간격 */
+  font-size: calc(16 / 1440 * 100vw); /* 텍스트 크기 */
   color: #333; /* 텍스트 색상 */
 }

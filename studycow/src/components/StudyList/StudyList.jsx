@@ -44,7 +44,7 @@ const getAvatarImage = (rank) => {
 const StyledPaper = styled(Paper)(({ theme }) => ({
   background: "#83a1ca", // 파란색
   borderRadius: 15,
-  boxShadow: "0 3px 5px 2px rgba(33, 203, 243, .3)", // 그림자 색상 조정
+  boxShadow: "0 calc(3 / 1440 * 100vw) calc(5 / 1440 * 100vw) calc(2 / 1440 * 100vw) rgba(33, 203, 243, .3)", // 그림자 색상 조정
   color: "white",
   padding: theme.spacing(3), // 패딩 증가
 }));

@@ -4,8 +4,8 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  padding: 20px;
-  border-radius: 15px;
+  padding: calc(20 / 1440 * 100vw);
+  border-radius: calc(15 / 1440 * 100vw);
   transition: background 0.5s ease;
 }
 
@@ -52,40 +52,40 @@
 }
 
 .user-grade-image {
-  width: 200px;
+  width: calc(200 / 1440 * 100vw);
   height: auto;
   border-radius: 50%;
-  border: 5px solid #fff;
+  border: calc(5 / 1440 * 100vw) solid #fff;
 }
 
 .user-grade-text {
-  margin-top: 20px;
-  font-size: 30px;
+  margin-top: calc(20 / 1440 * 100vw);
+  font-size: calc(30 / 1440 * 100vw);
   font-weight: bold;
   color: #444;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: calc(2 / 1440 * 100vw) calc(2 / 1440 * 100vw) calc(4 / 1440 * 100vw) rgba(0, 0, 0, 0.2);
 }
 
 .user-grade-progress-bar-container {
   width: 80%;
   background-color: #e0e0e0;
-  border-radius: 10px;
-  margin-top: 10px;
-  height: 20px;
+  border-radius: calc(10 / 1440 * 100vw);
+  margin-top: calc(10 / 1440 * 100vw);
+  height: calc(20 / 1440 * 100vw);
   overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 calc(1 / 1440 * 100vw) calc(3 / 1440 * 100vw) rgba(0, 0, 0, 0.2);
 }
 
 .user-grade-progress-bar {
   height: 100%;
   background-color: #4caf50;
-  border-radius: 10px;
+  border-radius: calc(10 / 1440 * 100vw);
   transition: width 0.4s ease-in-out;
 }
 
 .user-grade-exp-text {
-  margin-top: 5px;
-  font-size: 18px;
+  margin-top: calc(5 / 1440 * 100vw);
+  font-size: calc(18 / 1440 * 100vw);
   font-weight: 500;
   color: #555;
 }
