@@ -35,9 +35,11 @@
 - Front 
 <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
-- Back-end : Java, Spring
-- 버전 및 이슈관리 : Gitlab 
-- 협업 툴 : Jira, Discord, Notion
+
+- Back-end : <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"><img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
+
+- 버전 및 이슈관리 : <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"> 
+- 협업 툴 : <img src="https://img.shields.io/badge/git-0052CC?style=for-the-badge&logo=jira&logoColor=white"> , Discord, Notion
 - 인프라 : AWS, Docker, Jenkins, Nginx
 - 성능 관리 및 모니터링 : Grafana, prometheus
 - 디자인 : [Figma](https://www.figma.com/file/fAisC2pEKzxTOzet9CfqML/README(oh-my-code)?node-id=39%3A1814)
