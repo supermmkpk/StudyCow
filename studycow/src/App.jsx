@@ -20,8 +20,8 @@ function App() {
     // Notiflix 전역 설정
     Notiflix.Notify.init({
       position: 'center-top',
-      width: '320px',
-      borderRadius: '7px',
+      width: 'calc(320 / 1440 * 100vw)',
+      borderRadius: 'calc(7 / 1440 * 100vw)',
       clickToClose: true
     });
 
