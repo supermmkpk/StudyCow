@@ -27,8 +27,8 @@ const UserGradeImage = () => {
     const y = e.clientY - container.top;   // 마우스의 Y좌표를 컨테이너 기준으로 계산
     
     // 마우스 위치에 따라 회전 각도 계산
-    const newRotateY = -1 / 5 * x + 20;  // Y축 회전 각도 계산
-    const newRotateX = 4 / 30 * y - 20;  // X축 회전 각도 계산
+    const newRotateY = -1 / 10 * x + 20;  // Y축 회전 각도 계산
+    const newRotateX = 2 / 30 * y - 20;  // X축 회전 각도 계산
   
     // 계산된 회전 각도 상태 업데이트
     setRotateX(newRotateX);
