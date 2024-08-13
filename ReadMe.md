@@ -35,7 +35,8 @@
  <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"> 
 
 ### Back-end  
-<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
+<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white"> <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
+
 
 ### 버전 및 이슈관리 
 
@@ -51,7 +52,9 @@
 
 ### 성능 관리 및 모니터링 
 
- <img src="https://img.shields.io/badge/grafana-009639?style=for-the-badge&logo=grafana&logoColor=white"> <img src="https://img.shields.io/badge/prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white">
+ <img src="https://img.shields.io/badge/grafana-009639?style=for-the-badge&logo=grafana&logoColor=white"> <img src="https://img.shields.io/badge/prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white"> <img src="https://img.shields.io/badge/sonarqube-4E9BCD?style=for-the-badge&logo=sonarqube&logoColor=white">
+
+
 ### 디자인 
  [Figma](https://www.figma.com/file/fAisC2pEKzxTOzet9CfqML/README(oh-my-code)?node-id=39%3A1814)
 
@@ -76,7 +79,7 @@
 ## 2. 채택한 개발 기술과 브랜치 전략
 
 
-### Vue, Django
+### Spring, JDK17 
 
 - SSAFY 관통 프로젝트의 필수 조건을 위해 채택했습니다.
 
@@ -89,50 +92,25 @@
 
 ### 브랜치 전략
 
-- 기본적으로 큰 틀을 Jira를 통해 세분화했습니다
+- 기본적인 역할분담은 Jira 및 WBS를 통해 세분화했습니다
 - 각 세분화된 기능들을 branch로 생성해 main에 merge 하는 방식으로 협업을 진행했습니다.
 
 
 <br>
 
-## 3. 프로젝트 구조 및 ERD
-
-```
-├─backEnd
-│  ├─accounts
-│  │  ├─migrations
-│  ├─media
-│  │  ├─images
-│  │  └─profile
-│  │      └─images
-│  ├─movies
-│  │  ├─management
-│  │  │  └─commands
-│  │  ├─migrations
-│  ├─movieweb
-│  ├─static
-│      └─images
-├─front-project
-│  ├─public
-│  └─src
-│      ├─assets
-│      ├─components
-│      │  ├─actor
-│      │  ├─common
-│      │  ├─movie
-│      │  └─Profile
-│      │  
-│      ├─router
-│      ├─stores
-│      └─views
-
-```
-
+## 3. DB 설계
 
 
 | ERD |
 |----------|
-|![image](https://github.com/Hun425/finalpjt/assets/147483675/f42de4f4-4859-43ca-ac8b-bb477af1a3c2)|
+|![StudyCow_ERD__1_](/uploads/07b4c9a8b02cdf507700b6a59f9358a7/StudyCow_ERD__1_.png)|
+
+## 4. 일정 관리
+
+| WBS |
+|----------|
+|[C202_기획_-_WBS.pdf](/uploads/8c483dad261c1ec352e4ac540b12852b/C202_기획_-_WBS.pdf)|
+
 
 
 <br>
@@ -140,10 +118,15 @@
 ## 4. 역할 분담
 
     
-### 👻채기훈
+### 👻채기훈 (조장)
 
-- **기능**
-    - 백엔드 서버 기본 기능 개발, DB 구성, 챗봇 및 검색 기능 개발, 영화 추천 및 검색 알고리즘 작성, 기초 CSS 디자인
+- **구현 기능**
+    - 인프라 CI/CD 자동화, 회원 API, 실시간 채팅 API, 신체 인식 AI, 플래너 API, Custom 예외처리 구현, 서버 모니터링
+
+- **사용 세부 기술 스택**
+
+<img src="https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white"> <img src="https://img.shields.io/badge/jsonwebtokens-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white"> <img src="https://img.shields.io/badge/redis-FF4438?style=for-the-badge&logo=redis&logoColor=white"> 
+
 
 <br>
 
@@ -161,20 +144,20 @@
 
 ### 개발 기간
 
-- 전체 개발 기간 : 2024-05-16 ~ 2024-05-23
-- UI 구현 : 2024-05-18 ~ 2024-05-22
-- 기능 구현 : 2024-05-16 ~ 2024-05-20
+- 전체 개발 기간 : 2024-07-01 ~ 2024-08-15
+- 기획 및 설계 : 2024-07-01 ~ 2024-07-12
+- 기능 구현 : 2024-07-15 ~ 2024-08-09
+- UI 구현 : 2024-07-15 ~ 2024-08-13
+
 
 <br>
 
 ### 작업 관리
 
-- Jira를 사용하여 업무 분담 및 세분화를 진행했습니다.
-- Notion을 사용하여 API 명세서를 작성했습니다.
-- Github branch를 사용하여 협업을 진행했습니다.
-
-
-
+- Jira + WBS 를 사용하여 업무를 세부적으로 분담했습니다.
+- Notion 및 Swagger를 사용하여 API 명세서를 작성했습니다.
+- Gitlab branch를 사용하여 협업을 진행했습니다.
+- 코드 및 커밋 컨벤션을 지정해 코드 품질 관리와 의사소통에 집중했습니다.
 
 <br>
 
