@@ -3,7 +3,6 @@ package com.studycow.dto.plan;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,12 +13,16 @@ import java.time.LocalDateTime;
  * @author 채기훈
  * @since JDK17
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class PlannerGetDto {
 
-public record PlannerGetDto(    int planId,
-        int userId,
-        int subCode,
-        LocalDate planDate,
-        String planContent,
-        int planStudyTime,
-        int planStatus) {
+    private int planId;
+    private int userId;
+    private int subCode;
+    private LocalDate planDate;
+    private String planContent;
+    private int planStudyTime;
+    private int planStatus;
 }
