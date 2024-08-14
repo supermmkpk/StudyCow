@@ -33,4 +33,5 @@ public interface UserService {
 
     /** 유저 공개 비공개 전환 메서드 **/
     void updateUserPublic(CustomUserDetails customUserDetails);
+
 }
