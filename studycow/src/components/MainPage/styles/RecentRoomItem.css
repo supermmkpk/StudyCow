@@ -1,6 +1,6 @@
 .recentRoomContainer {
   width: 100%;
-  height: calc(217 / 1440 * 100vw);
+  height: calc(160 / 1440 * 100vw);
   border-radius: calc(10 / 1440 * 100vw);
   background: #7092BE; /* 기본 배경 색 */
   background-size: cover; /* 배경 이미지가 컨테이너를 덮도록 설정 */

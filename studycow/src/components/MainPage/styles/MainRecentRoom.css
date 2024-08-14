@@ -1,6 +1,6 @@
 .mainRecentRoomContainer {
   width: calc(270 / 1440 * 100vw);
-  height: calc(262.5 / 1440 * 100vw);
+  height: calc(205 / 1440 * 100vw);
   border-radius: calc(20 / 1440 * 100vw);
   box-shadow: 0 calc(8 / 1440 * 100vw) calc(12 / 1440 * 100vw) rgba(0, 0, 0, 0.1);
   padding: calc(10 / 1440 * 100vw);
@@ -29,7 +29,7 @@
 .recentRoomIsNone {
   font-family: "JalnanGothic", sans-serif;
   width: calc(270 / 1440 * 100vw);
-  height: calc(262.5 / 1440 * 100vw);
+  height: calc(230 / 1440 * 100vw);
   border-radius: calc(20 / 1440 * 100vw);
   box-shadow: 0 calc(8 / 1440 * 100vw) calc(12 / 1440 * 100vw) rgba(0, 0, 0, 0.1);
   padding: calc(10 / 1440 * 100vw);
