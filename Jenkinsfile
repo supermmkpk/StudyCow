@@ -1,13 +1,13 @@
 pipeline {
     agent any
     
-    
     environment {
         DOCKER_NETWORK = "studycow_network"
         GPT_API_KEY = credentials('gpt-api-key-id')
         VITE_API_BASE_URL = 'https://i11c202.p.ssafy.io/studycow/'
         SPRING_PROFILES_ACTIVE = 'prod'
         OPENVIDU_SECRET = credentials('openvidu-secret-id')
+        TZ = 'Asia/Seoul'  // 원하는 시간대 설정
     }
     stages {
         stage('Checkout') {
@@ -26,7 +26,7 @@ pipeline {
             }
         }
         
-        stage('Frontend - Build and Deploy') {
+        stage('Frontend - Build') {
             steps {
                 dir('studycow') {
                     sh 'npm install'
@@ -35,11 +35,6 @@ pipeline {
                     sh 'cat build/index.html || echo "index.html not found"'
                     sh 'echo "VITE_API_BASE_URL=${VITE_API_BASE_URL}" > .env'  
                     sh 'docker build -t frontend:${BUILD_NUMBER} --build-arg VITE_API_BASE_URL=${VITE_API_BASE_URL} .'
-                    
-                    sh 'docker stop frontend || true'
-                    sh 'docker rm frontend || true'
-                    sh 'docker run -d --name frontend --network studycow_network -p 3000:80 frontend:${BUILD_NUMBER}'
-                    sh 'docker cp frontend:/usr/share/nginx/html ./nginx-content'
                 }
             }
         }
@@ -58,8 +53,43 @@ pipeline {
                         -e SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} \
                         -e GPT_API_KEY=${GPT_API_KEY} \
                         -e OPENVIDU_SECRET=${OPENVIDU_SECRET} \
+                        -e TZ=${TZ} \
+                        -v /etc/localtime:/etc/localtime:ro \
+                        -v /etc/timezone:/etc/timezone:ro \
                         backend:${BUILD_NUMBER}
                     """
+                    
+                    // 컨테이너 내부 시간 동기화 (선택사항)
+                    sh "docker exec backend date"
+                    sh "docker exec backend apt-get update && apt-get install -y tzdata"
+                    sh "docker exec backend ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime"
+                    sh "docker exec backend dpkg-reconfigure -f noninteractive tzdata"
+                }
+            }
+        }
+        
+        stage('Frontend - Deploy') {
+            steps {
+                script {
+                    sh 'docker stop frontend || true'
+                    sh 'docker rm frontend || true'
+                    sh """
+                    docker run -d --name frontend \
+                        --network ${DOCKER_NETWORK} \
+                        -p 3000:80 \
+                        -e TZ=${TZ} \
+                        -v /etc/localtime:/etc/localtime:ro \
+                        -v /etc/timezone:/etc/timezone:ro \
+                        frontend:${BUILD_NUMBER}
+                    """
+                    
+                    // 컨테이너 내부 시간 동기화 (선택사항)
+                    sh "docker exec frontend date"
+                    sh "docker exec frontend apk add --no-cache tzdata"
+                    sh "docker exec frontend ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime"
+                    sh "docker exec frontend echo '${TZ}' > /etc/timezone"
+                    
+                    sh 'docker cp frontend:/usr/share/nginx/html ./nginx-content'
                 }
             }
         }
