@@ -7,7 +7,7 @@ pipeline {
         VITE_API_BASE_URL = 'https://i11c202.p.ssafy.io/studycow/'
         SPRING_PROFILES_ACTIVE = 'prod'
         OPENVIDU_SECRET = credentials('openvidu-secret-id')
-        TZ = 'Asia/Seoul'  // 원하는 시간대 설정
+        TZ = 'Asia/Seoul'
     }
     stages {
         stage('Checkout') {
@@ -31,8 +31,8 @@ pipeline {
                 dir('studycow') {
                     sh 'npm install'
                     sh 'npm run build'
-                    sh 'ls -la build'
-                    sh 'cat build/index.html || echo "index.html not found"'
+                    sh 'ls -la dist'  // Changed from 'build' to 'dist'
+                    sh 'cat dist/index.html || echo "index.html not found"'  // Changed from 'build' to 'dist'
                     sh 'echo "VITE_API_BASE_URL=${VITE_API_BASE_URL}" > .env'  
                     sh 'docker build -t frontend:${BUILD_NUMBER} --build-arg VITE_API_BASE_URL=${VITE_API_BASE_URL} .'
                 }
@@ -59,11 +59,8 @@ pipeline {
                         backend:${BUILD_NUMBER}
                     """
                     
-                    // 컨테이너 내부 시간 동기화 (선택사항)
+                    // Remove the apt-get commands
                     sh "docker exec backend date"
-                    sh "docker exec backend apt-get update && apt-get install -y tzdata"
-                    sh "docker exec backend ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime"
-                    sh "docker exec backend dpkg-reconfigure -f noninteractive tzdata"
                 }
             }
         }
@@ -83,13 +80,9 @@ pipeline {
                         frontend:${BUILD_NUMBER}
                     """
                     
-                    // 컨테이너 내부 시간 동기화 (선택사항)
                     sh "docker exec frontend date"
-                    sh "docker exec frontend apk add --no-cache tzdata"
-                    sh "docker exec frontend ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime"
-                    sh "docker exec frontend echo '${TZ}' > /etc/timezone"
                     
-                    sh 'docker cp frontend:/usr/share/nginx/html ./nginx-content'
+                    // Remove nginx-content copy as it's not necessary
                 }
             }
         }
@@ -97,7 +90,7 @@ pipeline {
         stage('Health Check') {
             steps {
                 script {
-                    sh 'sleep 10'  // 서비스가 완전히 시작될 때까지 대기 시간
+                    sh 'sleep 10'
                     sh 'curl -f http://13.125.238.202:8080/studycow/actuator/health || echo "Backend health check failed, but continuing deployment"'
                     sh 'curl -f http://13.125.238.202/studycow || echo "Frontend health check failed, but continuing deployment"'
                 }
