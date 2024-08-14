@@ -113,16 +113,16 @@
 
 ### Spring
 
-- 향후 서비스 확장시 유연하게 대처하기 위한 Java 기반 Spring Framework 선택
+- 향후 서비스 확장시 유연하게 대처하기 위한 Java 기반 Spring Framework 
 
 
 ### JDK17
 
-- record 기능을 사용한 Dto 및 instancof 패턴 매칭을 위한 JDK17버전 선택
+- record 기능을 사용한 Dto 및 instancof 패턴 매칭을 위한 JDK17버전 
 
 ### React
 
-- Vue.js 보다 자유로운 편집 및 커스텀을 위한 React 선택
+- Vue.js 보다 자유로운 편집 및 커스텀을 위한 React 
 
 
 ### 브랜치 전략
