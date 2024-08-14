@@ -12,7 +12,7 @@ const MainPage = () => {
     <>
       <Navbar />
       <div className="main">{isLogin ? <Main_Login /> : <Main_Unlogin />}</div>
-      <Footer />
+      {isLogin ? <Footer /> : <></>}
     </>
   );
 };
