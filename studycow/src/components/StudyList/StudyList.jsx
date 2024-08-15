@@ -55,7 +55,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow:
     "0 calc(3 / 1440 * 100vw) calc(5 / 1440 * 100vw) calc(2 / 1440 * 100vw) rgba(33, 203, 243, .3)", // 그림자 색상 조정
   color: "white",
-  padding: theme.spacing(3), // 패딩 증가
+  padding: theme.spacing(1), // 패딩 증가
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
@@ -140,7 +140,7 @@ const StudyList = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentRank((prevRank) => (prevRank + 1) % displayCount);
-    }, 2000);
+    }, 1500);
     return () => clearInterval(interval);
   }, [displayCount]);
 
@@ -214,7 +214,7 @@ const StudyList = () => {
                     variant="body1"
                     className="expandedRankUserNick"
                   >
-                    닉네임: {data.userNickName}
+                    {data.userNickName}
                   </StyledTypography>
                   <StyledTypography
                     variant="body1"
