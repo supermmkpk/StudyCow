@@ -101,6 +101,10 @@ public class ChatGPTController {
             ChatGPTResponse chatGPTResponse = template.postForObject(apiURL, request, ChatGPTResponse.class);
             String response = chatGPTResponse.getChoices().get(0).getMessage().getContent();
 
+            // 배열 형식 검증 및 구조 조정
+            response = response.replaceAll("(?<=\\})\\s*(?=\\s*\\{)", ",");
+            response = response.replaceAll(",\\s*]", "]");
+
             // JSON 마크다운 제거
             if (response.contains("```json") || response.contains("```")) {
                 // 마크다운을 제거하기 위해 처음과 끝의 부분을 잘라냅니다.
