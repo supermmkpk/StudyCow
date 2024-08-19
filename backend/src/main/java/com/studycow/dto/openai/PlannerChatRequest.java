@@ -459,9 +459,9 @@ public class PlannerChatRequest {
                 .append("## 출력 형식: \n")
                 .append("{ \n")
                 .append("  \"analysis\": \"데이터 분석 및 전략 설명 (문자열)\", \n")
-                .append("  \"plans\": [계획 JSON 객체들의 배열] \n")
+                .append("  \"plans\": [ 계획 JSON 객체들의 배열 ] \n")
                 .append("} \n\n")
-                .append("## 이 출력 형식에 반드시 맞춰 분석 결과와 다음 5일간의 학습 계획을 JSON 형태로 제공해주세요.\n")
+                .append("## 이 출력 형식에 반드시 맞춰 분석 결과와 다음 5일간의 학습 계획을 JSON 형태로 제공해주세요. 각 객체는 콤마로 구분되어야 합니다. \n")
                 .append("## 각 날짜는 ").append(startDay).append("부터 시작합니다.");
 
         this.model = model;

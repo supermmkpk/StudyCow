@@ -13,7 +13,7 @@
   flex-direction: column;
   z-index: 2000;
   width: calc(600 / 1440 * 100vw); /* 가로 크기 */
-  height: calc(400 / 1440 * 100vw); /* 세로 크기 */
+  height: calc(600 / 1440 * 100vw); /* 세로 크기 */
 }
 
 .LoadingPage img {
