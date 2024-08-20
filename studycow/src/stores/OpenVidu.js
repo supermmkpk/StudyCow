@@ -128,7 +128,7 @@ const useRoomStore = create((set) => ({
       }
 
       const publisher = await OV.initPublisherAsync(undefined, {
-        audioSource: true, // or specific device id
+        audioSource: false, // or specific device id
         videoSource: true, // or specific device id
         publishAudio: true,
         publishVideo: true,
