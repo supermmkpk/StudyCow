@@ -24,7 +24,7 @@ function StudyRoom() {
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [selectedAudio, setSelectedAudio] = useState('');
-  const [volume, setVolume] = useState(0.5);
+  const [volume, setVolume] = useState(0.1);
   const [micVolume, setMicVolume] = useState(0.5);
   const [bgmOn, setBgmOn] = useState(false);
   const audioRef = useRef(new Audio());
