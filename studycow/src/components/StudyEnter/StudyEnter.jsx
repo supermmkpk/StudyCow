@@ -1,5 +1,5 @@
 import "./styles/StudyEnter.css";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import RoomDetailInfoBox from "./RoomDetailInfoBox";
 import { useNavigate } from 'react-router-dom';
 import useStudyStore from "../../stores/study";
@@ -8,6 +8,8 @@ import Notiflix from 'notiflix';
 
 const StudyEnter = ({ roomId, onRequestClose }) => {
   const { roomDetailInfo, fetchRoomDetailInfo, registerRoom } = useStudyStore();
+  const [cameraStream, setCameraStream] = useState(null);
+  const webcamRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -18,11 +20,19 @@ const StudyEnter = ({ roomId, onRequestClose }) => {
   // 마이크 및 카메라 권한 요청 함수
   const requestPermissions = async () => {
     try {
-      await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      setCameraStream(stream);
       Notiflix.Notify.success('카메라 권한이 허용되었습니다.');
     } catch (error) {
       Notiflix.Notify.failure('카메라 권한이 거부되었습니다.');
     }
+  };
+
+  const handleClose = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+    }
+    onRequestClose();
   };
 
   useEffect(() => {
@@ -50,7 +60,7 @@ const StudyEnter = ({ roomId, onRequestClose }) => {
 
   return (
     <div className="studyEnterPageMain">
-      <button className="closeButton" onClick={onRequestClose}>
+      <button className="closeButton" onClick={() => { onRequestClose(); handleClose(); }}>
         X
       </button>
       <div className="studyEnterPageContainer">
@@ -84,6 +94,7 @@ const StudyEnter = ({ roomId, onRequestClose }) => {
           <div className="cameraTestArea">
             <h2>카메라 테스트</h2>
             <Webcam
+              ref={webcamRef}
               className="roomWebcamTest"
               videoConstraints={{ facingMode: "user" }}
             />
